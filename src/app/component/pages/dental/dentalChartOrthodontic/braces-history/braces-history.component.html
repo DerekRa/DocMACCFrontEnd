@@ -1,0 +1,153 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/orthodontic-examination"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item" >
+                    <a class="link-dark"
+                        routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{ id }}"
+                    >
+                    Orthodontic Examination 
+                    </a>
+                </li>
+                <li
+                    class="breadcrumb-item active"
+                    aria-current="page"
+                >
+                    <span>History</span>
+                    
+                </li>
+            </ol>
+        </nav>
+        <!-- Name -->
+        <div class="grid">
+            <div class="col-11 text-xl">
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+        <!-- Show per page And Search All -->
+        <div class="grid -mb-1">
+            <div class="col-auto me-auto ml-2">
+                <label for="selectDisplay" class="mt-2">Show per page:&nbsp;&nbsp;</label>
+            </div>
+            <div class="col-auto mt-1 -mb-1">
+                <select
+                    class="form-select form-select-sm mb-1"
+                    (change)="onChangeShowPage($event)"
+                    style="width: auto;"
+                >
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="col text-center">
+                <span>&nbsp;</span>
+            </div>
+            <div class="col-auto">
+                <input
+                    class="form-control-sm mr-2"
+                    type="text"
+                    (keyup)="onChangeSearchAll($event)"
+                    placeholder="Search type here.."
+                />
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="grid">
+            <div class="col">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Date Of Procedure</div>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Choose Date here.."
+                                        (change)="onChangeDateOfProcedure($event)"
+                                        *ngIf="this.action=='orthodontic-history'"
+                                    />
+                                    
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Bracket Height</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Bracket Height type here.."
+                                        (keyup)="onChangeBracketHeight($event)"
+                                        *ngIf="this.action=='orthodontic-history'"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Note</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Note type here.."
+                                        (keyup)="onChangeNote($event)"
+                                        *ngIf="this.action=='orthodontic-history'"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody
+                        *ngFor="
+                            let bracesHistory of bracesHistoryData
+                                | paginate
+                                    : {
+                                            itemsPerPage: paginationSize,
+                                            currentPage: pageNoDisplay,
+                                            totalItems: paginationTotalItems
+                                        }
+                        "
+                    >
+                        <tr>
+                            <td>{{ bracesHistory?.dateOfProcedure  | date }}</td>
+                            <td>{{ bracesHistory?.bracketHeight }}</td>
+                            <td>{{ bracesHistory?.note }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Total and Pagination -->
+        <div class="grid"> 
+                <div class="col -mt-3">
+                    <label>Total items: {{ paginationTotalItems }}</label>
+                </div>
+                <div class="col-auto">
+                    <div class="paginationStyle -mt-2 align-items-end">
+                        <pagination-controls
+                            previousLabel="Prev"
+                            nextLabel="Next"
+                            [responsive]="true"
+                            (pageChange)="handlePageChange($event)"
+                        ></pagination-controls>
+                    </div>
+                </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,426 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/patients-profile">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/patient-profile/{{ id }}">View Profile</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Update</li>
+            </ol>
+        </nav>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <div class="col-2">
+                    <img src="{{ picture }}" formControlName="imgLink" class="img-thumbnail" alt="..." />
+                </div>
+                <div class="col-5 printUpdateGrid">
+                    <label for="imgLink" class="form-label">
+                        Upload Image <span class="fw-lighter fst-italic">(.jpg, .png)</span>
+                    </label>
+                    <input
+                        class="form-control form-control-sm"
+                        (change)="onFileChange($event)"
+                        type="file"
+                        name="imgLink"
+                        id="formFileMultiple"
+                        multiple
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-8"><hr /></div>
+                <div class="col"></div>
+            </div>
+            <!-- <alert></alert> -->
+            <div class="grid">
+                <div class="col-11 col-offset-1">
+                    <div class="grid">
+                        <div class="col">
+                            <label for="lastName" class="font-semibold"
+                                ><span class="astrk">&ast;</span>Last Name</label
+                            >
+                            <input
+                                type="text"
+                                formControlName="lastName"
+                                class="form-control form-control-sm"
+                                name="lastName"
+                                id="lname"
+                                [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }"
+                            />
+                            <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+                                <div *ngIf="f['lastName'].errors['minlength']">
+                                    Last Name must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="firstName" class="font-semibold"
+                                ><span class="astrk">&ast;</span>First Name</label
+                            >
+                            <input
+                                type="text"
+                                formControlName="firstName"
+                                class="form-control form-control-sm"
+                                name="firstName"
+                                id="fname"
+                                [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }"
+                            />
+                            <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+                                <div *ngIf="f['firstName'].errors['minlength']">
+                                    First Name must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="middleName" class="font-semibold"
+                                ><span class="astrk">&ast;</span>Middle Name</label
+                            >
+                            <input
+                                type="text"
+                                formControlName="middleName"
+                                class="form-control form-control-sm"
+                                name="middleName"
+                                id="mname"
+                                [ngClass]="{ 'is-invalid': submitted && f['middleName'].errors }"
+                            />
+                            <div *ngIf="submitted && f['middleName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['middleName'].errors['required']">Middle Name is required</div>
+                                <div *ngIf="f['middleName'].errors['minlength']">
+                                    Middle Name must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="nickName" class="font-semibold">Nick Name</label>
+                            <input
+                                type="text"
+                                formControlName="nickName"
+                                class="form-control form-control-sm"
+                                name="nickName"
+                                id="nname"
+                                [ngClass]="{ 'is-invalid': submitted && f['nickName'].errors }"
+                            />
+                            <div *ngIf="submitted && f['nickName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['nickName'].errors['minlength']">
+                                    Nick Name must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col">
+                            <label for="religion" class="font-semibold"><span class="astrk">&ast;</span>Religion</label>
+                            <input
+                                type="text"
+                                formControlName="religion"
+                                class="form-control form-control-sm"
+                                name="religion"
+                                id="religionId"
+                                [ngClass]="{ 'is-invalid': submitted && f['religion'].errors }"
+                            />
+                            <div *ngIf="submitted && f['religion'].errors" class="invalid-feedback">
+                                <div *ngIf="f['religion'].errors['required']">Religion is required</div>
+                                <div *ngIf="f['religion'].errors['minlength']">
+                                    Religion must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="nationality" class="font-semibold">Nationality</label>
+                            <input
+                                type="text"
+                                formControlName="nationality"
+                                class="form-control form-control-sm"
+                                name="nationality"
+                                id="nationalityId"
+                                [ngClass]="{ 'is-invalid': submitted && f['nationality'].errors }"
+                            />
+                            <div *ngIf="submitted && f['nationality'].errors" class="invalid-feedback">
+                                <div *ngIf="f['nationality'].errors['minlength']">
+                                    Nationality must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="occupation" class="font-semibold">Occupation</label>
+                            <input
+                                type="text"
+                                formControlName="occupation"
+                                class="form-control form-control-sm"
+                                name="occupation"
+                                id="occupationId"
+                                [ngClass]="{ 'is-invalid': submitted && f['occupation'].errors }"
+                            />
+                            <div *ngIf="submitted && f['occupation'].errors" class="invalid-feedback">
+                                <div *ngIf="f['occupation'].errors['minlength']">
+                                    Occupation must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-12">
+                            <label for="homeAddress" class="font-semibold"
+                                ><span class="astrk">&ast;</span>Home Address</label
+                            >
+                            <textarea
+                                name="homeAddress"
+                                formControlName="homeAddress"
+                                class="form-control form-control-sm"
+                                id="hmAddress"
+                                cols="20"
+                                rows="3"
+                                [ngClass]="{ 'is-invalid': submitted && f['homeAddress'].errors }"
+                            ></textarea>
+                            <div *ngIf="submitted && f['homeAddress'].errors" class="invalid-feedback">
+                                <div *ngIf="f['homeAddress'].errors['required']">Home Address is required</div>
+                                <div *ngIf="f['homeAddress'].errors['minlength']">
+                                    Home Address must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['homeAddress'].errors['maxlength']">
+                                    Home Address must be maximum of 255 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col">
+                            <label for="homeNumber" class="font-semibold">Home Number</label>
+                            <input
+                                type="text"
+                                formControlName="homeNumber"
+                                class="form-control form-control-sm"
+                                name="homeNumber"
+                                id="hnumber"
+                                [ngClass]="{ 'is-invalid': submitted && f['homeNumber'].errors }"
+                            />
+                            <div *ngIf="submitted && f['homeNumber'].errors" class="invalid-feedback">
+                                <div *ngIf="f['homeNumber'].errors['minlength']">
+                                    Home Number must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="officeNumber" class="font-semibold">Office Number</label>
+                            <input
+                                type="text"
+                                formControlName="officeNumber"
+                                class="form-control form-control-sm"
+                                name="officeNumber"
+                                id="onumber"
+                                [ngClass]="{ 'is-invalid': submitted && f['officeNumber'].errors }"
+                            />
+                            <div *ngIf="submitted && f['officeNumber'].errors" class="invalid-feedback">
+                                <div *ngIf="f['officeNumber'].errors['minlength']">
+                                    Office Number must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="cellNumber" class="font-semibold"
+                                ><span class="astrk">&ast;</span>Cell Number</label
+                            >
+                            <input
+                                type="text"
+                                formControlName="cellNumber"
+                                class="form-control form-control-sm"
+                                name="cellNumber"
+                                id="cnumber"
+                                [ngClass]="{ 'is-invalid': submitted && f['cellNumber'].errors }"
+                            />
+                            <div *ngIf="submitted && f['cellNumber'].errors" class="invalid-feedback">
+                                <div *ngIf="f['cellNumber'].errors['required']">Cell Number is required</div>
+                                <div *ngIf="f['cellNumber'].errors['minlength']">
+                                    Cell Number must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="faxNumber" class="font-semibold">Fax Number</label>
+                            <input
+                                type="text"
+                                formControlName="faxNumber"
+                                class="form-control form-control-sm"
+                                name="faxNumber"
+                                id="fnumber"
+                                [ngClass]="{ 'is-invalid': submitted && f['faxNumber'].errors }"
+                            />
+                            <div *ngIf="submitted && f['faxNumber'].errors" class="invalid-feedback">
+                                <div *ngIf="f['faxNumber'].errors['minlength']">
+                                    Fax Number must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col">
+                            <label for="emailAddress" class="font-semibold">Email Address</label>
+                            <input
+                                type="text"
+                                formControlName="emailAddress"
+                                class="form-control form-control-sm"
+                                name="emailAddress"
+                                id="eaddress"
+                                [ngClass]="{ 'is-invalid': submitted && f['emailAddress'].errors }"
+                            />
+                            <div *ngIf="submitted && f['emailAddress'].errors" class="invalid-feedback">
+                                <div *ngIf="f['emailAddress'].errors['email']">Email Address is invalid</div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="dentalInsurance" class="font-semibold">Dental Insurance</label>
+                            <input
+                                type="text"
+                                formControlName="dentalInsurance"
+                                class="form-control form-control-sm"
+                                name="dentalInsurance"
+                                id="dinsurance"
+                                [ngClass]="{ 'is-invalid': submitted && f['dentalInsurance'].errors }"
+                            />
+                            <div *ngIf="submitted && f['dentalInsurance'].errors" class="invalid-feedback">
+                                <div *ngIf="f['dentalInsurance'].errors['minlength']">
+                                    Dental Insurance must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="firstDentalVisit" class="font-semibold"
+                                ><span class="astrk">&ast;</span>First Dental Visit</label
+                            >
+                            <input
+                                type="date"
+                                formControlName="firstDentalVisit"
+                                class="form-control form-control-sm"
+                                name="firstDentalVisit"
+                                id="fdvisit"
+                                min="1990-01-01"
+                                max="{{ date | date : 'yyyy-MM-dd' }}"
+                                [ngClass]="{ 'is-invalid': submitted && f['firstDentalVisit'].errors }"
+                            />
+                            <div *ngIf="submitted && f['firstDentalVisit'].errors" class="invalid-feedback">
+                                <div *ngIf="f['firstDentalVisit'].errors['required']">
+                                    First Dental Visit is required
+                                </div>
+                                <div *ngIf="f['firstDentalVisit'].errors['minlength']">
+                                    First Dental Visit must be at least 2 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1 font-italic">Minors:</div>
+                <div class="col-6"><hr /></div>
+                <div class="col">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary btn-sm ms-3"
+                        data-bs-toggle="collapse"
+                        href="#collapseMinor"
+                    >
+                        Collapse
+                    </button>
+                </div>
+            </div>
+            <div class="grid collapse hide" id="collapseMinor">
+                <div class="col-11 col-offset-1">
+                    <div class="grid">
+                        <div class="col">
+                            <label for="parentsGuardian" class="font-semibold">Parents / Guardian</label>
+                            <input
+                                type="text"
+                                formControlName="parentsGuardian"
+                                class="form-control form-control-sm"
+                                name="parentsGuardian"
+                                id="pgname"
+                                [ngClass]="{ 'is-invalid': submitted && f['parentsGuardian'].errors }"
+                            />
+                            <div *ngIf="submitted && f['parentsGuardian'].errors" class="invalid-feedback">
+                                <div *ngIf="f['parentsGuardian'].errors['minlength']">
+                                    Parents or Guadian Name must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['parentsGuardian'].errors['maxlength']">
+                                    Parents or Guadian Name must be maximum of 255 characters
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <label for="parentsGuardianOccupation" class="font-semibold">Occupation</label>
+                            <input
+                                type="text"
+                                formControlName="parentsGuardianOccupation"
+                                class="form-control form-control-sm"
+                                name="parentsGuardianOccupation"
+                                id="pgoccupationId"
+                                [ngClass]="{ 'is-invalid': submitted && f['parentsGuardianOccupation'].errors }"
+                            />
+                            <div *ngIf="submitted && f['parentsGuardianOccupation'].errors" class="invalid-feedback">
+                                <div *ngIf="f['parentsGuardianOccupation'].errors['minlength']">
+                                    Parents or Guadian Occupation must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['parentsGuardianOccupation'].errors['maxlength']">
+                                    Parents or Guadian Occupation must be maximum of 255 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-6">
+                            <label for="referralName" class="font-semibold">Refferal Name</label>
+                            <input
+                                type="text"
+                                formControlName="referralName"
+                                class="form-control form-control-sm"
+                                name="referralName"
+                                id="refname"
+                                [ngClass]="{ 'is-invalid': submitted && f['referralName'].errors }"
+                            />
+                            <div *ngIf="submitted && f['referralName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['referralName'].errors['minlength']">
+                                    Refferal Name must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['referralName'].errors['maxlength']">
+                                    Refferal Name must be maximum of 255 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-8">
+                            <label for="reasonDentalConsultation" class="font-semibold"
+                                >Reason for Dental Consultation</label
+                            >
+                            <textarea
+                                name="reasonDentalConsultation"
+                                formControlName="reasonDentalConsultation"
+                                class="form-control form-control-sm"
+                                id="rdconsultation"
+                                cols="20"
+                                rows="2"
+                                [ngClass]="{ 'is-invalid': submitted && f['reasonDentalConsultation'].errors }"
+                                >{{ profileModel?.minor?.reasonDentalConsultation }}</textarea
+                            >
+                            <div *ngIf="submitted && f['reasonDentalConsultation'].errors" class="invalid-feedback">
+                                <div *ngIf="f['reasonDentalConsultation'].errors['minlength']">
+                                    Reason for Dental Consultation must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['reasonDentalConsultation'].errors['maxlength']">
+                                    Reason for Dental Consultation must be maximum of 255 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col mb-6"><button type="submit" class="btn btn-outline-primary btn-sm ms-3">Update</button></div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

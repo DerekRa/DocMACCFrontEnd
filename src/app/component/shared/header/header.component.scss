@@ -1,0 +1,33 @@
+@import "../../../../assets/styles/colors";
+
+header {
+  font-size: 18px;
+  nav {
+    background: $bgColor;
+    margin: 0 0 40px 0;
+    .dropdown:hover > .dropdown-menu {
+      display: block;
+    }
+    .dropdown:hover > .dropdown-item {
+      display: block;
+    }
+  }
+  .valign-center {
+    display: inline-flex;
+    align-items: center;
+  }
+  .menuFontStyle {
+    font-size: large;
+    font-weight: 300;
+    font-style: roboto;
+  }
+  .overflowLogout {
+    position: relative;
+    float: right;
+    height: 30px;
+    z-index: 999 !important;
+    position: relative;
+    background-color: aqua;
+    margin-top: 10px !important;
+  }
+}

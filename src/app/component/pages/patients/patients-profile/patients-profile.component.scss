@@ -1,0 +1,25 @@
+main {
+    padding-bottom: 40px;
+    .selectDisplay {
+        display: flex;
+    }
+    .symbol {
+        font-size: 15px;
+    }
+    table thead > tr > th.theadStyle {
+        text-align: center;
+        padding-bottom: 10px;
+    }
+    div.input-group-text.theadStyle {
+        font-weight: bold;
+        background-color: var(--bs-table-bg);
+    }
+    div.input-group-text.theadStyle:hover {
+        cursor: pointer;
+    }
+    .paginationStyle {
+        position: relative;
+        text-align: right;
+        font-size: 14px;
+    }
+}

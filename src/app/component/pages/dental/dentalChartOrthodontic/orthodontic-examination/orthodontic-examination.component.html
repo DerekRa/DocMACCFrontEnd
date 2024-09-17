@@ -1,0 +1,919 @@
+<app-header></app-header>
+<main>
+  <div class="container w-auto">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/dental-chart/orthodontic-examination"
+            >List of Patients</a
+          >
+        </li>
+        <li
+          class="breadcrumb-item"
+          [style.display]="recordAction == 'add-record' ? 'block' : 'none'"
+        >
+          <a
+            class="link-dark"
+            routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{
+              id
+            }}"
+            (click)="updateRecordActionToView()"
+          >
+            Orthodontic Examination
+          </a>
+        </li>
+        <li
+          class="breadcrumb-item"
+          [style.display]="recordAction == 'view-record' ? 'block' : 'none'"
+          aria-current="page"
+        >
+          Orthodontic Examination
+        </li>
+        <li
+          class="breadcrumb-item active"
+          [style.display]="recordAction == 'add-record' ? 'block' : 'none'"
+          aria-current="page"
+        >
+          Update
+        </li>
+      </ol>
+    </nav>
+    <!-- Name and Update Button -->
+    <div class="grid">
+      <div class="col-11 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+      <div class="col-1 text-xl">
+        <a
+          routerLink="/dental-records/dental-chart/orthodontic-examination/add-record/{{
+            id
+          }}"
+          routerLinkActive="activebutton"
+          ariaCurrentWhenActive="page"
+          (click)="updateRecordActionToUpdate()"
+          *ngIf="recordAction == 'view-record'; else updateRecord"
+          class="btn btn-outline-primary btn-sm"
+          tabindex="-1"
+          role="button"
+          aria-disabled="true"
+          >Update</a
+        >
+        <ng-template #updateRecord>
+          <a
+            routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{
+              id
+            }}"
+            (click)="updateRecordActionToView()"
+            class="btn btn-outline-primary btn-sm"
+          >
+            <div class="valign-center">
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Arrow left icon"
+                fontIcon="arrow_back"
+              ></mat-icon>
+              &nbsp;Back
+            </div>
+          </a>
+        </ng-template>
+      </div>
+    </div>
+    <!-- Orthodontic Tooth Chart Table -->
+    <div class="grid">
+      <div class="col-12">
+        <div class="row justify-content-md-center overflowTableClass">
+          <div style="width: 100%">
+            <table class="table">
+              <tr>
+                <td>
+                  <form
+                    [formGroup]="formBracketPrescription"
+                    (ngSubmit)="onSubmitBracketPrescription()"
+                  >
+                    <div class="row -mb-2">
+                      <label for="bracketPrescriptionId" class="col-sm-2"
+                        >Bracket Prescription:</label
+                      >
+                      <div
+                        *ngIf="
+                          submittedBracketPrescription;
+                          else updateBracketPrescription
+                        "
+                        class="col-sm-5 -ml-7 mb-2"
+                      >
+                        <span *ngIf="bracketPrescription?.values">
+                          {{ bracketPrescription?.values }}
+                          <a
+                            routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{
+                              id
+                            }}/bracket-prescription-history"
+                            routerLinkActive="activebutton"
+                            ariaCurrentWhenActive="page"
+                            class="btn btn-outline-primary btn-sm btn-xs -mt-1 -mb-1"
+                            tabindex="-1"
+                            role="button"
+                            aria-disabled="true"
+                            >History</a
+                          >
+                        </span>
+                      </div>
+                      <ng-template #updateBracketPrescription>
+                        <div class="col-sm-5 -ml-7 -mt-1">
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="bracketPrescription"
+                            name="bracketPrescription"
+                            id="bracketPrescriptionId"
+                            placeholder="Type Bracket Prescription here..."
+                          />
+                        </div>
+                        <div class="col-sm-1 -ml-3">
+                          <button
+                            type="submit"
+                            class="btn btn-outline-primary btn-sm -mt-1"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <form
+                    [formGroup]="formMaxillaryWireType"
+                    (ngSubmit)="onSubmitMaxillaryWireType()"
+                  >
+                    <div class="row -mb-3">
+                      <label for="maxillaryWireTypeId" class="col-sm-2 -mb-1"
+                        >Maxillary (Wire Type):</label
+                      >
+                      <div
+                        *ngIf="submittedMaxillary; else updateMaxillaryWireType"
+                        class="col-sm-5 -ml-7"
+                      >
+                        <span class="-mb-5" *ngIf="maxillaryWireType?.values">
+                          {{ maxillaryWireType?.values }}
+                          <a
+                            routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{
+                              id
+                            }}/maxillary-wire-type-history"
+                            routerLinkActive="activebutton"
+                            ariaCurrentWhenActive="page"
+                            class="btn btn-outline-primary btn-sm btn-xs"
+                            tabindex="-1"
+                            role="button"
+                            aria-disabled="true"
+                            >History</a
+                          >
+                        </span>
+                      </div>
+                      <ng-template #updateMaxillaryWireType>
+                        <div class="col-sm-5 -ml-7 -mt-1">
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="maxillaryWireType"
+                            name="maxillaryWireType"
+                            id="maxillaryWireTypeId"
+                            placeholder="Type Maxillary (Wire Type) here..."
+                          />
+                        </div>
+                        <div class="col-sm-1 -ml-3">
+                          <button
+                            type="submit"
+                            class="btn btn-outline-primary btn-sm -mt-1"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="row justify-content-md-center">
+                    <div class="col-12 align-middle">
+                      <table class="table table-sm table-bordered mb-0">
+                        <tr class="text-center">
+                          <td
+                            [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                            *ngFor="
+                              let imagesTempRightTopCenter of imageDetailsPermaRightTopCenter;
+                              let i = index
+                            "
+                          >
+                            <img
+                              *ngIf="
+                                recordAction == 'add-record';
+                                else viewAction
+                              "
+                              src="{{ addTeethLink }}"
+                              alt="Add"
+                              class="addImage"
+                              [width]="widthAddImage"
+                              [height]="heightAddImage"
+                              (click)="
+                                addUpdateOrthodonticExam(
+                                  imagesTempRightTopCenter.teethNumbering
+                                )
+                              "
+                            />
+                            <ng-template #viewAction>
+                              <img
+                                src="{{
+                                  imagesTempRightTopCenter.teethImageLink
+                                }}"
+                                alt=""
+                                [width]="widthImage"
+                                [height]="heightImage"
+                                (click)="
+                                  teethHistory(
+                                    imagesTempRightTopCenter.teethNumbering
+                                  )
+                                "
+                              />
+                            </ng-template>
+                          </td>
+                          <td
+                            class="bdrall"
+                            *ngFor="
+                              let imagesTempLeftTopCenter of imageDetailsPermaLeftTopCenter
+                            "
+                          >
+                            <img
+                              *ngIf="
+                                recordAction == 'add-record';
+                                else viewAction
+                              "
+                              src="{{ addTeethLink }}"
+                              alt="Add"
+                              class="addImage"
+                              [width]="widthAddImage"
+                              [height]="heightAddImage"
+                              (click)="
+                                addUpdateOrthodonticExam(
+                                  imagesTempLeftTopCenter.teethNumbering
+                                )
+                              "
+                            />
+                            <ng-template #viewAction>
+                              <img
+                                src="{{
+                                  imagesTempLeftTopCenter.teethImageLink
+                                }}"
+                                alt=""
+                                [width]="widthImage"
+                                [height]="heightImage"
+                                (click)="
+                                  teethHistory(
+                                    imagesTempLeftTopCenter.teethNumbering
+                                  )
+                                "
+                              />
+                            </ng-template>
+                          </td>
+                        </tr>
+                        <tr class="text-center">
+                          <td
+                            [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                            *ngFor="
+                              let imagesPermaRightTopCenter of imageDetailsPermaRightTopCenter;
+                              let i = index
+                            "
+                            [style]="
+                              'background-color: ' +
+                              imagesPermaRightTopCenter?.toothBackgroundValue
+                                ?.secondRow
+                            "
+                          >
+                            <img
+                              *ngIf="
+                                recordAction == 'add-record';
+                                else viewAction
+                              "
+                              src="{{ addTeethLink }}"
+                              alt="Add"
+                              class="addImage"
+                              [width]="widthAddImage"
+                              [height]="heightAddImage"
+                              (click)="
+                                addUpdateOrthodonticExam(
+                                  imagesPermaRightTopCenter.teethNumbering
+                                )
+                              "
+                            />
+                            <ng-template #viewAction>
+                              <img
+                                src="{{
+                                  imagesPermaRightTopCenter.teethImageLink
+                                }}"
+                                alt=""
+                                [width]="widthBigImage"
+                                [height]="heightBigImage"
+                                (click)="
+                                  teethRecentHistory(
+                                    imagesPermaRightTopCenter.teethNumbering
+                                  )
+                                "
+                              />
+                            </ng-template>
+                          </td>
+                          <td
+                            class="bdrall"
+                            *ngFor="
+                              let imagesPermaLeftTopCenter of imageDetailsPermaLeftTopCenter
+                            "
+                            [style]="
+                              'background-color: ' +
+                              imagesPermaLeftTopCenter?.toothBackgroundValue
+                                ?.secondRow
+                            "
+                          >
+                            <img
+                              *ngIf="
+                                recordAction == 'add-record';
+                                else viewAction
+                              "
+                              src="{{ addTeethLink }}"
+                              alt="Add"
+                              class="addImage"
+                              [width]="widthAddImage"
+                              [height]="heightAddImage"
+                              (click)="
+                                addUpdateOrthodonticExam(
+                                  imagesPermaLeftTopCenter.teethNumbering
+                                )
+                              "
+                            />
+                            <ng-template #viewAction>
+                              <img
+                                src="{{
+                                  imagesPermaLeftTopCenter.teethImageLink
+                                }}"
+                                alt=""
+                                [width]="widthBigImage"
+                                [height]="heightBigImage"
+                                (click)="
+                                  teethRecentHistory(
+                                    imagesPermaLeftTopCenter.teethNumbering
+                                  )
+                                "
+                              />
+                            </ng-template>
+                          </td>
+                        </tr>
+                        <tr class="text-center">
+                          <td
+                            [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                            *ngFor="
+                              let imagesPermaRightTopCenter of imageDetailsPermaRightTopCenter;
+                              let i = index
+                            "
+                            (mouseenter)="
+                              displayCondition(
+                                imagesPermaRightTopCenter.teethNumbering
+                              )
+                            "
+                          >
+                            <button
+                              mat-raised-button
+                              matTooltip="{{ teethNumber }}"
+                            >
+                              {{ imagesPermaRightTopCenter.teethNumbering }}
+                            </button>
+                          </td>
+                          <td
+                            class="bdrall"
+                            *ngFor="
+                              let imagesPermaLeftTopCenter of imageDetailsPermaLeftTopCenter
+                            "
+                            (mouseenter)="
+                              displayCondition(
+                                imagesPermaLeftTopCenter.teethNumbering
+                              )
+                            "
+                          >
+                            <button
+                              mat-raised-button
+                              matTooltip="{{ teethNumber }}"
+                            >
+                              {{ imagesPermaLeftTopCenter.teethNumbering }}
+                            </button>
+                          </td>
+                        </tr>
+                        <tr class="text-center">
+                          <td
+                            [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                            *ngFor="
+                              let imagesPermaRightTopCenter of imageDetailsPermaRightTopCenter;
+                              let i = index
+                            "
+                            [style]="
+                              'background-color: ' +
+                              imagesPermaRightTopCenter?.toothBackgroundValue
+                                ?.forthRow
+                            "
+                          >
+                            <div
+                              [style]="
+                                'box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2), 0 4px 17px 0 rgba(69, 68, 68, 0.2);' +
+                                'border-top:' +
+                                imagesPermaRightTopCenter?.toothSurfaceValue
+                                  ?.top +
+                                ' 12px solid;' +
+                                'border-top-right-radius: 50%;' +
+                                'border-left:' +
+                                imagesPermaRightTopCenter?.toothSurfaceValue
+                                  ?.left +
+                                ' 12px solid;' +
+                                'border-top-left-radius: 50%;' +
+                                'border-bottom:' +
+                                imagesPermaRightTopCenter?.toothSurfaceValue
+                                  ?.bottom +
+                                ' 12px solid;' +
+                                'border-bottom-right-radius: 50%;' +
+                                'border-right:' +
+                                imagesPermaRightTopCenter?.toothSurfaceValue
+                                  ?.right +
+                                ' 12px solid;' +
+                                'border-bottom-left-radius: 50%;' +
+                                'background-color: ' +
+                                imagesPermaRightTopCenter?.toothSurfaceValue
+                                  ?.center +
+                                ';margin: 3px; width: 42px; height: 42px; margin-left: auto; margin-right: auto;'
+                              "
+                              class="pizza-{{
+                                imagesPermaRightTopCenter.teethNumbering
+                              }}"
+                            >
+                              &nbsp;
+                            </div>
+                          </td>
+                          <td
+                            class="bdrall"
+                            *ngFor="
+                              let imagesPermaLeftTopCenter of imageDetailsPermaLeftTopCenter
+                            "
+                            [style]="
+                              'background-color: ' +
+                              imagesPermaLeftTopCenter?.toothBackgroundValue
+                                ?.forthRow
+                            "
+                          >
+                            <div
+                              [style]="
+                                'box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2), 0 4px 17px 0 rgba(69, 68, 68, 0.2);' +
+                                'border-top:' +
+                                imagesPermaLeftTopCenter?.toothSurfaceValue
+                                  ?.top +
+                                ' 12px solid;' +
+                                'border-top-right-radius: 50%;' +
+                                'border-left:' +
+                                imagesPermaLeftTopCenter?.toothSurfaceValue
+                                  ?.left +
+                                ' 12px solid;' +
+                                'border-top-left-radius: 50%;' +
+                                'border-bottom:' +
+                                imagesPermaLeftTopCenter?.toothSurfaceValue
+                                  ?.bottom +
+                                ' 12px solid;' +
+                                'border-bottom-right-radius: 50%;' +
+                                'border-right:' +
+                                imagesPermaLeftTopCenter?.toothSurfaceValue
+                                  ?.right +
+                                ' 12px solid;' +
+                                'border-bottom-left-radius: 50%;' +
+                                'background-color: ' +
+                                imagesPermaLeftTopCenter?.toothSurfaceValue
+                                  ?.center +
+                                ';margin: 3px; width: 42px; height: 42px; margin-left: auto; margin-right: auto;'
+                              "
+                              class="pizza-{{
+                                imagesPermaLeftTopCenter.teethNumbering
+                              }}"
+                            >
+                              &nbsp;
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <form
+                    [formGroup]="formMandibularWireType"
+                    (ngSubmit)="onSubmitMandibularWireType()"
+                  >
+                    <div class="row -mb-2">
+                      <label for="mandibularWireTypeId" class="col-sm-2"
+                        >Mandibular (Wire Type):</label
+                      >
+                      <div
+                        *ngIf="
+                          submittedMandibular;
+                          else updateMandibularWireType
+                        "
+                        class="col-sm-5 -ml-6 -mt-1"
+                      >
+                        <span *ngIf="mandibularWireType?.values">
+                          {{ mandibularWireType?.values }}
+                          <a
+                            routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{
+                              id
+                            }}/mandibular-wire-type-history"
+                            routerLinkActive="activebutton"
+                            ariaCurrentWhenActive="page"
+                            class="btn btn-outline-primary btn-sm btn-xs"
+                            tabindex="-1"
+                            role="button"
+                            aria-disabled="true"
+                            >History</a
+                          >
+                        </span>
+                      </div>
+                      <ng-template #updateMandibularWireType>
+                        <div class="col-sm-5 -ml-6 -mt-1">
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            formControlName="mandibularWireType"
+                            name="mandibularWireType"
+                            id="mandibularWireTypeId"
+                            placeholder="Type Mandibular (Wire Type) here..."
+                          />
+                        </div>
+                        <div class="col-sm-1 -ml-3">
+                          <button
+                            type="submit"
+                            class="btn btn-outline-primary btn-sm -mt-1"
+                          >
+                            Save
+                          </button>
+                        </div>
+                      </ng-template>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="col-12 align-middle">
+                    <table class="table table-sm table-bordered mb-0">
+                      <tr class="text-center">
+                        <td
+                          [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                          *ngFor="
+                            let imagesTempRightBottomCenter of imageDetailsPermaRightBottomCenter;
+                            let i = index
+                          "
+                        >
+                          <img
+                            *ngIf="
+                              recordAction == 'add-record';
+                              else viewAction
+                            "
+                            src="{{ addTeethLink }}"
+                            alt="Add"
+                            class="addImage"
+                            [width]="widthAddImage"
+                            [height]="heightAddImage"
+                            (click)="
+                              addUpdateOrthodonticExam(
+                                imagesTempRightBottomCenter.teethNumbering
+                              )
+                            "
+                          />
+                          <ng-template #viewAction>
+                            <img
+                              src="{{
+                                imagesTempRightBottomCenter.teethImageLink
+                              }}"
+                              alt=""
+                              [width]="widthBigImage"
+                              [height]="heightBigImage"
+                              (click)="
+                                teethHistory(
+                                  imagesTempRightBottomCenter.teethNumbering
+                                )
+                              "
+                            />
+                          </ng-template>
+                        </td>
+                        <td
+                          class="bdrall"
+                          *ngFor="
+                            let imagesTempLeftBottomCenter of imageDetailsPermaLeftBottomCenter
+                          "
+                        >
+                          <img
+                            *ngIf="
+                              recordAction == 'add-record';
+                              else viewAction
+                            "
+                            src="{{ addTeethLink }}"
+                            alt="Add"
+                            class="addImage"
+                            [width]="widthAddImage"
+                            [height]="heightAddImage"
+                            (click)="
+                              addUpdateOrthodonticExam(
+                                imagesTempLeftBottomCenter.teethNumbering
+                              )
+                            "
+                          />
+                          <ng-template #viewAction>
+                            <img
+                              src="{{
+                                imagesTempLeftBottomCenter.teethImageLink
+                              }}"
+                              alt=""
+                              [width]="widthBigImage"
+                              [height]="heightBigImage"
+                              (click)="
+                                teethHistory(
+                                  imagesTempLeftBottomCenter.teethNumbering
+                                )
+                              "
+                            />
+                          </ng-template>
+                        </td>
+                      </tr>
+                      <tr class="text-center">
+                        <td
+                          [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                          *ngFor="
+                            let imagesTempRightBottomCenter of imageDetailsPermaRightBottomCenter;
+                            let i = index
+                          "
+                          [style]="
+                            'background-color: ' +
+                            imagesTempRightBottomCenter?.toothBackgroundValue
+                              ?.secondRow
+                          "
+                        >
+                          <img
+                            *ngIf="
+                              recordAction == 'add-record';
+                              else viewAction
+                            "
+                            src="{{ addTeethLink }}"
+                            alt="Add"
+                            class="addImage"
+                            [width]="widthAddImage"
+                            [height]="heightAddImage"
+                            (click)="
+                              addUpdateOrthodonticExam(
+                                imagesTempRightBottomCenter.teethNumbering
+                              )
+                            "
+                          />
+                          <ng-template #viewAction>
+                            <img
+                              src="{{
+                                imagesTempRightBottomCenter.teethImageLink
+                              }}"
+                              alt=""
+                              [width]="widthImage"
+                              [height]="heightImage"
+                              (click)="
+                                teethRecentHistory(
+                                  imagesTempRightBottomCenter.teethNumbering
+                                )
+                              "
+                            />
+                          </ng-template>
+                        </td>
+                        <td
+                          class="bdrall"
+                          *ngFor="
+                            let imagesTempLeftBottomCenter of imageDetailsPermaLeftBottomCenter
+                          "
+                          [style]="
+                            'background-color: ' +
+                            imagesTempLeftBottomCenter?.toothBackgroundValue
+                              ?.secondRow
+                          "
+                        >
+                          <img
+                            *ngIf="
+                              recordAction == 'add-record';
+                              else viewAction
+                            "
+                            src="{{ addTeethLink }}"
+                            alt="Add"
+                            class="addImage"
+                            [width]="widthAddImage"
+                            [height]="heightAddImage"
+                            (click)="
+                              addUpdateOrthodonticExam(
+                                imagesTempLeftBottomCenter.teethNumbering
+                              )
+                            "
+                          />
+                          <ng-template #viewAction>
+                            <img
+                              src="{{
+                                imagesTempLeftBottomCenter.teethImageLink
+                              }}"
+                              alt=""
+                              [width]="widthImage"
+                              [height]="heightImage"
+                              (click)="
+                                teethRecentHistory(
+                                  imagesTempLeftBottomCenter.teethNumbering
+                                )
+                              "
+                            />
+                          </ng-template>
+                        </td>
+                      </tr>
+                      <tr class="text-center">
+                        <td
+                          [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                          *ngFor="
+                            let imagesTempRightBottomCenter of imageDetailsPermaRightBottomCenter;
+                            let i = index
+                          "
+                          (mouseenter)="
+                            displayCondition(
+                              imagesTempRightBottomCenter.teethNumbering
+                            )
+                          "
+                        >
+                          <button
+                            mat-raised-button
+                            matTooltip="{{ teethNumber }}"
+                          >
+                            {{ imagesTempRightBottomCenter.teethNumbering }}
+                          </button>
+                        </td>
+                        <td
+                          class="bdrall"
+                          *ngFor="
+                            let imagesTempLeftBottomCenter of imageDetailsPermaLeftBottomCenter
+                          "
+                          (mouseenter)="
+                            displayCondition(
+                              imagesTempLeftBottomCenter.teethNumbering
+                            )
+                          "
+                        >
+                          <button
+                            mat-raised-button
+                            matTooltip="{{ teethNumber }}"
+                          >
+                            {{ imagesTempLeftBottomCenter.teethNumbering }}
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="text-center">
+                        <td
+                          [ngClass]="i < 7 ? 'bdrall' : 'bdrupdwn bdrend'"
+                          *ngFor="
+                            let imagesTempRightBottomCenter of imageDetailsPermaRightBottomCenter;
+                            let i = index
+                          "
+                          [style]="
+                            'background-color: ' +
+                            imagesTempRightBottomCenter?.toothBackgroundValue
+                              ?.forthRow
+                          "
+                        >
+                          <div
+                            [style]="
+                              'box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2), 0 4px 17px 0 rgba(69, 68, 68, 0.2);' +
+                              'border-top:' +
+                              imagesTempRightBottomCenter?.toothSurfaceValue
+                                ?.top +
+                              ' 12px solid;' +
+                              'border-top-right-radius: 50%;' +
+                              'border-left:' +
+                              imagesTempRightBottomCenter?.toothSurfaceValue
+                                ?.left +
+                              ' 12px solid;' +
+                              'border-top-left-radius: 50%;' +
+                              'border-bottom:' +
+                              imagesTempRightBottomCenter?.toothSurfaceValue
+                                ?.bottom +
+                              ' 12px solid;' +
+                              'border-bottom-right-radius: 50%;' +
+                              'border-right:' +
+                              imagesTempRightBottomCenter?.toothSurfaceValue
+                                ?.right +
+                              ' 12px solid;' +
+                              'border-bottom-left-radius: 50%;' +
+                              'background-color: ' +
+                              imagesTempRightBottomCenter?.toothSurfaceValue
+                                ?.center +
+                              ';margin: 3px; width: 42px; height: 42px; margin-left: auto; margin-right: auto;'
+                            "
+                            class="pizza-{{
+                              imagesTempRightBottomCenter.teethNumbering
+                            }}"
+                          >
+                            &nbsp;
+                          </div>
+                        </td>
+                        <td
+                          class="bdrall"
+                          *ngFor="
+                            let imagesTempLeftBottomCenter of imageDetailsPermaLeftBottomCenter
+                          "
+                          [style]="
+                            'background-color: ' +
+                            imagesTempLeftBottomCenter?.toothBackgroundValue
+                              ?.forthRow
+                          "
+                        >
+                          <div
+                            [style]="
+                              'box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2), 0 4px 17px 0 rgba(69, 68, 68, 0.2);' +
+                              'border-top:' +
+                              imagesTempLeftBottomCenter?.toothSurfaceValue
+                                ?.top +
+                              ' 12px solid;' +
+                              'border-top-right-radius: 50%;' +
+                              'border-left:' +
+                              imagesTempLeftBottomCenter?.toothSurfaceValue
+                                ?.left +
+                              ' 12px solid;' +
+                              'border-top-left-radius: 50%;' +
+                              'border-bottom:' +
+                              imagesTempLeftBottomCenter?.toothSurfaceValue
+                                ?.bottom +
+                              ' 12px solid;' +
+                              'border-bottom-right-radius: 50%;' +
+                              'border-right:' +
+                              imagesTempLeftBottomCenter?.toothSurfaceValue
+                                ?.right +
+                              ' 12px solid;' +
+                              'border-bottom-left-radius: 50%;' +
+                              'background-color: ' +
+                              imagesTempLeftBottomCenter?.toothSurfaceValue
+                                ?.center +
+                              ';margin: 3px; width: 42px; height: 42px; margin-left: auto; margin-right: auto;'
+                            "
+                            class="pizza-{{
+                              imagesTempLeftBottomCenter.teethNumbering
+                            }}"
+                          >
+                            &nbsp;
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Line -->
+    <div class="grid">
+      <div class="col">
+        <hr />
+      </div>
+    </div>
+    <!-- Child Xray Taken Display -->
+    <app-xray-taken-display
+      [profileData]="profileModel"
+      [recordData]="recordAction"
+      [idData]="id"
+      [examTypeData]="examType"
+      [examUrlData]="examUrl"
+    ></app-xray-taken-display>
+    <!-- Line -->
+    <div class="grid">
+      <div class="col">
+        <hr />
+      </div>
+    </div>
+    <!-- Periodontal Screening, Occlusion, Appliances, TMD -->
+    <app-pre-requisites
+      [recordData]="recordAction"
+      [idData]="id"
+      [examUrlData]="examUrl"
+    ></app-pre-requisites>
+  </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,78 @@
+main {
+    padding-bottom: 40px;
+    .astrk {
+        color: rgba($color: #f03535, $alpha: 1);
+    }
+    .vl {
+        border-left: 4px solid rgb(129, 126, 126);
+        height: 40px;
+        left: 80%;
+        margin-left: 33px;
+        margin-right: -53px;
+        top: 0;
+        border-radius: 5%;
+    }
+    .alert {
+        margin: auto;
+        position: absolute;
+        top: 110px;
+        left: 30px;
+    }
+    .invalid-feedback-data {
+        color: #dc3545;
+        // font-size: 0.875em;
+    }
+    .invalid-feedback-data-label {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .invalid-feedback-data input[type='checkbox'] {
+        border-color: red;
+    }
+    .checkboxClass {
+        margin-bottom: -8px;
+        //padding-bottom: -130px;
+    }
+    .form-check-label {
+        margin-bottom: -3px;
+    }
+    
+    .dp-input {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+        line-height: 1.5;
+        background: rgb(238, 238, 238);
+        border: 1px solid #d1d1d1;
+        border-radius: 3px 0px 0px 3px;
+      }
+      
+    .dp-group {
+        position: relative;
+        display: -ms-flexbox;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        width: 100%;
+      }
+      
+    .dp-button {
+        cursor: pointer;
+        margin-left: 0px;
+        display: inline-block;
+        text-align: center;
+        vertical-align: middle;
+        user-select: none;
+        background-color: transparent;
+        border: 1px solid #d1d1d1;
+        border-left: 0px;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        box-shadow: 1px 1px 2px 0px #EEE;
+        border-radius: 0px 3px 3px 0px;
+      }
+
+    .inputGroupDOP{
+        background: rgb(238, 238, 238);
+      }
+}

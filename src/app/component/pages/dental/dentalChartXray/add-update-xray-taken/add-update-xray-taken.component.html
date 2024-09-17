@@ -1,0 +1,83 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/intraoral-examination"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        class="link-dark"
+                        routerLink="/dental-records/dental-chart/{{dentalChart}}/add-record/{{ id }}"
+                        >{{examType}}</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        class="link-dark"
+                        routerLink="/dental-records/dental-chart/xray-taken/{{dentalChart}}/{{labelName}}/{{ id }}"
+                        >Xray Taken {{labelName}}</a
+                    >
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{action}}</li>
+            </ol>
+        </nav>
+        <div class="grid">
+            <div class="col-11 offset-md-1 -mb-4">
+                <h4>
+                    Upload {{labelName}} <span class="fw-lighter fst-italic">(.jpg, .png)</span>
+                </h4>
+            </div>
+            <div class=" col-11 -mb-3 offset-md-1">
+                <span class="fw-lighter fst-italic">Draft Image/s</span>
+            </div>
+            <div class="col-11 offset-md-1">
+                <ngx-dropzone (change)="onFileChange($event)">
+                    <ngx-dropzone-label>Drag/Drop image/s to be uploaded here..</ngx-dropzone-label>
+                    <ngx-dropzone-preview *ngFor="let item of pictures" [removable]="true" (removed)="onRemove(item)">
+                        <ngx-dropzone-label>
+                            <!-- Progress Bar -->
+                            <div class="progress form-group" *ngIf="uploadProgress > 0">
+                                <div
+                                    class="progress-bar progress-bar-striped bg-success"
+                                    role="progressbar"
+                                    [style.width.%]="uploadProgress"
+                                ></div>
+                            </div>
+                            <img src="{{ item }}" class="img-thumbnail" height="240px" width="240px" alt="..."
+                        /></ngx-dropzone-label>
+                    </ngx-dropzone-preview>
+                </ngx-dropzone>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="col-2 offset-md-1 d-flex align-items-center justify-content-center"><label for="remarksId">Remarks</label></div>
+            <div class="col-9"><textarea
+                [name]="remarks"
+                [(ngModel)] = "remarks"
+                class="form-control form-control-sm"
+                id="remarksId"
+                cols="20"
+                rows="3"
+            ></textarea></div>
+        </div>
+        <div class="grid">
+            <div class="offset-md-1 col-1">
+                <button
+                    type="button"
+                    id="saveFiles"
+                    class="btn btn-outline-primary btn-sm ms-3"
+                    (click)="onSaveFiles()"
+                    [disabled]="saveFiles"
+                >
+                    Save
+                </button>
+            </div>
+        </div>
+        <div class="grid"><div class="col">&nbsp;</div></div>
+    </div>
+</main>

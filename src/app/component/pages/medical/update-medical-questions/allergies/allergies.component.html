@@ -1,0 +1,13 @@
+<div [formGroup]="form">
+    <div *ngFor="let listOfAllergy of listOfAllAllergies.controls; let i = index">
+        <div class="field-checkbox">
+            <input
+                type="checkbox"
+                [value]="listOfAllergy.value.value"
+                [checked]="listOfAllergy.value.checked"
+                (change)="onCheckboxChangeAllergies($event)"
+            />
+            <label>{{ listOfAllergy.value.name }}</label>
+        </div>
+    </div>
+</div>

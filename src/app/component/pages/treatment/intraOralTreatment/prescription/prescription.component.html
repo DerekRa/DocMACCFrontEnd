@@ -1,0 +1,314 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral/{{ id }}"
+            >Intraoral Treatment List</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Prescription</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-9 text-xl">
+        <span class="mb-1">
+          {{
+            profileModel?.name?.lastName +
+              " " +
+              profileModel?.name?.middleName +
+              ", " +
+              profileModel?.name?.firstName
+          }}
+        </span>
+      </div>
+      <div class="col-auto mb-1 ms-auto">
+        <button
+          class="btn btn-outline-dark btn-sm mb-2"
+          type="button"
+          (click)="printPDFPrescription()"
+        >
+          <div class="valign-center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Print icon"
+              fontIcon="print"
+            ></mat-icon>
+            &nbsp;Print
+          </div></button
+        >&nbsp;
+        <button
+          class="btn btn-outline-dark btn-sm mb-2"
+          type="button"
+          routerLink="/dental-records/treatment-plan/prescription/{{ id }}/{{
+            dateOfProcedure
+          }}/Add"
+        >
+          Add (Blank)</button
+        >&nbsp;
+        <button
+          class="btn btn-outline-dark btn-sm mb-2 mr-2"
+          type="button"
+          routerLink="/dental-records/treatment-plan/prescription/{{ id }}/{{
+            dateOfProcedure
+          }}/Add-Auto"
+        >
+          Add (Auto)
+        </button>
+      </div>
+    </div>
+    <!-- Show per page And Search All -->
+    <div class="grid -mb-1">
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Show per page:&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-1 -mb-1">
+        <select
+          class="form-select form-select-sm mb-1"
+          (change)="onChangeShowPage($event)"
+          style="width: auto"
+        >
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      <div class="col text-center">
+        <span
+          >Date of Procedure :
+          {{ dateOfProcedure | date : "MMMM d, yyyy" }}</span
+        >
+      </div>
+      <div class="col-auto">
+        <input
+          class="form-control-sm mr-2"
+          type="text"
+          (keyup)="onChangeSearchAll($event)"
+          placeholder="Search type here.."
+        />
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="grid">
+      <div class="col">
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr class="table-primary">
+              <th scope="col">
+                <div class="input-group">
+                  <div class="input-group-text theadStyle">Actions</div>
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Brand Name
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Brand Name type here.."
+                    (keyup)="onChangeBrandName($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Generic Name
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Generic Name type here.."
+                    (keyup)="onChangeGenericName($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Disp.
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Dispense type here.."
+                    (keyup)="onChangeDispense($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Dosage
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Dosage type here.."
+                    (keyup)="onChangeDosage($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Remarks
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Remarks type here.."
+                    (keyup)="onChangeRemarks($event)"
+                  />
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            *ngFor="
+              let prescription of prescriptionData
+                | paginate
+                  : {
+                      itemsPerPage: paginationSize,
+                      currentPage: pageNoDisplay,
+                      totalItems: paginationTotalItems
+                    }
+            "
+          >
+            <tr>
+              <td class="fitWidth">
+                <button
+                  (click)="updateRemovePrescription(prescription)"
+                  class="btn btn-outline-danger btn-sm ml-1"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModalToggle"
+                >
+                  Delete
+                </button>
+              </td>
+              <td [width]="260">{{ prescription?.brandName }}</td>
+              <td [width]="300">{{ prescription?.genericName }}</td>
+              <td [width]="120">{{ prescription?.dispense }}</td>
+              <td [width]="150">{{ prescription?.dosage }}</td>
+              <td>{{ prescription?.remarks }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Total and Pagination -->
+    <div class="grid">
+      <div class="col -mt-3">
+        <label>Total items: {{ paginationTotalItems }}</label>
+      </div>
+      <div class="col-auto">
+        <div class="paginationStyle -mt-2 align-items-end">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [responsive]="true"
+            (pageChange)="handlePageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+    <!-- Delete Modal -->
+    <div
+      class="modal"
+      id="deleteModalToggle"
+      tabindex="-1"
+      aria-labelledby="deleteModalToggleLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title lbltext" id="deleteModalToggleLabel">
+              Are you sure?
+            </p>
+            <button
+              type="button"
+              class="btn-close btn-sm"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-1">Note:</div>
+                <div class="col-md-10 text-center">
+                  This action will <span class="fw-bold">remove</span> data
+                  pertaining to <br />
+                  <span class="fst-italic text-decoration-underline"
+                    >{{
+                      prescriptionDataToRemove?.brandName +
+                        " - " +
+                        prescriptionDataToRemove?.genericName +
+                        " - " +
+                        prescriptionDataToRemove?.dosage
+                    }}.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm me-3"
+                (click)="removePrescription()"
+                data-bs-dismiss="modal"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

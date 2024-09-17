@@ -1,0 +1,134 @@
+main {
+    padding-bottom: 40px;
+    .astrk {
+        color: rgba($color: #f03535, $alpha: 1);
+    }
+    .alert {
+        margin: auto;
+        position: absolute;
+        top: 110px;
+        left: 30px;
+    }
+    .invalid-feedback-data {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+    .checkboxClass {
+        margin-bottom: -8px;
+        //padding-bottom: -130px;
+    }
+    .form-check-label {
+        margin-bottom: -3px;
+    }
+    .astrk {
+        color: red;
+    }
+    .lbltext {
+        font-size: 1.425rem;
+    }
+    // .vertline {
+    //     background: url('assets/brand/vertical-line-svgrepo-com.svg');
+    //     background-repeat: repeat;
+    //     background-position: center center;
+    //     background-size: 100% 3%, auto;
+    //     padding-bottom: -50px !important;
+    // }
+    .txtorient {
+        text-orientation: revert-layer;
+        writing-mode: vertical-rl;
+        margin-top: 350px;
+        margin-left: -60px !important;
+    }
+    td.bdrend {
+        border-right: 3px solid black;
+        padding: 5px 5px;
+        height: 37px;
+        // background-color: #dc3545;
+    }
+    td.bdrend .addImage {
+        opacity: 0.5;
+    }
+    td.bdrall {
+        border: 1px solid rgb(248, 242, 242);
+        height: 37px;
+        padding: 5px 5px;
+        // background-color: #dc3545;
+    }
+    td.bdrall .addImage {
+        opacity: 0.5;
+    }
+    td.bdrupdwn {
+        border-top: 1px solid rgb(248, 242, 242);
+        border-bottom: 1px solid rgb(248, 242, 242);
+        height: 37px;
+    }
+    input.floatingInput {
+        outline: 0;
+        border-width: 0 0 2px;
+        border-color: black;
+        border-bottom-left-radius: 1px;
+        border-bottom-right-radius: 1px;
+    }
+    input.floatingInput:focus {
+        border-color: green;
+    }
+    .lblfnt {
+        font-size: 0.756rem;
+        font-weight: 600;
+    }
+    .overflowHideTableClass {
+        overflow: hidden;
+    }
+    .overflowTableClass {
+        overflow: auto;
+        overscroll-behavior: contain;
+    }
+    .txtTopAlignRight {
+        margin-top: auto;
+        margin-bottom: 5%;
+        text-align: right;
+    }
+    .txtTopAlignLeft {
+        margin-top: auto;
+        margin-bottom: 5%;
+        text-align: left;
+    }
+    .txtBottomAlignRight {
+        margin-top: auto;
+        margin-bottom: 12%;
+        text-align: right;
+    }
+    .txtBottomAlignLeft {
+        margin-top: auto;
+        margin-bottom: 12%;
+        text-align: left;
+    }
+    .tstcol {
+        background-color: aqua;
+    }
+    .bgcolr {
+        /* background-color: yellowgreen; */
+        vertical-align: middle;
+    }
+
+    .pizza {
+        box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2), 0 4px 17px 0 rgba(69, 68, 68, 0.2);
+        border-top: rgba(244, 33, 33, 0.588) 12px solid; //rgb(231, 226, 226)
+        border-top-right-radius: 50%;
+        border-left: rgb(112, 203, 150) 12px solid; //rgb(236, 230, 230)
+        border-top-left-radius: 50%;
+        border-bottom: rgb(116, 175, 203) 12px solid; //rgb(239, 233, 233)
+        border-bottom-right-radius: 50%;
+        border-right: rgb(95, 91, 150) 12px solid; //rgb(242, 236, 236)
+        border-bottom-left-radius: 50%;
+        background-color: var(--testbgcolor); //rgb(255, 249, 249)
+        margin: 3px;
+        width: 42px;
+        height: 42px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .material-symbols-outlined {
+        font-size:small;
+    }
+}

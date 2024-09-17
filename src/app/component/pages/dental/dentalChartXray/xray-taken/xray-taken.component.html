@@ -1,0 +1,257 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/{{dentalChart}}"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        class="link-dark"
+                        routerLink="/dental-records/dental-chart/{{dentalChart}}/add-record/{{ id }}"
+                        >{{examType}}</a
+                    >
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Xray Taken {{labelName}}</li>
+            </ol>
+        </nav>
+        <!-- Search and Add -->
+        <div class="grid">
+            <div class="col">
+                <div class="selectDisplay">
+                    <label for="selectDisplay" class="mt-1">Show per page:&nbsp;&nbsp;</label>
+                    <select
+                        class="form-select form-select-sm mb-1"
+                        (change)="onChangeShowPage($event)"
+                        name="selectDisplay"
+                        style="width: auto"
+                    >
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-1">
+                <button
+                    class="btn btn-outline-dark btn-sm float-end"
+                    type="button"
+                    routerLink="/dental-records/dental-chart/xray-taken/{{dentalChart}}/{{labelName}}/{{id}}/Add"
+                >
+                    Add
+                </button>
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="grid">
+            <div class="col">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th scope="col" class="theadStyle"></th>
+                            <th scope="col" class="theadStyle">Actions</th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Remarks</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Remarks type here.."
+                                        (keyup)="onChangeRemarks($event)"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col" [width]="400" style="text-align: center">Image/s</th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Date</div>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Choose Date here.."
+                                        (change)="onChangeCreatedDate($event)"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody
+                        *ngFor="
+                            let images of xrayTakenImageDetails
+                                | paginate
+                                    : {
+                                          itemsPerPage: paginationSize,
+                                          currentPage: pageNoDisplay,
+                                          totalItems: paginationTotalItems
+                                      }
+                        "
+                    >
+                        <tr>
+                            <td scope="row">
+                                <div class="form-check d-flex align-items-center justify-content-center">
+                                    <input class="form-check-input" type="radio" name="periapicalName" [id]="'periapicalNameId'+images.xrayTakenId"
+                                    (change)="updateDisplay(images.xrayTakenId)" [checked]="images.display"
+                                    >
+                                    </div>
+                            </td>
+                            <td scope="row">
+                                <div>
+                                    <button
+                                        class="btn btn-outline-danger btn-sm"
+                                        type="button"
+                                        (click)="updateDeleteItem(images)"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModalToggle"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                            <td>{{ images.remarks }}</td>
+                            <td>
+                                <div class="grid">
+                                    <div class="col-sm-2 ml-2 mt-2" *ngFor="
+                                    let image of images.imageList">
+                                        <img
+                                            src="{{ image.imgLink }}"
+                                            class="img-thumbnail h-5rem w-5rem"
+                                            alt="{{ image.hashName }}"
+                                            (click)="
+                                                updateViewItem(image.hashNameType, image.originalName, image.imgLink)
+                                            "
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#displayImageModalToggle"
+                                        />
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ images.createdAt | date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Total and Pagination -->
+        <div class="grid">
+            <div class="col">
+                <label>Total items: {{ paginationTotalItems }}</label>
+            </div>
+            <div class="col">
+                <div class="paginationStyle">
+                    <pagination-controls
+                        previousLabel="Prev"
+                        nextLabel="Next"
+                        [responsive]="true"
+                        (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
+            </div>
+        </div>
+        <!-- Delete Modal -->
+        <div
+            class="modal"
+            id="deleteModalToggle"
+            tabindex="-1"
+            aria-labelledby="deleteModalToggleLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title lbltext" id="deleteModalToggleLabel">Are you sure?</p>
+                        <button
+                            type="button"
+                            class="btn-close btn-sm"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-1">Note:</div>
+                                <div class="col-md-10 text-center">
+                                    This action will <span class="fw-bold">remove</span> Xray Taken Periapical Data <br />
+                                    from
+                                    <span class="fst-italic text-decoration-underline"
+                                        >{{
+                                            profileModel?.name?.lastName +
+                                                ' ' +
+                                                profileModel?.name?.middleName +
+                                                ', ' +
+                                                profileModel?.name?.firstName
+                                        }}.</span>
+                                    <br /><br />
+                                    <span class="fw-bold">Remarks:</span> {{xrayTakenImageDetailDelete?.remarks}} <br />
+                                    <span class="fw-bold">Image/s:</span> 
+                                    <div class="grid">
+                                        <div class="col-sm-2 ml-1 mt-4" *ngFor="let images of xrayTakenImageDetailDelete?.imageList; let i = index">
+                                            <img
+                                                src="{{ images.imgLink }}"
+                                                class="img-thumbnail -mt-3 h-4rem w-4rem"
+                                                alt="{{ images.hashName }}"
+                                                
+                                                (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#displayImageModalToggle"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger btn-sm me-3"
+                                (click)="deletePreProcedureRequirement()"
+                                data-bs-dismiss="modal"
+                            >
+                                Delete
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- View Image Modal -->
+        <div
+            class="modal fade"
+            id="displayImageModalToggle"
+            tabindex="-1"
+            aria-labelledby="displayImageModalToggleLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title lbltext" id="displayImageModalToggleLabel">{{ imgNameOriginal }}</p>
+                        <button
+                            type="button"
+                            class="btn-close btn-sm"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <img src="{{ imgLink }}" height="auto" width="auto" alt="{{ hashName }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

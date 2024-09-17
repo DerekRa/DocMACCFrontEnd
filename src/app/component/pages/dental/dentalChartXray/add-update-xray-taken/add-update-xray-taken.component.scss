@@ -1,0 +1,65 @@
+#drop-region {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    width: 200px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+#drop-region:hover {
+    box-shadow: 0 0 45px rgba(0, 0, 0, 0.1);
+}
+
+#image-preview {
+    margin-top: 20px;
+}
+#image-preview .image-view {
+    display: inline-block;
+    position: relative;
+    margin-right: 13px;
+    margin-bottom: 13px;
+}
+#image-preview .image-view img {
+    max-width: 100px;
+    max-height: 100px;
+}
+#image-preview .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
+ngx-dropzone {
+    width: 100%;
+    height: auto;
+    min-height: 120px;
+    max-height: 100%;
+}
+.ngx-dz-hovered {
+    box-shadow: 0 0 45px rgba(0, 0, 0, 0.1) !important;
+}
+ngx-dropzone-preview {
+    // height: 300px !important;
+    // width: 250px !important;
+    min-width: 275px !important;
+    max-width: 500px !important;
+    min-height: 270px !important;
+    max-height: 600px !important;
+}
+ngx-dropzone-preview .img-thumbnail {
+    // height: auto;
+    // width: auto;
+    min-width: 30px !important;
+    max-width: 400px !important;
+    min-height: 30px !important;
+    max-height: 300px !important;
+}
+.alert-success {
+    width: 100px !important;
+    top: 110px;
+    left: 30px;
+}

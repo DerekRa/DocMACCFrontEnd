@@ -1,0 +1,224 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral/{{ id }}"
+            >Intraoral Treatment List</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/prescription/{{ id }}/{{
+              dateOfProcedure
+            }}"
+            >Prescription</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Add</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-9 text-xl">
+        <span class="mb-1">
+          {{
+            profileModel?.name?.lastName +
+              " " +
+              profileModel?.name?.middleName +
+              ", " +
+              profileModel?.name?.firstName
+          }}
+        </span>
+      </div>
+    </div>
+    <!-- Form for Prescription -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <div class="col col-lg-10 col-offset-1">
+          <div class="grid">
+            <!-- Brand Name -->
+            <div class="col col-lg-8">
+              <label for="brandNameId"
+                ><span class="astrk">&ast;</span
+                ><span class="font-semibold">Brand Name</span></label
+              >
+              <select
+                class="form-select form-select-sm"
+                aria-label="Brand Name Select"
+                (change)="onChangeBrandName($event)"
+                name="brandName"
+                formControlName="brandName"
+                id="brandNameId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['genericName'].errors
+                }"
+              >
+                <option selected></option>
+                <option
+                  *ngFor="let choices of prescriptionChoices"
+                  value="{{ choices.brandName }}"
+                >
+                  {{ choices.brandName }}
+                </option>
+              </select>
+              <div
+                *ngIf="submitted && f['brandName'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['brandName'].errors['required']">
+                  Brand Name is required
+                </div>
+                <div *ngIf="f['brandName'].errors['minlength']">
+                  Brand Name must be at least 2 characters
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Generic Name -->
+          <div class="grid">
+            <div class="col col-lg-8">
+              <label for="genericNameId"
+                ><span class="astrk">&ast;</span
+                ><span class="font-semibold">Generic Name</span></label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="genericName"
+                formControlName="genericName"
+                id="genericNameId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['genericName'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['genericName'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['genericName'].errors['required']">
+                  Generic Name is required
+                </div>
+                <div *ngIf="f['genericName'].errors['minlength']">
+                  Generic Name must be at least 2 characters
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <!-- Dispense -->
+            <div class="col">
+              <label for="dispenseId"
+                ><span class="font-semibold">Dispense</span></label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="dispense"
+                formControlName="dispense"
+                id="dispenseId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['dispense'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['dispense'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['dispense'].errors['required']">
+                  Dispense is required
+                </div>
+              </div>
+            </div>
+            <!-- Dosage -->
+            <div class="col">
+              <label for="dosageId"
+                ><span class="astrk">&ast;</span
+                ><span class="font-semibold">Dosage</span></label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="dosage"
+                formControlName="dosage"
+                id="dosageId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['dosage'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['dosage'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['dosage'].errors['required']">
+                  Dosage is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <!-- Remarks -->
+            <div class="col">
+              <label for="remarksId" class="font-semibold"
+                ><span class="astrk">&ast;</span>Remarks</label
+              >
+              <textarea
+                name="remarks"
+                formControlName="remarks"
+                class="form-control form-control-sm"
+                id="remarksId"
+                cols="20"
+                rows="3"
+                [ngClass]="{
+                  'is-invalid': submitted && f['remarks'].errors
+                }"
+              ></textarea>
+              <div
+                *ngIf="submitted && f['remarks'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['remarks'].errors['required']">
+                  Remarks is required
+                </div>
+                <div *ngIf="f['remarks'].errors['minlength']">
+                  Remarks must be at least 2 characters
+                </div>
+                <div *ngIf="f['remarks'].errors['maxlength']">
+                  Remarks must be maximum of 255 characters
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid justify-content-center mt-4">
+        <!-- <div class="col-2 text-lg"></div> -->
+        <div class="col-6 col-offset-4">
+          <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+          <button
+            type="submit"
+            id="saveallnowid"
+            class="btn btn-outline-primary btn-sm -mt-1"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+<app-footer></app-footer>

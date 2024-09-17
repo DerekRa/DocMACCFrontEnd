@@ -1,0 +1,42 @@
+main {
+    padding-bottom: 40px;
+    .selectDisplay {
+        display: flex;
+    }
+    .symbol {
+        font-size: 15px;
+    }
+    th {
+        text-align: center !important;
+    }
+    table thead > tr > th.theadStyle th.col {
+        text-align: center !important;
+        padding-bottom: 10px;
+    }
+    div.input-group-text.theadStyle {
+        font-weight: bold;
+        background-color: var(--bs-table-bg);
+        text-align: center !important;
+    }
+    div.input-group-text.theadStyle:hover {
+        cursor: pointer;
+    }
+    .paginationStyle {
+        position: relative;
+        text-align: right;
+        font-size: 14px;
+    }
+    .gfg {
+        margin: 3%;
+        position: relative;
+    }
+    .text-container {
+        position: absolute;
+        font-size: 8px;
+        color: rgb(255, 255, 255);
+        left: 1rem;
+        top: 4rem;
+        background-color: rgb(41, 41, 41, 0.8);
+        padding: 0 0.5rem;
+    }
+}

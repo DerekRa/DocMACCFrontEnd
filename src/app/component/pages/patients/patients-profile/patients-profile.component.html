@@ -1,0 +1,283 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">
+          List of Patients
+        </li>
+      </ol>
+    </nav>
+    <!-- Search and Add -->
+    <div class="grid">
+      <div class="col-5">
+        <div class="selectDisplay">
+          <label for="selectDisplay" class="mt-1"
+            >Show per page:&nbsp;&nbsp;</label
+          >
+          <select
+            class="form-select form-select-sm mb-1"
+            (change)="onChangeShowPage($event)"
+            name="selectDisplay"
+            style="width: auto"
+          >
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
+      <div class="col">
+        <input
+          class="form-control-sm me-2 float-end"
+          type="text"
+          (keyup)="onChangeSearchName($event)"
+          placeholder="Search All type here.."
+        />
+      </div>
+      <div class="col-1" [hidden]="!(urlLocation == '/patients-profile')">
+        <button
+          class="btn btn-outline-dark btn-sm float-end"
+          type="button"
+          routerLink="/add-patient-profile"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="grid">
+      <div class="col">
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr class="table-primary">
+              <th scope="col" class="theadStyle">Actions</th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    First Name
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="First name type here.."
+                    (keyup)="onChangeFirstName($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Last Name
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Last name type here.."
+                    (keyup)="onChangeLastName($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Middle Name
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Middle name type here.."
+                    (keyup)="onChangeMiddleName($event)"
+                  />
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            *ngFor="
+              let name of nameList
+                | paginate
+                  : {
+                      itemsPerPage: paginationSize,
+                      currentPage: page,
+                      totalItems: paginationTotalItems
+                    }
+            "
+          >
+            <tr>
+              <th scope="row">
+                <div [hidden]="!(urlLocation == '/patients-profile')">
+                  <button
+                    (click)="viewPatientProfile(name.id)"
+                    class="btn btn-outline-primary btn-sm"
+                    type="button"
+                  >
+                    View
+                  </button>
+                </div>
+                <div [hidden]="!(urlLocation == '/medical-history/patients')">
+                  <div [hidden]="!medicalHistoryCollection.includes(name.id)">
+                    <button
+                      (click)="viewMedicalHistory(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="medicalHistoryCollection.includes(name.id)">
+                    <button
+                      (click)="addMedicalHistory(name.id)"
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div
+                  [hidden]="
+                    !(
+                      urlLocation ==
+                      '/dental-records/dental-chart/intraoral-examination'
+                    )
+                  "
+                >
+                  <div [hidden]="!intraOralCollection.includes(name.id)">
+                    <button
+                      (click)="viewIntralOralExam(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="intraOralCollection.includes(name.id)">
+                    <button
+                      (click)="addIntralOralExam(name.id)"
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div
+                  [hidden]="
+                    !(
+                      urlLocation ==
+                      '/dental-records/dental-chart/orthodontic-examination'
+                    )
+                  "
+                >
+                  <div [hidden]="!orthodonticCollection.includes(name.id)">
+                    <button
+                      (click)="viewOrthodonticExam(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="orthodonticCollection.includes(name.id)">
+                    <button
+                      (click)="addOrthodonticExam(name.id)"
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+                <div
+                  [hidden]="
+                    !(urlLocation == '/dental-records/treatment-plan/intraoral')
+                  "
+                >
+                  <div [hidden]="!intraOralCollection.includes(name.id)">
+                    <button
+                      (click)="viewIntraOralTreatment(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="intraOralCollection.includes(name.id)">
+                    <button
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                      disabled="true"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+                <div
+                  [hidden]="
+                    !(
+                      urlLocation ==
+                      '/dental-records/treatment-plan/orthodontic'
+                    )
+                  "
+                >
+                  <div [hidden]="!orthodonticCollection.includes(name.id)">
+                    <button
+                      (click)="viewOrthodonticTreatment(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="orthodonticCollection.includes(name.id)">
+                    <button
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                      disabled="true"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
+              </th>
+              <td>{{ name.firstName }}</td>
+              <td>{{ name.lastName }}</td>
+              <td>{{ name.middleName }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Total and Pagination -->
+    <div class="grid">
+      <div class="col">
+        <label>Total items: {{ paginationTotalItems }}</label>
+      </div>
+      <div class="col">
+        <div class="paginationStyle">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [responsive]="true"
+            (pageChange)="handlePageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,162 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/intraoral-examination"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        class="link-dark"
+                        routerLink="/dental-records/dental-chart/intraoral-examination/view-record/{{ id }}"
+                        >Intraoral Examination</a
+                    >
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">History</li>
+            </ol>
+        </nav>
+        <!-- Complete name -->
+        <div class="grid">
+            <div class="col col-sm-3 text-xl">
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+        <!-- Search and Add -->
+        <div class="grid">
+            <div class="col-auto me-auto ml-2">
+                <label for="selectDisplay" class="mt-2">Show per page:&nbsp;&nbsp;</label>
+            </div>
+            <div class="col-auto mt-1 -mb-1">
+                <select
+                    class="form-select form-select-sm mb-1"
+                    (change)="onChangeShowPage($event)"
+                    style="width: auto;"
+                >
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+            <div class="col text-center">
+                <span>{{recentHistory}} Teeth History for Number {{teethNumbering}}</span>
+            </div>
+            <div class="col-auto">
+                <input
+                    class="form-control-sm mr-2"
+                    type="text"
+                    (keyup)="onChangeSearchAll($event)"
+                    placeholder="Search type here.."
+                />
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="grid">
+            <div class="col">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Date Of Procedure</div>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Choose Date here.."
+                                        (change)="onChangeDateOfProcedure($event)"
+                                        *ngIf="this.action=='history'"
+                                    />
+                                    
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Category</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Category type here.."
+                                        (keyup)="onChangeCategory($event)"
+                                        *ngIf="this.action=='history'"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Procedure Done</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Procedure Done type here.."
+                                        (keyup)="onChangeProcedureDone($event)"
+                                        *ngIf="this.action=='history'"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Surface</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Surface type here.."
+                                        (keyup)="onChangeSurface($event)"
+                                        *ngIf="this.action=='history'"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="teethHistoryData.length==0; else viewTeethHistory"></tbody>
+                    <ng-template #viewTeethHistory>
+                        <tbody
+                            *ngFor="
+                                let teethHistory of teethHistoryData
+                                    | paginate
+                                        : {
+                                              itemsPerPage: paginationSize,
+                                              currentPage: pageNoDisplay,
+                                              totalItems: paginationTotalItems
+                                          }
+                            "
+                        >
+                            <tr>
+                                <td>{{ teethHistory?.dateOfProcedure  | date }}</td>
+                                <td>{{ teethHistory?.category }}</td>
+                                <td>{{ teethHistory?.procedureDone }}</td>
+                                <td>{{ teethHistory?.surface }}</td>
+                            </tr>
+                        </tbody>
+                    </ng-template>
+                </table>
+            </div>
+        </div>
+        <!-- Total and Pagination -->
+        <div class="grid">
+            <div class="col">
+                <label>Total items: {{ paginationTotalItems }}</label>
+            </div>
+            <div class="col">
+                <div class="paginationStyle">
+                    <pagination-controls
+                        previousLabel="Prev"
+                        nextLabel="Next"
+                        [responsive]="true"
+                        (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

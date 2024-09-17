@@ -1,0 +1,336 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a routerLink="/patients-profile">List of Patients</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">View Profile</li>
+      </ol>
+    </nav>
+    <div class="grid">
+      <div class="col-2">
+        <img
+          src="{{ profileModel?.imgLink }}"
+          class="img-thumbnail"
+          alt="..."
+        />
+      </div>
+      <div class="col-6 printUpdateGrid">
+        <button
+          [disabled]="!medicalModel"
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="printPDFProfile(profileModel?.id)"
+        >
+          Print
+        </button>
+        <button
+          (click)="updatePatientProfile(profileModel?.id)"
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+        >
+          Update
+        </button>
+      </div>
+      <div class="col-2">
+        <button
+          type="button"
+          class="btn btn-outline-danger btn-sm ms-3"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModalToggle"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-6"><hr /></div>
+      <div class="col"></div>
+    </div>
+    <div class="grid">
+      <div class="col-11 col-offset-1">
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Full Name</div>
+          <div class="col-4 font-light">
+            {{
+              profileModel?.name?.lastName +
+                " " +
+                profileModel?.name?.middleName +
+                ", " +
+                profileModel?.name?.firstName
+            }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Nick Name</div>
+          <div class="col-4 font-light">{{ profileModel?.name?.nickName }}</div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Birthday</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.birthday | date : "MM / dd / yyyy" }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Age</div>
+          <div class="col-4 font-light">{{ profileModel?.age }}</div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Gender</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.sex }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Religion</div>
+          <div class="col-4 font-light">{{ profileModel?.religion }}</div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Nationality</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.nationality }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Occupation</div>
+          <div class="col-4 font-light">{{ profileModel?.occupation }}</div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Home Number</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.contactDetail?.contactNumber?.homeNumber }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Cell Number</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.contactDetail?.contactNumber?.cellNumber }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Office Number</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.contactDetail?.contactNumber?.officeNumber }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Fax Number</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.contactDetail?.contactNumber?.faxNumber }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Home Address</div>
+          <div class="col font-light">
+            {{ profileModel?.contactDetail?.homeAddress }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">Email Address</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.contactDetail?.emailAddress }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Dental Insurance</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.dentalInsurance }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-2 font-semibold text-lg">First Dental Visit</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.firstDentalVisit }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Date of Registration</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.createdAt | date : "MM / dd / yyyy" }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-1 font-italic">Minors:</div>
+      <div class="col-6"><hr /></div>
+      <div class="col"></div>
+    </div>
+    <div class="grid">
+      <div class="col-11 col-offset-1">
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Parents / Guardian</div>
+          <div class="col-3 font-light">
+            {{ profileModel?.minor?.parentsGuardian }}
+          </div>
+          <div class="col-2 font-semibold text-lg">Occupation</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.minor?.parentsGuardianOccupation }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Referral Name</div>
+          <div class="col-4 font-light">
+            {{ profileModel?.minor?.referralName }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-4 font-semibold text-lg">
+            Reason for Dental Consultation
+          </div>
+          <div class="col-4 font-light">
+            {{ profileModel?.minor?.reasonDentalConsultation }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-2 font-italic">Medical History:</div>
+      <div class="col-6"><hr /></div>
+      <div class="col"></div>
+    </div>
+    <div class="grid">
+      <div class="col-11 col-offset-1 mb-6">
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">History of Illness</div>
+          <div class="col-7 font-light">
+            <div *ngIf="medicalModel?.questions?.haveYouHadAnyOfTheFollowing">
+              <div
+                *ngFor="
+                  let haveFollowing of medicalModel?.questions
+                    ?.haveYouHadAnyOfTheFollowing;
+                  let i = index
+                "
+              >
+                <li *ngIf="haveFollowing.checked">
+                  {{ haveFollowing.name }}
+                </li>
+              </div>
+            </div>
+            <li
+              *ngIf="medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing"
+            >
+              {{ medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing }}
+            </li>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-4 font-semibold text-lg">
+            Prescribed / Non-prescibed Medication
+          </div>
+          <div class="col-4 font-light">
+            {{ medicalModel?.questions?.prescriptionMedication }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Allergic</div>
+          <div class="col-4 font-light">
+            <div *ngIf="medicalModel?.questions?.allergies">
+              <div
+                *ngFor="
+                  let allergy of medicalModel?.questions?.allergies;
+                  let i = index
+                "
+              >
+                <li *ngIf="allergy.checked">{{ allergy.name }}</li>
+              </div>
+            </div>
+            <li *ngIf="medicalModel?.questions?.otherAllergies">
+              {{ medicalModel?.questions?.otherAllergies }}
+            </li>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Medical Treatment</div>
+          <div class="col-4 font-light">
+            {{
+              medicalModel?.questions?.medicalTreatment == "Yes"
+                ? medicalModel?.questions?.medicalTreatment +
+                  " (" +
+                  medicalModel?.questions?.conditionTreated +
+                  ")"
+                : medicalModel?.questions?.medicalTreatment
+            }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Hospitalized</div>
+          <div class="col-4 font-light">
+            {{
+              medicalModel?.questions?.hospitalized == "Yes"
+                ? medicalModel?.questions?.hospitalized +
+                  " (" +
+                  medicalModel?.questions?.whenWhyHospitalized +
+                  ")"
+                : medicalModel?.questions?.hospitalized
+            }}
+          </div>
+        </div>
+        <div class="grid">
+          <div class="col-3 font-semibold text-lg">Surgical Operation</div>
+          <div class="col-4 font-light">
+            {{
+              medicalModel?.questions?.surgicalOperation == "Yes"
+                ? medicalModel?.questions?.surgicalOperation +
+                  " (" +
+                  medicalModel?.questions?.whatOperation +
+                  ")"
+                : medicalModel?.questions?.surgicalOperation
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Delete Modal -->
+    <div
+      class="modal"
+      id="deleteModalToggle"
+      tabindex="-1"
+      aria-labelledby="deleteModalToggleLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title lbltext" id="deleteModalToggleLabel">
+              Are you sure?
+            </p>
+            <button
+              type="button"
+              class="btn-close btn-sm"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-1">Note:</div>
+                <div class="col-md-10 text-center">
+                  This action will <span class="fw-bold">remove</span> all data
+                  pertaining to <br />
+                  <span class="fst-italic text-decoration-underline"
+                    >{{
+                      profileModel?.name?.lastName +
+                        " " +
+                        profileModel?.name?.middleName +
+                        ", " +
+                        profileModel?.name?.firstName
+                    }}.</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm me-3"
+                (click)="deletePatientProfile(profileModel?.id)"
+                data-bs-dismiss="modal"
+              >
+                Delete
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

@@ -1,0 +1,769 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/intraoral-examination"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item">
+                    <a
+                        class="link-dark"
+                        routerLink="/dental-records/dental-chart/intraoral-examination/add-record/{{ id }}"
+                        >Intraoral Examination</a
+                    >
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Add Tooth Condition</li>
+            </ol>
+        </nav>
+        <!-- Complete name -->
+        <div class="grid">
+            <div class="col text-xl">
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+        <!-- Kinds of Teeth, Teeth Position Status, Date Of Procedure -->
+        <div class="grid">
+            <div class="col-12">
+                <div class="row lbltext">
+                    <div class="col-4 col-md-auto">
+                        {{ intraoralExaminationResponse?.dentalChartDesignResponse?.kindsOfTeeth }}
+                    </div>
+                    <div class="col-1 col-md-auto">&#8226;</div>
+                    <div class="col-4 col-md-auto">
+                        {{ intraoralExaminationResponse?.dentalChartDesignResponse?.teethPositionStatus }}
+                    </div>
+                    <div class="col-1 col-md-auto">&#8226;</div>
+                    <div class="col-2 col-md-auto">
+                        <a class="link-dark" data-bs-toggle="collapse" href="#collapseToothNumber"
+                            >{{ toothNumbersValue + '' }} Edit</a
+                        >
+                    </div>
+                    <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">|</div>
+                    <div class="col-5 col-md-auto lbltext"><span class="astrk">&ast;</span>Date of Procedure</div>
+                    <div class="col-4 col-md-auto -mt-2">
+
+
+                        <div class="input-group input-group-sm mb-3">
+                            <input type="text" class="form-control inputGroupDOP" aria-label="Date Of Procedure" aria-describedby="dateprocd"
+                             placeholder="YYYY-MM-DD"
+                             value="{{ intraoralExaminationResponse?.dateOfProcedure | date : 'yyyy-MM-dd' }}"
+                             [matDatepicker]="picker"
+                             (dateChange)="onChangeDateOfProcedure($event)"
+                             min="1990-01-01"
+                             max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+                             [ngClass]="{
+                                    'is-invalid': submitted && f['dateOfProcedure'].errors
+                                }"
+                              readonly>
+                            <button class="btn btn-outline-secondary" id="dateprocd" (click)="picker.open()" type="button">
+                                <span class="material-symbols-outlined">
+                                    event
+                                    </span></button>
+                        </div>
+                        <mat-datepicker #picker ></mat-datepicker>
+                          
+                        
+                        <!-- <input
+                            type="date"
+                            class="form-control form-control-sm mt-1"
+                            name="dateOfProcedure"
+                            min="1990-01-01"
+                            max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+                            [matDatepicker]="picker"
+                            (change)="onChangeDateOfProcedure($event)"
+                            value="{{ intraoralExaminationResponse?.dateOfProcedure | date : 'yyyy-MM-dd' }}"
+                            [ngClass]="{
+                                'is-invalid': submitted && f['dateOfProcedure'].errors
+                            }"
+                        /> -->
+                        
+
+
+                        <div *ngIf="submitted && f['dateOfProcedure'].errors" class="form-check">
+                            <div *ngIf="f['dateOfProcedure'].errors['required']" class="invalid-feedback-data">
+                                Date of procedure is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Collapse Tooth Numbers -->
+        <div class="grid collapse hide" id="collapseToothNumber">
+            <div class="col-11 col-offset-1">
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Temporary Status Right</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div *ngFor="let toothNumberValue of toothDetailsTempRightTop; let i = index">
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="let toothNumberValue of toothDetailsTempRightBottom; let i = index"
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Temporary Status Left</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div *ngFor="let toothNumberValue of toothDetailsTempLeftTop; let i = index">
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div *ngFor="let toothNumberValue of toothDetailsTempLeftBottom; let i = index">
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Permanent Status Right</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaRightTopCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaRightBottomCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Permanent Status Left</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaLeftTopCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaLeftBottomCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="grid">
+            <div class="col-12 -mt-4 -mb-2"><hr /></div>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-md-3 fw-light">
+                            <span class="fw-bold">Condition</span>
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    class="form-check"
+                                    *ngFor="let conditions of getFormConditions.controls; let i = index"
+                                    formArrayName="conditions"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <input
+                                            [checked]="getFormConditions.controls[i].value.checked"
+                                            value="{{ getFormConditions.controls[i].value.value }}"
+                                            id="{{
+                                                getFormConditions.controls[i].value.inputId
+                                                    ? getFormConditions.controls[i].value.inputId
+                                                    : 'conditionId' + i
+                                            }}"
+                                            class="form-check-input"
+                                            name="{{
+                                                getFormConditions.controls[i].value.fcname
+                                                    ? getFormConditions.controls[i].value.fcname
+                                                    : 'fcConditionname' + i
+                                            }}"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangeConditions($event , false)"
+                                        />
+                                        <label
+                                            ><span
+                                                class="fw-bold"
+                                                [innerHtml]="getFormConditions.controls[i].value.label.split('-')[0]"
+                                            ></span>
+                                            - {{ getFormConditions.controls[i].value.label.split('-')[1] }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 fw-light">
+                            <span class="fw-bold">Restorations</span>
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    class="form-check"
+                                    *ngFor="let conditions of getFormRestorations.controls; let i = index"
+                                    formArrayName="restorations"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <input
+                                            [checked]="getFormRestorations.controls[i].value.checked"
+                                            value="{{ getFormRestorations.controls[i].value.value }}"
+                                            id="{{ getFormRestorations.controls[i].value.inputId }}"
+                                            class="form-check-input"
+                                            name="{{ getFormRestorations.controls[i].value.fcname }}"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangeRestorations($event, false)"
+                                        />
+                                        <label
+                                            ><span class="fw-bold">{{
+                                                getFormRestorations.controls[i].value.label.split('-')[0]
+                                            }}</span>
+                                            - {{ getFormRestorations.controls[i].value.label.split('-')[1] }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-check">
+                                <label class="form-check-label" for="flexCheckinlay">
+                                    <span class="fw-bold">In</span> - Inlay
+                                </label>
+                                <br />
+                                <div formGroupName="conditionProcedureGroupings">
+                                    <div
+                                        class="form-check form-check-inline"
+                                        *ngFor="let conditions of getFormRestorationsInlay.controls; let i = index"
+                                        formArrayName="restorationsInlay"
+                                    >
+                                        <div formGroupName="{{ i }}">
+                                            <input
+                                                [checked]="getFormRestorationsInlay.controls[i].value.checked"
+                                                value="{{ getFormRestorationsInlay.controls[i].value.value }}"
+                                                id="{{ getFormRestorationsInlay.controls[i].value.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ getFormRestorationsInlay.controls[i].value.fcname }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeRestorationsInlay($event, false)"
+                                            />
+                                            <label> {{ getFormRestorationsInlay.controls[i].value.name }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                        >Other</label
+                                    >
+                                    <div class="col-sm-8">
+                                        <div formGroupName="conditionProcedureGroupings">
+                                            <div
+                                                class="form-group"
+                                                formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    formControlName="restorationInlayOther"
+                                                    name="restorationInlayOther"
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                        >Note</label
+                                    >
+                                    <div class="col-sm-8">
+                                        <div formGroupName="conditionProcedureGroupings">
+                                            <div
+                                                class="form-group"
+                                                formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    formControlName="restorationInlayNote"
+                                                    name="restorationInlayNote"
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label"> <span class="fw-bold">On</span> - Onlay </label>
+                                <br />
+                                <div formGroupName="conditionProcedureGroupings">
+                                    <div
+                                        class="form-check form-check-inline"
+                                        *ngFor="let conditions of getFormRestorationsOnlay.controls; let i = index"
+                                        formArrayName="restorationsOnlay"
+                                    >
+                                        <div formGroupName="{{ i }}">
+                                            <input
+                                                [checked]="getFormRestorationsOnlay.controls[i].value.checked"
+                                                value="{{ getFormRestorationsOnlay.controls[i].value.value }}"
+                                                id="{{ getFormRestorationsOnlay.controls[i].value.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ getFormRestorationsOnlay.controls[i].value.fcname }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeRestorationsOnlay($event, false)"
+                                            />
+                                            <label> {{ getFormRestorationsOnlay.controls[i].value.name }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                        >Other</label
+                                    >
+                                    <div class="col-sm-8">
+                                        <div formGroupName="conditionProcedureGroupings">
+                                            <div
+                                                class="form-group"
+                                                formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    formControlName="restorationOnlayOther"
+                                                    name="restorationOnlayOther"
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                        >Note</label
+                                    >
+                                    <div class="col-sm-8">
+                                        <div formGroupName="conditionProcedureGroupings">
+                                            <div
+                                                class="form-group"
+                                                formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                            >
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    formControlName="restorationOnlayNote"
+                                                    name="restorationOnlayNote"
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label" for="flexCheckijmplt">
+                                    <span class="fw-bold">FL</span> - Fluoride Application
+                                </label>
+                                <br />
+                                <div formGroupName="conditionProcedureGroupings">
+                                    <div
+                                        class="form-check form-check-inline"
+                                        *ngFor="let conditions of getFormRestorationsFluoride.controls; let i = index"
+                                        formArrayName="restorationsFluoride"
+                                    >
+                                        <div formGroupName="{{ i }}">
+                                            <input
+                                                [checked]="getFormRestorationsFluoride.controls[i].value.checked"
+                                                value="{{ getFormRestorationsFluoride.controls[i].value.value }}"
+                                                id="{{ getFormRestorationsFluoride.controls[i].value.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ getFormRestorationsFluoride.controls[i].value.fcname }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeRestorationsFluoride($event, false)"
+                                            />
+                                            <label> {{ getFormRestorationsFluoride.controls[i].value.name }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 fw-light">
+                            <span class="fw-bold">Prosthetics</span>
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    class="form-check"
+                                    *ngFor="let prosthetics of getFormProsthetics.controls; let i = index"
+                                    formArrayName="prosthetics"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <input
+                                            [checked]="getFormProsthetics.controls[i].value.checked"
+                                            value="{{ getFormProsthetics.controls[i].value.value }}"
+                                            id="{{ getFormProsthetics.controls[i].value.inputId }}"
+                                            class="form-check-input"
+                                            name="{{ getFormProsthetics.controls[i].value.fcname }}"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangeProsthetics($event, false)"
+                                        />
+                                        <label
+                                            ><span
+                                                class="fw-bold"
+                                                [innerHtml]="getFormProsthetics.controls[i].value.label.split('-')[0]"
+                                            ></span>
+                                            - {{ getFormProsthetics.controls[i].value.label.split('-')[1] }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                    >Note</label
+                                >
+                                <div class="col-sm-10">
+                                    <div formGroupName="conditionProcedureGroupings">
+                                        <div
+                                            class="form-group"
+                                            formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                        >
+                                            <input
+                                                type="text"
+                                                class="form-control form-control-sm"
+                                                formControlName="prostheticsNote"
+                                                name="prostheticsNote"
+                                                placeholder=""
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 fw-light">
+                            <span class="fw-bold">Denture</span>
+                            <!-- <div formGroupName="conditionProcedureSurfaceRemarksResponse"> -->
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    *ngFor="let denture of getFormDenture.controls; let i = index"
+                                    formArrayName="denture"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <div class="form-check">
+                                            <input
+                                                [checked]="getFormDenture.controls[i].value.checked"
+                                                value="{{ getFormDenture.controls[i].value.value }}"
+                                                id="{{ getFormDenture.controls[i].value.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ getFormDenture.controls[i].value.fcname }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeDenture($event, false)"
+                                            />
+                                            <label
+                                                ><span
+                                                    class="fw-bold"
+                                                    [innerHtml]="getFormDenture.controls[i].value.label.split('-')[0]"
+                                                ></span>
+                                                - {{ getFormDenture.controls[i].value.label.split('-')[1] }}</label
+                                            >
+                                        </div>
+                                        <div class="row mb-2">
+                                            <label
+                                                for="colFormLabelSm"
+                                                class="col-sm-2 col-form-label col-form-label-sm"
+                                                >Note</label
+                                            >
+                                            <div class="col-sm-8">
+                                                <input
+                                                    type="text"
+                                                    class="form-control form-control-sm"
+                                                    id="colFormLabelSm"
+                                                    [value]="getFormDenture.controls[i].value.noteValue"
+                                                    placeholder=""
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100 d-none d-md-block"></div>
+                            <span class="fw-bold">Periodontal</span>
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    class="form-check"
+                                    *ngFor="let periodontal of getFormPeriodontal.controls; let i = index"
+                                    formArrayName="periodontal"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <input
+                                            [checked]="getFormPeriodontal.controls[i].value.checked"
+                                            value="{{ getFormPeriodontal.controls[i].value.value }}"
+                                            id="{{ getFormPeriodontal.controls[i].value.inputId }}"
+                                            class="form-check-input"
+                                            name="{{ getFormPeriodontal.controls[i].value.fcname }}"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangePeriodontal($event, false)"
+                                        />
+                                        <label
+                                            ><span
+                                                class="fw-bold"
+                                                [innerHtml]="getFormPeriodontal.controls[i].value.label.split('-')[0]"
+                                            ></span>
+                                            - {{ getFormPeriodontal.controls[i].value.label.split('-')[1] }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-100 d-none d-md-block"></div>
+                            <span class="fw-bold">Surgery</span>
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div
+                                    class="form-check"
+                                    *ngFor="let surgery of getFormSurgery.controls; let i = index"
+                                    formArrayName="surgery"
+                                >
+                                    <div formGroupName="{{ i }}">
+                                        <input
+                                            [checked]="getFormSurgery.controls[i].value.checked"
+                                            value="{{ getFormSurgery.controls[i].value.value }}"
+                                            id="{{ getFormSurgery.controls[i].value.inputId }}"
+                                            class="form-check-input"
+                                            name="{{ getFormSurgery.controls[i].value.fcname }}"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangeSurgery($event, false)"
+                                        />
+                                        <label
+                                            ><span
+                                                class="fw-bold"
+                                                [innerHtml]="getFormSurgery.controls[i].value.label.split('-')[0]"
+                                            ></span>
+                                            - {{ getFormSurgery.controls[i].value.label.split('-')[1] }}</label
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm"
+                                    >Reason</label
+                                >
+                                <div class="col-sm-8">
+                                    <div formGroupName="conditionProcedureGroupings">
+                                        <div
+                                            class="form-group"
+                                            formGroupName="conditionProcedureSurfaceRemarksResponse"
+                                        >
+                                            <input
+                                                type="text"
+                                                class="form-control form-control-sm"
+                                                formControlName="surgeryReason"
+                                                name="surgeryReason"
+                                                placeholder=""
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="row"><hr /></div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12 col-md-auto">
+                            <span class="fw-bold">Tooth Surface</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-auto">
+                            <div formArrayName="surfaceCheckResponses">
+                                <div
+                                    class="form-check form-check-inline"
+                                    *ngFor="let surfaceCheckResponse of getFormSurfaceCheck.controls; index as i"
+                                >
+                                    <div [formGroupName]="i">
+                                        <input
+                                            [checked]="getFormSurfaceCheck.controls[i].value.checked"
+                                            value="{{ getFormSurfaceCheck.controls[i].value.value }}"
+                                            id="{{ getFormSurfaceCheck.controls[i].value.id }}"
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            (change)="onCheckboxChangeSurfaceCheck($event, false)"
+                                        />
+                                        <label>{{ getFormSurfaceCheck.controls[i].value.name }}</label>
+                                    </div>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="checkboxAllId"
+                                        (change)="onCheckboxAllChangeSurfaceCheck($event, false)"
+                                    />
+                                    <label class="form-check-label" for="inlineCheckbox6">ALL</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-1 col-md-auto">
+                            <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm -mt-1"
+                                >Note</label
+                            >
+                        </div>
+                        <div class="col-11 col-md-3">
+                            <div formGroupName="conditionProcedureGroupings">
+                                <div class="form-group" formGroupName="conditionProcedureSurfaceRemarksResponse">
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        formControlName="toothSurfaceNote"
+                                        name="toothSurfaceNote"
+                                        placeholder=""
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col"><hr /></div>
+            </div>
+            <div class="grid justify-content-center mb-6">
+                <!-- <div class="col-2 text-lg"></div> -->
+                <div class="col-2">
+                    <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+                    <button
+                        *ngIf="newDataToInsert; else viewUpdate"
+                        type="submit"
+                        id="saveallnowid"
+                        class="btn btn-outline-primary btn-sm -mt-1"
+                    >
+                        Save All
+                    </button>
+                    <ng-template #viewUpdate>
+                        <button type="submit" id="saveallnowid" class="btn btn-outline-primary btn-sm -mt-1">
+                            Update All
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

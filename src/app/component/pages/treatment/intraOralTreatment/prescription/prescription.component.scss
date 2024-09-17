@@ -1,0 +1,15 @@
+main {
+  padding-bottom: 40px;
+  .fitWidth {
+    white-space: nowrap;
+  }
+  .mat-icon {
+    font-size: 15px;
+    height: 15px;
+    width: 15px;
+  }
+  .valign-center {
+    display: inline-flex;
+    align-items: center;
+  }
+}

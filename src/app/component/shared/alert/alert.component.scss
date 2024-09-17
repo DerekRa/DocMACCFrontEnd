@@ -1,0 +1,21 @@
+.alert {
+    margin: auto;
+    position: absolute;
+    z-index: 1;
+    top: auto;
+    left: auto;
+}
+.alert-success {
+    position: fixed;
+    z-index: 1;
+    top: 110px;
+    left: 30px;
+    min-width: auto;
+}
+.alert-danger {
+    position: fixed;
+    z-index: 1;
+    top: 110px;
+    left: 30px;
+    min-width: auto;
+}

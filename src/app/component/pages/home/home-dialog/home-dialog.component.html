@@ -1,0 +1,26 @@
+<h2 mat-dialog-title class="-mb-1" cdkFocusInitial>
+  {{ data?.firstName + " " + data?.lastName }}
+</h2>
+<div mat-dialog-content>
+  <b>Appointment : </b>{{ data?.title }}
+  <ul>
+    <li><b>Cell Number :</b> {{ data?.cellNumber }}</li>
+    <li><b>Service To Avail :</b> {{ data?.serviceToAvail }}</li>
+    <li>
+      <b>Date and Time :</b> {{ data?.start | date : "MMM dd, yyyy , h:mm a" }}
+    </li>
+    <!-- <li><b>Date Time End :</b> {{ data?.end }}</li> -->
+  </ul>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="'cancel'">Cancel</button>
+  <button mat-button [mat-dialog-close]="'edit'">Edit</button>
+  <button
+    mat-button
+    [mat-dialog-close]="'delete'"
+    data-bs-toggle="modal"
+    data-bs-target="#deleteModalToggle"
+  >
+    Delete
+  </button>
+</div>

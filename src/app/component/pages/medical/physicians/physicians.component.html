@@ -1,0 +1,164 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patient/{{ id }}">Health</a></li>
+                <li class="breadcrumb-item active" aria-current="page">List of Physicians</li>
+            </ol>
+        </nav>
+        <!-- Search and Add -->
+        <div class="grid">
+            <div class="col-5">
+                <div class="selectDisplay">
+                    <label for="selectDisplay" class="mt-1">Show per page:&nbsp;&nbsp;</label>
+                    <select
+                        class="form-select form-select-sm mb-1"
+                        (change)="onChangeShowPage($event)"
+                        name="selectDisplay"
+                        style="width: auto"
+                    >
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <input
+                    class="form-control-sm me-2 float-end"
+                    type="text"
+                    (keyup)="onChangeSearchName($event)"
+                    placeholder="Search All type here.."
+                />
+            </div>
+            <div class="col-1">
+                <button
+                    class="btn btn-outline-dark btn-sm float-end"
+                    type="button"
+                    routerLink="/medical-history/patient/physicians/{{ id }}/Add"
+                >
+                    Add
+                </button>
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="grid">
+            <div class="col">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th scope="col" class="theadStyle">Actions</th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">
+                                        Full Name
+                                    </div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Full name type here.."
+                                        (keyup)="onChangePhysicianName($event)"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">
+                                        Office Address
+                                    </div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Office address type here.."
+                                        (keyup)="onChangePhysicianOfficeAddress($event)"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">
+                                        Office Number
+                                    </div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Office number type here.."
+                                        (keyup)="onChangePhysicianOfficeNumber($event)"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">
+                                        Specialty
+                                    </div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Specialty type here.."
+                                        (keyup)="onChangePhysicianSpecialty($event)"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody
+                        *ngFor="
+                            let physician of physicianList
+                                | paginate
+                                    : {
+                                          itemsPerPage: paginationSize,
+                                          currentPage: page,
+                                          totalItems: paginationTotalItems
+                                      }
+                        "
+                    >
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <button
+                                        class="btn btn-outline-primary btn-sm"
+                                        type="button"
+                                        routerLink="/medical-history/patient/physicians/{{ id }}/View/{{
+                                            physician.id
+                                        }}"
+                                    >
+                                        View
+                                    </button>
+                                </div>
+                            </th>
+                            <td>{{ physician.fullName }}</td>
+                            <td>{{ physician.officeAddress }}</td>
+                            <td>{{ physician.officeNumber }}</td>
+                            <td>{{ physician.specialty }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Total and Pagination -->
+        <div class="grid">
+            <div class="col">
+                <label>Total items: {{ paginationTotalItems }}</label>
+            </div>
+            <div class="col">
+                <div class="paginationStyle">
+                    <pagination-controls
+                        previousLabel="Prev"
+                        nextLabel="Next"
+                        [responsive]="true"
+                        (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>

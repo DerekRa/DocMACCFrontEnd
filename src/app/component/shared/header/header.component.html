@@ -1,0 +1,179 @@
+<header>
+  <nav class="navbar sticky-top navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand -mb-4 -mt-4" href="#">
+        <img
+          src="assets/images/logo-white.png"
+          alt="Bootstrap"
+          width="59"
+          height="61"
+        />
+      </a>
+
+      <div
+        class="collapse navbar-collapse justify-content-md-center"
+        id="navbarSupportedContent"
+      >
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a
+              class="nav-link active valign-center nav-active-link"
+              routerLink="/home"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example home icon"
+                fontIcon="home"
+              ></mat-icon>
+              &nbsp;Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/patients-profile"
+              ><div class="valign-center">
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example person icon"
+                  fontIcon="co_present"
+                ></mat-icon>
+                &nbsp;Patient Profile
+              </div></a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/medical-history/patients"
+              ><div class="valign-center">
+                <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example medication icon"
+                  fontIcon="medication"
+                ></mat-icon>
+                &nbsp;Medical History
+              </div></a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <div class="nav-link dropdown-toggle valign-center">
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example dentistry icon"
+                fontIcon="content_paste"
+              ></mat-icon>
+              &nbsp;Dental Records
+            </div>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" routerLink="/patients-profile"
+                  >Previous Dental History</a
+                >
+              </li>
+              <li class="dropend">
+                <a
+                  class="dropdown-item dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  >Dental Chart</a
+                >
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      routerLink="/dental-records/dental-chart/intraoral-examination"
+                      >Intraoral</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      routerLink="/dental-records/dental-chart/orthodontic-examination"
+                      >Orthodontic</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li class="dropend">
+                <a
+                  class="dropdown-item dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  >Treatment Plan</a
+                >
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item nav-active-link"
+                      routerLink="/dental-records/treatment-plan/intraoral"
+                      >Intraoral</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item nav-active-link"
+                      routerLink="/dental-records/treatment-plan/orthodontic"
+                      >Orthodontic</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle valign-center nav-active-link"
+              routerLink="/patients-profile"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Example payments icon"
+                fontIcon="payments"
+              ></mat-icon>
+              &nbsp;Billing
+            </a>
+            <ul class="dropdown-menu mb-2">
+              <li>
+                <a
+                  class="dropdown-item nav-active-link"
+                  routerLink="/patients-profile"
+                  >Intraoral</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item nav-active-link"
+                  routerLink="/patients-profile"
+                  >Orthodontics</a
+                >
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <button
+        mat-button
+        [matMenuTriggerFor]="menuLogout"
+        class="btn btn-outline-secondary"
+      >
+        <div class="valign-center">Hi {{ this.user.name }}&nbsp;</div>
+      </button>
+      <mat-menu #menuLogout="matMenu" xPosition="before" class="overflowLogout">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon
+            aria-hidden="false"
+            aria-label="Logout icon"
+            fontIcon="logout"
+          ></mat-icon>
+          &nbsp;Log out
+        </button>
+      </mat-menu>
+    </div>
+  </nav>
+</header>

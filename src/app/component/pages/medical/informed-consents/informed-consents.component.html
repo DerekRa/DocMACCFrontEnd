@@ -1,0 +1,243 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patient/{{ id }}">Health</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb_title }}</li>
+            </ol>
+        </nav>
+        <!-- Search and Add -->
+        <div class="grid">
+            <div class="col">
+                <div class="selectDisplay">
+                    <label for="selectDisplay" class="mt-1">Show per page:&nbsp;&nbsp;</label>
+                    <select
+                        class="form-select form-select-sm mb-1"
+                        (change)="onChangeShowPage($event)"
+                        name="selectDisplay"
+                        style="width: auto"
+                    >
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-1">
+                <button
+                    class="btn btn-outline-dark btn-sm float-end"
+                    type="button"
+                    routerLink="/medical-history/patient/preProcedure/{{ item_name }}/{{ id }}/add"
+                >
+                    Add
+                </button>
+            </div>
+        </div>
+        <!-- Table -->
+        <div class="grid">
+            <div class="col">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th scope="col" class="theadStyle"></th>
+                            <th scope="col" class="theadStyle">Actions</th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Name</div>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Name type here.."
+                                        (keyup)="onChangeOriginalName($event)"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="col" [width]="400" style="text-align: center">Image</th>
+                            <th scope="col">
+                                <div class="input-group">
+                                    <div class="input-group-text theadStyle" (click)="onSortPage($event)">Date</div>
+                                    <input
+                                        type="date"
+                                        class="form-control"
+                                        placeholder="Choose Date here.."
+                                        (change)="onChangeCreatedDate($event)"
+                                    />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody
+                        *ngFor="
+                            let images of imageDetails
+                                | paginate
+                                    : {
+                                          itemsPerPage: paginationSize,
+                                          currentPage: page,
+                                          totalItems: paginationTotalItems
+                                      }
+                        "
+                    >
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        (change)="updateDisplay(images.hashName)"
+                                        value=""
+                                        aria-label="..."
+                                        [checked]="images.display"
+                                    />
+                                </div>
+                            </th>
+                            <th scope="row">
+                                <div>
+                                    <button
+                                        class="btn btn-outline-danger btn-sm"
+                                        type="button"
+                                        (click)="updateDeleteItem(images.hashNameType, images.originalName)"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModalToggle"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </th>
+                            <td>{{ images.originalName }}</td>
+                            <td>
+                                <div class="gfg">
+                                    <img
+                                        src="{{ images.imgLink }}"
+                                        height="80px"
+                                        width="80px"
+                                        alt="{{ images.hashName }}"
+                                        (click)="
+                                            updateViewItem(images.hashNameType, images.originalName, images.imgLink)
+                                        "
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#displayImageModalToggle"
+                                    />
+                                    <!-- <div class="text-container">
+                                        <span>{{ images.hashName }}</span>
+                                    </div> -->
+                                </div>
+                            </td>
+                            <td>{{ images.createdAt | date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Total and Pagination -->
+        <div class="grid">
+            <div class="col">
+                <label>Total items: {{ paginationTotalItems }}</label>
+            </div>
+            <div class="col">
+                <div class="paginationStyle">
+                    <pagination-controls
+                        previousLabel="Prev"
+                        nextLabel="Next"
+                        [responsive]="true"
+                        (pageChange)="handlePageChange($event)"
+                    ></pagination-controls>
+                </div>
+            </div>
+        </div>
+        <!-- Delete Modal -->
+        <div
+            class="modal"
+            id="deleteModalToggle"
+            tabindex="-1"
+            aria-labelledby="deleteModalToggleLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title lbltext" id="deleteModalToggleLabel">Are you sure?</p>
+                        <button
+                            type="button"
+                            class="btn-close btn-sm"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-1">Note:</div>
+                                <div class="col-md-10 text-center">
+                                    This action will <span class="fw-bold">remove</span> Informed Consent data ({{
+                                        this.imgNameOriginal
+                                    }}) file from
+                                    <br />
+                                    <span class="fst-italic text-decoration-underline"
+                                        >{{
+                                            profileModel?.name?.lastName +
+                                                ' ' +
+                                                profileModel?.name?.middleName +
+                                                ', ' +
+                                                profileModel?.name?.firstName
+                                        }}.</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger btn-sm me-3"
+                                (click)="deletePreProcedureRequirement()"
+                                data-bs-dismiss="modal"
+                            >
+                                Delete
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- View Image Modal -->
+        <div
+            class="modal fade"
+            id="displayImageModalToggle"
+            tabindex="-1"
+            aria-labelledby="displayImageModalToggleLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <p class="modal-title lbltext" id="displayImageModalToggleLabel">{{ imgNameOriginal }}</p>
+                        <button
+                            type="button"
+                            class="btn-close btn-sm"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <img src="{{ imgLink }}" height="auto" width="auto" alt="{{ hashName }}" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<app-footer></app-footer>

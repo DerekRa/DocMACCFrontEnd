@@ -1,0 +1,40 @@
+main {
+  padding-bottom: 40px;
+  .astrk {
+    color: rgba($color: #f03535, $alpha: 1);
+  }
+  .alert {
+    margin: auto;
+    position: absolute;
+    top: 110px;
+    left: 30px;
+  }
+  .inputGroupDate {
+    background: rgb(238, 238, 238);
+  }
+  .mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+  .valign-center {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+::ng-deep ngx-material-timepicker-content {
+  --body-background-color: #fff;
+  --primary-font-family: "Roboto", sans-serif;
+  --button-color: #003cff !important;
+  --dial-active-color: #fff;
+  --dial-inactive-color: rgba(255, 255, 255, 0.5);
+  --dial-background-color: #003cff !important;
+  --dial-editable-active-color: #003cff !important;
+  --dial-editable-background-color: #fff;
+  --clock-face-time-active-color: #fff;
+  --clock-face-time-inactive-color: #6c6c6c;
+  --clock-face-inner-time-inactive-color: #929292;
+  --clock-face-time-disabled-color: #c5c5c5;
+  --clock-face-background-color: #f0f0f0;
+  --clock-hand-color: #003cff !important;
+}

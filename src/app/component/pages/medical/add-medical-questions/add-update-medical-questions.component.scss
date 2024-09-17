@@ -1,0 +1,31 @@
+main {
+    padding-bottom: 40px;
+    .astrk {
+        color: rgba($color: #f03535, $alpha: 1);
+    }
+    .alert {
+        margin: auto;
+        position: absolute;
+        top: 110px;
+        left: 30px;
+    }
+    .invalid-feedback-data {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+    .checkboxClass {
+        margin-bottom: -8px;
+        //padding-bottom: -130px;
+    }
+    .form-check-label {
+        margin-bottom: -3px;
+    }
+    #otherhvanyffid{
+        font-size: small;
+        font-weight: 6px;
+    }
+    #othersalergcid{
+        font-size: small;
+        font-weight: 6px;
+    }
+}

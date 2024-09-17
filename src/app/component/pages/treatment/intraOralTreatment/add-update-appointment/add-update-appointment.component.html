@@ -1,0 +1,214 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/dental-records/treatment-plan/intraoral/{{ id }}"
+            >Intraoral Treatment List</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Appointment</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-11 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="grid">
+        <div class="col col-lg-4 col-offset-1">
+          <div class="grid">
+            <!-- Event Title -->
+            <div class="col">
+              <label for="eventTitleId"
+                ><span class="astrk">&ast;</span
+                ><span class="font-semibold">Event Title</span> (<i
+                  >Short Description</i
+                >)</label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="eventTitle"
+                formControlName="eventTitle"
+                id="eventTitleId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['eventTitle'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['eventTitle'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['eventTitle'].errors['required']">
+                  Event Title is required
+                </div>
+                <div *ngIf="f['eventTitle'].errors['minlength']">
+                  Event Title must be at least 2 characters
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <!-- Service To Avail -->
+        <div class="col-11 col-offset-1">
+          <label for="serviceToAvailId" class="font-semibold"
+            ><span class="astrk">&ast;</span>Service To Avail</label
+          >
+          <textarea
+            name="serviceToAvail"
+            formControlName="serviceToAvail"
+            class="form-control form-control-sm"
+            id="serviceToAvailId"
+            cols="20"
+            rows="3"
+            [ngClass]="{
+              'is-invalid': submitted && f['serviceToAvail'].errors
+            }"
+          ></textarea>
+          <div
+            *ngIf="submitted && f['serviceToAvail'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['serviceToAvail'].errors['required']">
+              Service To Avail is required
+            </div>
+            <div *ngIf="f['serviceToAvail'].errors['minlength']">
+              Service To Avail must be at least 2 characters
+            </div>
+            <div *ngIf="f['serviceToAvail'].errors['maxlength']">
+              Service To Avail must be maximum of 255 characters
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <!-- Date Time Picker -->
+        <div class="col-4 col-offset-1">
+          <label for="rangeDateFromId" class="font-semibold"
+            ><span class="astrk">&ast;</span>Date</label
+          >
+          <div class="input-group input-group-sm">
+            <input
+              type="text"
+              name="rangeDateFrom"
+              formControlName="rangeDateFrom"
+              class="form-control form-control-sm inputGroupDate"
+              id="rangeDateFromId"
+              placeholder="YYYY-MM-DD"
+              value=""
+              [matDatepicker]="pickerdate"
+              min="{{ currentDate | date : 'yyyy-MM-dd' }}"
+              max="2050-01-01"
+              [ngClass]="{
+                'is-invalid': submitted && f['rangeDateFrom'].errors
+              }"
+              readonly
+            />
+            <button
+              class="btn btn-outline-secondary"
+              id="datestartBtnId"
+              (click)="pickerdate.open()"
+              type="button"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Calendar icon"
+                fontIcon="calendar_month"
+              ></mat-icon>
+            </button>
+          </div>
+          <div
+            *ngIf="submitted && f['rangeDateFrom'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['rangeDateFrom'].errors['required']">
+              Date is required
+            </div>
+          </div>
+          <mat-datepicker #pickerdate></mat-datepicker>
+        </div>
+        <div class="col-4">
+          <label for="rangeTimeFromId" class="font-semibold"
+            ><span class="astrk">&ast;</span>Time</label
+          >
+          <div class="input-group input-group-sm">
+            <input
+              type="text"
+              [ngxTimepicker]="fullTime"
+              [format]="12"
+              name="rangeTimeFrom"
+              formControlName="rangeTimeFrom"
+              id="rangeTimeFromId"
+              class="form-control form-control-sm inputGroupDate"
+              placeholder="HH:MM"
+              value=""
+              [ngClass]="{
+                'is-invalid': submitted && f['rangeTimeFrom'].errors
+              }"
+              readonly
+            />
+            <button
+              class="btn btn-outline-secondary"
+              id="timepickerBtnId"
+              (click)="fullTime.open()"
+              type="button"
+            >
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Time icon"
+                fontIcon="access_time"
+              ></mat-icon>
+            </button>
+          </div>
+          <div
+            *ngIf="submitted && f['rangeTimeFrom'].errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['rangeTimeFrom'].errors['required']">
+              Time is required
+            </div>
+          </div>
+          <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+        </div>
+      </div>
+      <div class="grid justify-content-center mt-4">
+        <!-- <div class="col-2 text-lg"></div> -->
+        <div class="col-6 col-offset-4">
+          <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+          <button
+            type="submit"
+            id="saveallnowid"
+            class="btn btn-outline-primary btn-sm -mt-1"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+<app-footer></app-footer>

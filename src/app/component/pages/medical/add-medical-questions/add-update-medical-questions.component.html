@@ -1,0 +1,708 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item" *ngIf="urlLocation == 'Update'">
+                    <a routerLink="/medical-history/patient/{{ id }}">Health</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ urlLocation }}</li>
+            </ol>
+        </nav>
+
+        <div class="grid">
+            <div class="col text-xl">
+                Health Check up -
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <div class="col-1">1.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Are you in good health?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                id="gdhlthyes"
+                                value="Yes"
+                                name="goodHealth"
+                                formControlName="goodHealth"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['goodHealth'].errors
+                                }"
+                                ngModel
+                            />
+                            <label class="form-check-label" for="gdhlthyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                id="gdhlthno"
+                                value="No"
+                                name="goodHealth"
+                                formControlName="goodHealth"
+                                ngModel
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['goodHealth'].errors
+                                }"
+                            />
+                            <label class="form-check-label" for="gdhlthno">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['goodHealth'].errors" class="form-check">
+                            <div *ngIf="f['goodHealth'].errors['required']" class="invalid-feedback-data">
+                                Good Health is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">2.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Are you under medical treatment now?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                name="medicalTreatment"
+                                formControlName="medicalTreatment"
+                                id="undrmdttyes"
+                                value="Yes"
+                                (change)="onChangeConditionYesNo($event, 'conditionTreated')"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['medicalTreatment'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="undrmdttyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                name="medicalTreatment"
+                                formControlName="medicalTreatment"
+                                id="undrmdttno"
+                                value="No"
+                                (change)="onChangeConditionYesNo($event, 'conditionTreated')"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['medicalTreatment'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="undrmdttno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['medicalTreatment'].errors" class="form-check">
+                            <div *ngIf="f['medicalTreatment'].errors['required']" class="invalid-feedback-data">
+                                Medical Treatment is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, what is the condition being treated?</div>
+                <div class="col-5">
+                    <input
+                        id="condtiontreatd"
+                        type="text"
+                        class="form-control form-control-sm"
+                        name="conditionTreated"
+                        formControlName="conditionTreated"
+                        placeholder="Type the condition being treated here.."
+                        [ngClass]="{
+                            'is-invalid': submitted && f['conditionTreated'].errors
+                        }"
+                    />
+                    <div *ngIf="submitted && f['conditionTreated'].errors" class="invalid-feedback">
+                        <div *ngIf="f['conditionTreated'].errors['required']">Condition being treated is required</div>
+                        <div *ngIf="f['conditionTreated'].errors['minlength']">
+                            Condition being treated must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['conditionTreated'].errors['maxlength']">
+                            Condition being treated must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">3.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Have you ever had serious illness or surgical operation?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                formControlName="surgicalOperation"
+                                name="surgicalOperation"
+                                id="srsillsopyes"
+                                value="Yes"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['surgicalOperation'].errors
+                                }"
+                                (change)="onChangeConditionYesNo($event, 'whatOperation')"
+                                ngModel
+                            />
+                            <label for="srsillsopyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                class="form-check-input"
+                                formControlName="surgicalOperation"
+                                name="surgicalOperation"
+                                id="srsillsopno"
+                                value="No"
+                                (change)="onChangeConditionYesNo($event, 'whatOperation')"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['surgicalOperation'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="srsillsopno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['surgicalOperation'].errors" class="form-check">
+                            <div *ngIf="f['surgicalOperation'].errors['required']" class="invalid-feedback-data">
+                                Serious illness or Surgical operation is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, what illness or operation?</div>
+                <div class="col-5">
+                    <input
+                        id="illnssoption"
+                        type="text"
+                        name="whatOperation"
+                        formControlName="whatOperation"
+                        placeholder="Type illness or operation here.."
+                        class="form-control form-control-sm"
+                        [ngClass]="{
+                            'is-invalid': submitted && f['whatOperation'].errors
+                        }"
+                    />
+                    <div *ngIf="submitted && f['whatOperation'].errors" class="invalid-feedback">
+                        <div *ngIf="f['whatOperation'].errors['required']">Type illness or operation is required</div>
+                        <div *ngIf="f['whatOperation'].errors['minlength']">
+                            Type illness or operation must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['whatOperation'].errors['maxlength']">
+                            Type illness or operation must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">4.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Have you ever been hospitalized?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="hospitalized"
+                                name="hospitalized"
+                                id="evrbnhsptlzyes"
+                                class="form-check-input"
+                                value="Yes"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['hospitalized'].errors
+                                }"
+                                (change)="onChangeConditionYesNo($event, 'whenWhyHospitalized')"
+                                ngModel
+                            />
+                            <label for="evrbnhsptlzyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="hospitalized"
+                                name="hospitalized"
+                                id="evrbnhsptlzno"
+                                value="No"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['hospitalized'].errors
+                                }"
+                                (change)="onChangeConditionYesNo($event, 'whenWhyHospitalized')"
+                                ngModel
+                            />
+                            <label for="evrbnhsptlzno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['hospitalized'].errors" class="form-check">
+                            <div *ngIf="f['hospitalized'].errors['required']" class="invalid-feedback-data">
+                                Hospitalized is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, when and why?</div>
+                <div class="col-5">
+                    <input
+                        id="hospitalzedwhenwhy"
+                        type="text"
+                        formControlName="whenWhyHospitalized"
+                        name="whenWhyHospitalized"
+                        placeholder="Type when and why here.."
+                        class="form-control form-control-sm"
+                        [ngClass]="{
+                            'is-invalid': submitted && f['whenWhyHospitalized'].errors
+                        }"
+                        ngModel
+                    />
+                    <div *ngIf="submitted && f['whenWhyHospitalized'].errors" class="invalid-feedback">
+                        <div *ngIf="f['whenWhyHospitalized'].errors['required']">
+                            Hospitalized, when and why is required
+                        </div>
+                        <div *ngIf="f['whenWhyHospitalized'].errors['minlength']">
+                            Hospitalized, when and why must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['whenWhyHospitalized'].errors['maxlength']">
+                            Hospitalized, when and why must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">5.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Are you taking any prescription / non-prescription medication?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="prescriptionMedication"
+                                name="prescriptionMedication"
+                                id="prstnmednyes"
+                                value="Yes"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['prescriptionMedication'].errors
+                                }"
+                                (change)="onChangeConditionYesNo($event, 'specificPrescriptionMedication')"
+                                ngModel
+                            />
+                            <label for="prstnmednyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="prescriptionMedication"
+                                name="prescriptionMedication"
+                                id="prstnmednno"
+                                value="No"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['prescriptionMedication'].errors
+                                }"
+                                (change)="onChangeConditionYesNo($event, 'specificPrescriptionMedication')"
+                                ngModel
+                            />
+                            <label for="prstnmednno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['prescriptionMedication'].errors" class="form-check">
+                            <div *ngIf="f['prescriptionMedication'].errors['required']" class="invalid-feedback-data">
+                                Prescription / Non-prescription medication is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, please specify?</div>
+                <div class="col-5">
+                    <input
+                        id="prescriptnmedspecify"
+                        type="text"
+                        formControlName="specificPrescriptionMedication"
+                        name="specificPrescriptionMedication"
+                        placeholder="Type specification here.."
+                        class="form-control form-control-sm"
+                        [ngClass]="{
+                            'is-invalid': submitted && f['specificPrescriptionMedication'].errors
+                        }"
+                        ngModel
+                    />
+                    <div *ngIf="submitted && f['specificPrescriptionMedication'].errors" class="invalid-feedback">
+                        <div *ngIf="f['specificPrescriptionMedication'].errors['required']">
+                            Specific on prescription / Non-prescription medication is required
+                        </div>
+                        <div *ngIf="f['specificPrescriptionMedication'].errors['minlength']">
+                            Specific on prescription / Non-prescription medication must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['specificPrescriptionMedication'].errors['maxlength']">
+                            Specific on prescription / Non-prescription medication must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">6.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Do you use tobacco products?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="tobacco"
+                                name="tobacco"
+                                id="tbccoprdyes"
+                                value="Yes"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['tobacco'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="tbccoprdyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="tobacco"
+                                name="tobacco"
+                                id="tbccoprdno"
+                                value="No"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['tobacco'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="tbccoprdno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['tobacco'].errors" class="form-check">
+                            <div *ngIf="f['tobacco'].errors['required']" class="invalid-feedback-data">
+                                Tobacco is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">7.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Do you use alcohol, cocaine or other dangerous drugs?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="alcoholCocaineOtherDrugs"
+                                name="alcoholCocaineOtherDrugs"
+                                id="alcodgdyes"
+                                value="Yes"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['alcoholCocaineOtherDrugs'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="alcodgdyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="alcoholCocaineOtherDrugs"
+                                name="alcoholCocaineOtherDrugs"
+                                id="alcodgdno"
+                                value="No"
+                                class="form-check-input"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['alcoholCocaineOtherDrugs'].errors
+                                }"
+                                ngModel
+                            />
+                            <label for="alcodgdno" class="form-check-label">No</label>
+                        </div>
+                        <div *ngIf="submitted && f['alcoholCocaineOtherDrugs'].errors" class="form-check">
+                            <div *ngIf="f['alcoholCocaineOtherDrugs'].errors['required']" class="invalid-feedback-data">
+                                Alcohol, Cocaine or Other dangerous drugs is required
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">8.</div>
+                <div class="col-5">Are you allergic to any of the following:</div>
+                <div class="col-6">
+                    <div class="formgroup-inline">
+                        <div
+                            class="field-checkbox"
+                            *ngFor="let allergy of getFormAllergies.controls; let i = index"
+                            formArrayName="allergies"
+                        >
+                            <div formGroupName="{{ i }}" class="checkboxClass">
+                                <input
+                                    [checked]="getFormAllergies.controls[i].value.checked"
+                                    value="{{ getFormAllergies.controls[i].value.value }}"
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    (change)="onCheckboxChangeAllergies($event)"
+                                />
+                                <label>&nbsp;{{ getFormAllergies.controls[i].value.name }}</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="othersalergcid" class="p-sr-only">Others:</label>
+                            <input
+                                id="othersalergcid"
+                                type="text"
+                                class="h-1rem surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary"
+                                name="otherAllergies"
+                                formControlName="otherAllergies"
+                                placeholder="Type others here.."
+                                ngModel
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">9.</div>
+                <div class="col-5">Bleeding Time</div>
+                <div class="col-5">
+                    <input
+                        id="bleedingtimeId"
+                        type="text"
+                        class="form-control form-control-sm"
+                        name="bleedingTime"
+                        formControlName="bleedingTime"
+                        placeholder="Type bleeding time here.."
+                        ngModel
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">10.</div>
+                <div class="col-2">For woman only:</div>
+                <div class="col-3">Are you pregnant?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyPregnant"
+                                name="womanOnlyPregnant"
+                                id="arupgntyes"
+                                value="Yes"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arupgntyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyPregnant"
+                                name="womanOnlyPregnant"
+                                id="arupgntno"
+                                value="No"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arupgntno" class="form-check-label">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-3"></div>
+                <div class="col-3">Are you nursing?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyNursing"
+                                name="womanOnlyNursing"
+                                id="arunrngyes"
+                                value="Yes"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arunrngyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyNursing"
+                                name="womanOnlyNursing"
+                                id="arunrngno"
+                                value="No"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arunrngno" class="form-check-label">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-3"></div>
+                <div class="col-3">Are you taking birth control pills?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyBirthControlPills"
+                                name="womanOnlyBirthControlPills"
+                                id="arubtclplsyes"
+                                value="Yes"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arubtclplsyes" class="form-check-label">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                formControlName="womanOnlyBirthControlPills"
+                                name="womanOnlyBirthControlPills"
+                                id="arubtclplsno"
+                                value="No"
+                                class="form-check-input"
+                                ngModel
+                            />
+                            <label for="arubtclplsno" class="form-check-label">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">11.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Blood Type</div>
+                <div class="col-5">
+                    <input
+                        id="boodtypeId"
+                        type="text"
+                        name="bloodType"
+                        formControlName="bloodType"
+                        placeholder="Type blood type here.."
+                        class="form-control form-control-sm"
+                        [ngClass]="{
+                            'is-invalid': submitted && f['bloodType'].errors
+                        }"
+                        ngModel
+                    />
+                    <div *ngIf="submitted && f['bloodType'].errors" class="invalid-feedback">
+                        <div *ngIf="f['bloodType'].errors['required']">Blood Type is required</div>
+                        <div *ngIf="f['bloodType'].errors['maxlength']">
+                            Blood Type must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">12.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Blood Pressure</div>
+                <div class="col-5">
+                    <input
+                        id="bloodpressureId"
+                        type="text"
+                        name="bloodPressure"
+                        formControlName="bloodPressure"
+                        placeholder="Type blood pressure here.."
+                        class="form-control form-control-sm"
+                        [ngClass]="{
+                            'is-invalid': submitted && f['bloodPressure'].errors
+                        }"
+                        ngModel
+                    />
+                    <div *ngIf="submitted && f['bloodPressure'].errors" class="invalid-feedback">
+                        <div *ngIf="f['bloodPressure'].errors['required']">Blood Pressure is required</div>
+                        <div *ngIf="f['bloodPressure'].errors['minlength']">
+                            Blood Type must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['bloodPressure'].errors['maxlength']">
+                            Blood Type must be maximum of 83 characters
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">13.</div>
+                <div class="col">Do you have or have you had any of the following? Check which apply</div>
+            </div>
+            <div class="grid">
+                <div class="col-1"></div>
+                <div class="col">
+                    <div class="formgroup-inline">
+                        <div
+                            class="field-checkbox"
+                            *ngFor="let medCondition of getFormMediclConditions.controls; let i = index"
+                            formArrayName="haveYouHadAnyOfTheFollowing"
+                        >
+                            <div [formGroupName]="i" class="checkboxClass">
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    value="{{ getFormMediclConditions.controls[i].value.value }}"
+                                    [checked]="getFormMediclConditions.controls[i].value.checked"
+                                    (change)="onCheckboxChangeHadAnyFollowing($event)"
+                                />
+                                <label>&nbsp;{{ getFormMediclConditions.controls[i].value.name }}</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="otherhvanyffid" class="p-sr-only">Others:</label>
+                            <input
+                                id="otherhvanyffid"
+                                type="text"
+                                class="h-1rem surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary"
+                                name="otherHaveYouHadAnyOfTheFollowing"
+                                formControlName="otherHaveYouHadAnyOfTheFollowing"
+                                placeholder="Type others here.."
+                                ngModel
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col"><hr /></div>
+            </div>
+            <div class="grid justify-content-center mb-6">
+                <!-- <div class="col-2 text-lg"></div> -->
+                <div class="col-2">
+                    <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+                    <button type="submit" id="saveallnowid" class="btn btn-outline-primary btn-sm -mt-1">
+                        Save All
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

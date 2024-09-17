@@ -1,0 +1,33 @@
+<div class="grid">
+  <div class="col"><hr /></div>
+</div>
+<div class="grid">
+  <div class="col-3 text-lg">
+    Next Appointment Date
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1 btn-circle"
+      (click)="onUpdateAppointment()"
+    >
+      <mat-icon
+        aria-hidden="false"
+        aria-label="Edit icon"
+        fontIcon="edit"
+      ></mat-icon>
+    </button>
+  </div>
+  <div class="col">
+    {{ eventData?.start | date : "MMMM d, y ' at ' h:mm a " }}
+    <button
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewAppointments()"
+    >
+      History
+    </button>
+  </div>
+</div>
+<div class="grid">
+  <div class="col-3 text-lg">Service to Avail on Appointment</div>
+  <div class="col">{{ eventData?.serviceToAvail }}</div>
+</div>

@@ -1,0 +1,147 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patient/{{ id }}">Health</a></li>
+                <li class="breadcrumb-item">
+                    <a routerLink="/medical-history/patient/physicians/{{ id }}">List of Physicians</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Add</li>
+            </ol>
+        </nav>
+        <div class="grid">
+            <div class="col-1">
+                <!-- <img *ngIf="pictures.length == 0" src="{{ picture }}" class="img-thumbnail" alt="..." /> -->
+                <!-- <ul *ngFor="let item of pictures">
+                    <li><img src="{{ item }}" class="img-thumbnail" alt="..." /></li>
+                </ul> -->
+            </div>
+            <div class="col">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <div class="grid">
+                        <div class="col-1">1.</div>
+                        <div class="col-2"><span class="astrk">&ast;</span>Physician Name</div>
+                        <div class="col-5">
+                            <input
+                                id="physicianFullname"
+                                type="text"
+                                class="form-control form-control-sm"
+                                name="fullName"
+                                formControlName="fullName"
+                                placeholder="Type the physician name here.."
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['fullName'].errors
+                                }"
+                            />
+                            <div *ngIf="submitted && f['fullName'].errors" class="invalid-feedback">
+                                <div *ngIf="f['fullName'].errors['required']">Physician Name is required</div>
+                                <div *ngIf="f['fullName'].errors['minlength']">
+                                    Physician Name being treated must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['fullName'].errors['maxlength']">
+                                    Physician Name must be maximum of 83 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-1">2.</div>
+                        <div class="col-2"><span class="astrk">&ast;</span>Office Address</div>
+                        <div class="col-5">
+                            <input
+                                id="physicianOfficeAddress"
+                                type="text"
+                                class="form-control form-control-sm"
+                                name="officeAddress"
+                                placeholder="Type the office address here.."
+                                formControlName="officeAddress"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['officeAddress'].errors
+                                }"
+                            />
+                            <div *ngIf="submitted && f['officeAddress'].errors" class="invalid-feedback">
+                                <div *ngIf="f['officeAddress'].errors['required']">Office Address is required</div>
+                                <div *ngIf="f['officeAddress'].errors['minlength']">
+                                    Office Address being treated must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['officeAddress'].errors['maxlength']">
+                                    Office Address must be maximum of 83 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-1">3.</div>
+                        <div class="col-2"><span class="astrk">&ast;</span>Office Number</div>
+                        <div class="col-5">
+                            <input
+                                id="physicianOfficeNumber"
+                                type="text"
+                                class="form-control form-control-sm"
+                                name="officeNumber"
+                                placeholder="Type the office number here.."
+                                formControlName="officeNumber"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['officeNumber'].errors
+                                }"
+                            />
+                            <div *ngIf="submitted && f['officeNumber'].errors" class="invalid-feedback">
+                                <div *ngIf="f['officeNumber'].errors['required']">Office Number is required</div>
+                                <div *ngIf="f['officeNumber'].errors['minlength']">
+                                    Office Number being treated must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['officeNumber'].errors['maxlength']">
+                                    Office Number must be maximum of 83 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-1">4.</div>
+                        <div class="col-2"><span class="astrk">&ast;</span>Specialty</div>
+                        <div class="col-5">
+                            <input
+                                id="physicianSpecialty"
+                                type="text"
+                                class="form-control form-control-sm"
+                                name="specialty"
+                                placeholder="Type the specialty here.."
+                                formControlName="specialty"
+                                [ngClass]="{
+                                    'is-invalid': submitted && f['specialty'].errors
+                                }"
+                            />
+                            <div *ngIf="submitted && f['specialty'].errors" class="invalid-feedback">
+                                <div *ngIf="f['specialty'].errors['required']">Specialty is required</div>
+                                <div *ngIf="f['specialty'].errors['minlength']">
+                                    Specialty being treated must be at least 2 characters
+                                </div>
+                                <div *ngIf="f['specialty'].errors['maxlength']">
+                                    Specialty must be maximum of 83 characters
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-8"><hr /></div>
+                    </div>
+                    <div class="grid">
+                        <!-- <div class="col-2 text-lg"></div> -->
+                        <div class="col-9">
+                            <label class="fw-lighter" for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+                            <button type="submit" id="saveallnowid" class="btn btn-outline-primary btn-sm -mt-1">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="grid"><div class="col">&nbsp;</div></div>
+        </div>
+    </div>
+</main>
+<app-footer></app-footer>

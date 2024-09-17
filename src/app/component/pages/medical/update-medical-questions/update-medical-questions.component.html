@@ -1,0 +1,794 @@
+<app-header></app-header>
+<app-alert></app-alert>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patient/{{ id }}">Health</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Update</li>
+            </ol>
+        </nav>
+        <div class="grid">
+            <div class="col-11 text-xl">
+                Update Health (Last checked
+                {{
+                    medicalModel?.medicalModel?.updatedAt
+                        ? medicalModel?.medicalModel?.updatedAt
+                        : (medicalModel?.medicalModel?.createdAt | date : 'MMMM dd, yyyy')
+                }}) -
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <div class="col-1">1.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Are you in good health?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="goodHealth"
+                                id="gdhlthyes"
+                                value="Yes"
+                                formControlName="goodHealth"
+                            />
+                            <label for="gdhlthyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="goodHealth"
+                                id="gdhlthno"
+                                value="No"
+                                formControlName="goodHealth"
+                            />
+                            <label for="gdhlthno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">2.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Are you under medical treatment now?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="medicalTreatment"
+                                id="undrmdttyes"
+                                value="Yes"
+                                formControlName="medicalTreatment"
+                            />
+                            <label for="undrmdttyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="medicalTreatment"
+                                id="undrmdttno"
+                                value="No"
+                                formControlName="medicalTreatment"
+                            />
+                            <label for="undrmdttno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, what is the condition being treated?</div>
+                <div class="col-5">
+                    <input
+                        id="condtiontreatd"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        name="conditionTreated"
+                        formControlName="conditionTreated"
+                        placeholder="Type the condition being treated here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">3.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Have you ever had serious illness or surgical operation?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="surgicalOperation"
+                                id="srsillsopyes"
+                                value="Yes"
+                                formControlName="surgicalOperation"
+                            />
+                            <label for="srsillsopyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="surgicalOperation"
+                                id="srsillsopno"
+                                value="No"
+                                formControlName="surgicalOperation"
+                            />
+                            <label for="srsillsopno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, what illness or operation?</div>
+                <div class="col-5">
+                    <input
+                        id="illnssoption"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        formControlName="whatOperation"
+                        placeholder="Type illness or operation here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">4.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Have you ever been hospitalized?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="hospitalized"
+                                id="evrbnhsptlzyes"
+                                value="Yes"
+                                formControlName="hospitalized"
+                            />
+                            <label for="evrbnhsptlzyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="hospitalized"
+                                id="evrbnhsptlzno"
+                                value="No"
+                                formControlName="hospitalized"
+                            />
+                            <label for="evrbnhsptlzno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, when and why?</div>
+                <div class="col-5">
+                    <input
+                        id="hospitalzedwhenwhy"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        name="whenWhyHospitalized"
+                        formControlName="whenWhyHospitalized"
+                        placeholder="Type when and why here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">5.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Are you taking any prescription / non-prescription medication?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="prescriptionMedication"
+                                id="prstnmednyes"
+                                value="Yes"
+                                formControlName="prescriptionMedication"
+                            />
+                            <label for="prstnmednyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="prescriptionMedication"
+                                id="prstnmednno"
+                                value="No"
+                                formControlName="prescriptionMedication"
+                            />
+                            <label for="prstnmednno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-2"></div>
+                <div class="col-4">If so, please specify?</div>
+                <div class="col-5">
+                    <input
+                        id="prescriptnmedspecify"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        name="specificPrescriptionMedication"
+                        formControlName="specificPrescriptionMedication"
+                        placeholder="Type specification here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">6.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Do you use tobacco products?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input type="radio" name="tobacco" id="tbccoprdyes" value="Yes" formControlName="tobacco" />
+                            <label for="tbccoprdyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input type="radio" name="tobacco" id="tbccoprdno" value="No" formControlName="tobacco" />
+                            <label for="tbccoprdno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">7.</div>
+                <div class="col-5">
+                    <span class="astrk">&ast;</span>Do you use alcohol, cocaine or other dangerous drugs?
+                </div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="alcoholCocaineOtherDrugs"
+                                id="alcodgdyes"
+                                value="Yes"
+                                formControlName="alcoholCocaineOtherDrugs"
+                            />
+                            <label for="alcodgdyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="alcoholCocaineOtherDrugs"
+                                id="alcodgdno"
+                                value="No"
+                                formControlName="alcoholCocaineOtherDrugs"
+                            />
+                            <label for="alcodgdno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">8.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Are you allergic to any of the following:</div>
+                <div class="col-6">
+                    <app-allergies></app-allergies>
+                    <!-- <div class="formgroup-inline">
+                        <div *ngFor="let listOfAllergy of listOfAllAllergies.controls; let i = index">
+                            <div class="field-checkbox">
+                                <input
+                                    type="checkbox"
+                                    [value]="listOfAllergy.value"
+                                    formControlName="allergies"
+                                    [checked]="listOfAllergy"
+                                    (change)="onCheckboxChangeAllergies($event)"
+                                />
+                                <label>{{ listOfAllergy.value }}</label>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="formgroup-inline">
+                        <div class="field -mt-1">
+                            <label for="othersalergcid" class="p-sr-only">Others:</label>
+                            <input
+                                id="othersalergcid"
+                                type="text"
+                                class="text-base text-color h-1rem surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary"
+                                formControlName="otherAllergies"
+                                placeholder="Others type here.."
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">9.</div>
+                <div class="col-5">Bleeding Time</div>
+                <div class="col-5">
+                    <input
+                        id="bleedingtime"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        formControlName="bleedingTime"
+                        placeholder="Type bleeding time here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">10.</div>
+                <div class="col-2">For woman only:</div>
+                <div class="col-3">Are you pregnant?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arupreggyyesno"
+                                id="arupgntyes"
+                                value="Yes"
+                                formControlName="womanOnlyPregnant"
+                            />
+                            <label for="arupgntyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arupreggyyesno"
+                                id="arupgntno"
+                                value="No"
+                                formControlName="womanOnlyPregnant"
+                            />
+                            <label for="arupgntno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-3"></div>
+                <div class="col-3">Are you nursing?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arunursingyesno"
+                                id="arunrngyes"
+                                value="Yes"
+                                formControlName="womanOnlyNursing"
+                            />
+                            <label for="arunrngyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arunursingyesno"
+                                id="arunrngno"
+                                value="No"
+                                formControlName="womanOnlyNursing"
+                            />
+                            <label for="arunrngno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-3"></div>
+                <div class="col-3">Are you taking birth control pills?</div>
+                <div class="col-5">
+                    <div class="formgroup-inline -mb-2">
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arunrthcontlplsyesno"
+                                id="arubtclplsyes"
+                                value="No"
+                                formControlName="womanOnlyBirthControlPills"
+                            />
+                            <label for="arubtclplsyes">Yes</label>
+                        </div>
+                        <div class="field-radiobutton">
+                            <input
+                                type="radio"
+                                name="arunrthcontlplsyesno"
+                                id="arubtclplsno"
+                                value="No"
+                                formControlName="womanOnlyBirthControlPills"
+                            />
+                            <label for="arubtclplsno">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">11.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Blood Type</div>
+                <div class="col-5">
+                    <input
+                        id="boodtypeid"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        formControlName="bloodType"
+                        placeholder="Type blood type here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">12.</div>
+                <div class="col-5"><span class="astrk">&ast;</span>Blood Pressure</div>
+                <div class="col-5">
+                    <input
+                        id="bloodpressure"
+                        type="text"
+                        class="text-base text-color h-2rem -mt-1 surface-overlay p-1 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+                        formControlName="bloodPressure"
+                        placeholder="Type blood pressure here.."
+                    />
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col-1">13.</div>
+                <div class="col">Do you have or have you had any of the following? Check which apply</div>
+            </div>
+            <div class="grid">
+                <div class="col-1"></div>
+                <div class="col">
+                    <div class="formgroup-inline">
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="highbloodpressr"
+                                value="High Blood Pressure"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="highbloodpressr">High Blood Pressure</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="lowbloodpressr"
+                                value="Low Blood Pressure"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="lowbloodpressr">Low Blood Pressure</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="epilpsyconvns"
+                                value="Epilepsy / Convulsions"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="epilpsyconvns">Epilepsy / Convulsions</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="aidshivinfcn"
+                                value="AIDS or HIV Infection"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="aidshivinfcn">AIDS or HIV Infection</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="sexllytransmittdd"
+                                value="Sexually Transmitted disease"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="sexllytransmittdd">Sexually Transmitted disease</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="ulcersid"
+                                value="Stomach Troubles / Ulcers"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="ulcersid">Stomach Troubles / Ulcers</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="faintngseizre"
+                                value="Fainting Seizure"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="faintngseizre">Fainting Seizure</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="rapidwieghtloss"
+                                value="Rapid Weight Loss"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="rapidwieghtloss">Rapid Weight Loss</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="radiationthrpy"
+                                value="Radiation Therapy"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="radiationthrpy">Radiation Therapy</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="jointreplcmntimplt"
+                                value="Joint Replacement / Implant"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="jointreplcmntimplt">Joint Replacement / Implant</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="heartsrgry"
+                                value="Heart Surgery"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="heartsrgry">Heart Surgery</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="heartattck"
+                                value="Heart Attack"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="heartattck">Heart Attack</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="thyroidprob"
+                                value="Thyroid Problem"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="thyroidprob">Thyroid Problem</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="heartdisse"
+                                value="Heart Disease"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="heartdisse">Heart Disease</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="heartmurmr"
+                                value="Heart Murmur"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="heartmurmr">Heart Murmur</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="hepatitislvrdisse"
+                                value="Hepatitis / Liver Disease"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="hepatitislvrdisse">Hepatitis / Liver Disease</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="rheumaticfvr"
+                                value="Rheumatic Fever"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="rheumaticfvr">Rheumatic Fever</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="hayfevrallrgs"
+                                value="Hay Fever / Allergies"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="hayfevrallrgs">Hay Fever / Allergies</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="respritryprobs"
+                                value="Respiratory Problems"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="respritryprobs">Respiratory Problems</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="hepatjadc"
+                                value="Hepatitis / Jaundice"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="hepatjadc">Hepatitis / Jaundice</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="tuberculss"
+                                value="Tuberculosis"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="tuberculss">Tuberculosis</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="swallonanks"
+                                value="Swallon Ankles"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="swallonanks">Swallon Ankles</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="kidneydiss"
+                                value="Kidney Disease"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="kidneydiss">Kidney Disease</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="diabetesid"
+                                value="Diabetes"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="diabetesid">Diabetes</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="chestpainid"
+                                value="Chest Pain"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="chestpainid">Chest Pain</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="strokeid"
+                                value="Stroke"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="strokeid">Stroke</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="cancertumrs"
+                                value="Cancer / Tumors"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="cancertumrs">Cancer / Tumors</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="anemiaid"
+                                value="Anemia"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="anemiaid">Anemia</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="anginaid"
+                                value="Angina"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="anginaid">Angina</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="asthmaid"
+                                value="Asthma"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="asthmaid">Asthma</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="emphysemaid"
+                                value="Emphysema"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="emphysemaid">Emphysema</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="bleedngprobs"
+                                value="Bleeding Problems"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="bleedngprobs">Bleeding Problems</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="blooddisse"
+                                value="Blood Disease"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="blooddisse">Blood Disease</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="headinjurs"
+                                value="Head Injuries"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="headinjurs">Head Injuries</label>
+                        </div>
+                        <div class="field-checkbox">
+                            <input
+                                type="checkbox"
+                                id="arthritsrheums"
+                                value="Arthritis / Rheumatism"
+                                (change)="onCheckboxChangeHadAnyFollowing($event)"
+                            />
+                            <label for="arthritsrheums">Arthritis / Rheumatism</label>
+                        </div>
+                        <div class="field -mt-1">
+                            <label for="otherhvanyffid" class="p-sr-only">Others:</label>
+                            <input
+                                id="otherhvanyffid"
+                                type="text"
+                                class="text-base text-color h-1rem surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary"
+                                formControlName="otherHaveYouHadAnyOfTheFollowing"
+                                placeholder="Type others here.."
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col"><hr /></div>
+            </div>
+            <div class="grid">
+                <div class="col-2 text-lg">Informed Consent</div>
+                <div class="col-1">
+                    <button type="button" class="btn btn-outline-primary btn-sm -mt-1 -ml-5">Print IC</button>
+                </div>
+            </div>
+            <div class="grid">
+                <div class="col"><hr /></div>
+            </div>
+            <div class="grid justify-content-center">
+                <!-- <div class="col-2 text-lg"></div> -->
+                <div class="col-2">
+                    <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+                    <button type="submit" id="saveallnowid" class="btn btn-outline-primary btn-sm -mt-1">
+                        Save All
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

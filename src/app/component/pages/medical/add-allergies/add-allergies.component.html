@@ -1,0 +1,23 @@
+<form [formGroup]="allergiesForm">
+    <div formArrayName="allergies">
+        <div *ngFor="let allergy of listOfAllAllergiess; let i = index">
+            <div class="field-checkbox" [formGroupName]="i">
+                <input
+                    type="checkbox"
+                    value="{{ allergy.value.value }}"
+                    [checked]="allergy.value.checked"
+                    (change)="onCheckboxChangeAllergies($event)"
+                />
+                <label>{{ allergy.value.name }}</label>
+                <!-- {{ this.allergiesForm.controls['allergies'].value | json }} -->
+                <!-- {{ this.allergiesForm.controls['allergies'].value[i] | json }} -->
+                <!-- {{ allergy.value.name }} -->
+                <!-- {{ allergy.value.name[i] }} -->
+                <!-- {{ this.allergiesForm.value['allergies'][i].name | json }} -->
+                <!-- {{ allergy.value[i] | json }} -->
+            </div>
+        </div>
+    </div>
+</form>
+{{ this.allergiesForm.value.allergies | json }}
+<!-- {{ this.allergiesForm.value['allergies'][1].name | json }} -->

@@ -1,0 +1,138 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/treatment-plan/intraoral">List of Patients</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/treatment-plan/intraoral/{{ id }}"
+                        >Intraoral Treatment List</a
+                    >
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    <span>Certification</span>
+                </li>
+            </ol>
+        </nav>
+        <!-- Name -->
+        <div class="grid">
+            <div class="col-10 text-xl">
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <!-- Diagnosis -->
+            <div class="grid mt-4">
+                <div class="col-auto text-lg ml-2 mr-2"><span class="astrk">&ast;</span>Diagnosis:</div>
+                <div class="col-10 -mt-2">
+                    <textarea
+                        *ngIf="updateCertificate; else viewUpdateDiagnosis"
+                        name="diagnosis"
+                        formControlName="diagnosis"
+                        class="form-control form-control-sm"
+                        id="diagnosisId"
+                        placeholder="Type Diagnosis here..."
+                        rows="3"
+                        [ngClass]="{ 'is-invalid': submitted && f['diagnosis'].errors }"
+                    ></textarea>
+                    <div *ngIf="submitted && f['diagnosis'].errors" class="invalid-feedback">
+                        <div *ngIf="f['diagnosis'].errors['required']">Diagnosis is required</div>
+                        <div *ngIf="f['diagnosis'].errors['minlength']">Diagnosis must be at least 2 characters</div>
+                        <div *ngIf="f['diagnosis'].errors['maxlength']">
+                            Diagnosis must be maximum of 255 characters
+                        </div>
+                    </div>
+                    <ng-template #viewUpdateDiagnosis>{{ certificationData?.diagnosis }}</ng-template>
+                </div>
+            </div>
+            <!-- Remarks -->
+            <div class="grid mt-4">
+                <div class="col-auto text-lg ml-2 mr-2"><span class="astrk">&ast;</span>Recommendations :</div>
+                <div class="col-10 -mt-2">
+                    <textarea
+                        *ngIf="updateCertificate; else viewUpdateRemarks"
+                        name="recommendations"
+                        formControlName="recommendations"
+                        class="form-control form-control-sm"
+                        placeholder="Type Recommendations here..."
+                        id="recommendationId"
+                        [ngClass]="{ 'is-invalid': submitted && f['recommendations'].errors }"
+                        rows="3"
+                    ></textarea>
+                    <div *ngIf="submitted && f['recommendations'].errors" class="invalid-feedback">
+                        <div *ngIf="f['recommendations'].errors['required']">Recommendations is required</div>
+                        <div *ngIf="f['recommendations'].errors['minlength']">
+                            Recommendations must be at least 2 characters
+                        </div>
+                        <div *ngIf="f['recommendations'].errors['maxlength']">
+                            Recommendations must be maximum of 255 characters
+                        </div>
+                    </div>
+                </div>
+                <ng-template #viewUpdateRemarks>{{ certificationData?.recommendations }}</ng-template>
+            </div>
+            <div class="grid justify-content-center mt-6">
+                <div class="col-8"><hr /></div>
+            </div>
+            <!-- Save, Print, Update Back -->
+            <div class="grid justify-content-center">
+                <!-- <div class="col-2 text-lg"></div> -->
+                <div class="col text-center">
+                    <label for="saveallnowid" *ngIf="updateCertificate; else viewUpdateLabel"
+                        >Are you done? &nbsp; &nbsp;</label
+                    >
+                    <button
+                        *ngIf="updateCertificate; else viewUpdate"
+                        type="submit"
+                        id="saveallnowid"
+                        class="btn btn-outline-primary btn-sm"
+                    >
+                        Save
+                    </button>
+                    <button
+                        *ngIf="updateCertificate"
+                        type="button"
+                        id="goBackId"
+                        class="btn btn-outline-primary btn-sm ml-1"
+                        (click)="updateCertification()"
+                    >
+                        Back
+                    </button>
+                    <ng-template #viewUpdateLabel>
+                        <label for="saveallnowid">Do you want to Update or Print? &nbsp; &nbsp;</label>
+                    </ng-template>
+                    <ng-template #viewUpdate>
+                        <button
+                            type="button"
+                            id="saveallnowid"
+                            class="btn btn-outline-primary btn-sm"
+                            (click)="updateCertification()"
+                        >
+                            Update
+                        </button>
+
+                        <button
+                            [disabled]="newDataToInsert"
+                            type="button"
+                            id="printCertiId"
+                            class="btn btn-outline-primary btn-sm ms-3"
+                            (click)="printPDFCertificate()"
+                        >
+                            Print
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,89 @@
+<app-header></app-header>
+<main>
+    <div class="container">
+        <!-- Label -->
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patients">List of Patients</a></li>
+                <li class="breadcrumb-item"><a routerLink="/medical-history/patient/{{ id }}">Health</a></li>
+                <li class="breadcrumb-item">
+                    <a routerLink="/medical-history/patient/preProcedure/{{ item_name }}/{{ id }}">{{
+                        breadcrumb_title
+                    }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Add</li>
+            </ol>
+        </nav>
+        <div class="grid">
+            <div class="col-1">
+                <!-- <img *ngIf="pictures.length == 0" src="{{ picture }}" class="img-thumbnail" alt="..." /> -->
+                <!-- <ul *ngFor="let item of pictures">
+                    <li><img src="{{ item }}" class="img-thumbnail" alt="..." /></li>
+                </ul> -->
+            </div>
+            <div class="col-11">
+                <label for="imgLink" class="form-label">
+                    Upload {{ breadcrumb_title }} <span class="fw-lighter fst-italic">(.jpg, .png)</span>
+                </label>
+
+                <ngx-dropzone (change)="onFileChange($event)">
+                    <ngx-dropzone-label>Drag/Drop image/s to be uploaded here..</ngx-dropzone-label>
+
+                    <ngx-dropzone-preview *ngFor="let item of pictures" [removable]="true" (removed)="onRemove(item)">
+                        <ngx-dropzone-label>
+                            <!-- Progress Bar -->
+                            <div class="progress form-group" *ngIf="uploadProgress > 0">
+                                <div
+                                    class="progress-bar progress-bar-striped bg-success"
+                                    role="progressbar"
+                                    [style.width.%]="uploadProgress"
+                                ></div>
+                            </div>
+                            <img src="{{ item }}" class="img-thumbnail" height="240px" width="240px" alt="..."
+                        /></ngx-dropzone-label>
+                    </ngx-dropzone-preview>
+                </ngx-dropzone>
+                <div>&nbsp;</div>
+                <button
+                    type="button"
+                    id="saveFiles"
+                    class="btn btn-outline-primary btn-sm ms-3"
+                    (click)="onSaveFiles()"
+                    [disabled]="saveFiles"
+                >
+                    Save
+                </button>
+                <!-- <div class="dropzone" fileDragDrop (filesChangeEmiter)="onFileChange($event)">
+                    <div class="text-wrapper">
+                        <div class="centered">
+                            <input type="file" name="file" id="file" (change)="onFileChange($event.target.files)" multiple>
+                            <label for="file"><span class="textLink">Select your file</span> or Drop it here!</label>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div id="drop-region">
+                    <div class="drop-box" corpImgUpload (dropFiles)="onFileChange($event)">
+                        <span class="message">Drop File Images Here</span>
+                    </div>
+                    <div id="image-preview"></div>
+                </div> -->
+                <!-- <div class="row">
+                    <div class="drop-box" corpImgUpload (dropFiles)="onFileChange($event)">
+                        <span class="message">Drop File Images Here</span>
+                    </div>
+                </div> -->
+                <!-- <input
+                    class="form-control form-control-sm"
+                    (drop)="onFileChange($event)"
+                    type="file"
+                    multiple="multiple"
+                    name="imgLink"
+                    id="formFileMultiple"
+                /> -->
+            </div>
+        </div>
+        <div class="grid"><div class="col">&nbsp;</div></div>
+    </div>
+</main>
+<app-footer></app-footer>

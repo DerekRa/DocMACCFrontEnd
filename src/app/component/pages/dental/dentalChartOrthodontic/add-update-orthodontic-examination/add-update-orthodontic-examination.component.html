@@ -1,0 +1,246 @@
+<app-header></app-header>
+<main>
+    <div class="container w-auto">
+        <!-- Label -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="link-dark" routerLink="/dental-records/dental-chart/orthodontic-examination"
+                        >List of Patients</a
+                    >
+                </li>
+                <li class="breadcrumb-item" >
+                    <a class="link-dark"
+                        routerLink="/dental-records/dental-chart/orthodontic-examination/view-record/{{ id }}"
+                    >
+                    Orthodontic Examination 
+                    </a>
+                </li>
+                <li class="breadcrumb-item" >
+                    <a class="link-dark"
+                        routerLink="/dental-records/dental-chart/orthodontic-examination/add-record/{{ id }}"
+                    >
+                    Update 
+                    </a>
+                </li>
+                <li
+                    class="breadcrumb-item active"
+                    aria-current="page"
+                >
+                    Add Braces
+                </li>
+            </ol>
+        </nav>
+        <!-- Name -->
+        <div class="grid">
+            <div class="col-11 text-xl">
+                {{
+                    profileModel?.name?.lastName +
+                        ' ' +
+                        profileModel?.name?.middleName +
+                        ', ' +
+                        profileModel?.name?.firstName
+                }}
+            </div>
+        </div>
+        <!-- Teeth Number and Date of Procedure -->
+        <div class="grid mt-2">
+            <div class="col-2 col-md-auto">
+                <a class="link-dark" data-bs-toggle="collapse" href="#collapseToothNumber"
+                    >{{ toothNumbersValue + '' }} <span class="badge bg-light text-dark">See more</span></a
+                >
+            </div>
+            <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">|</div>
+            <div class="col-5 col-md-auto lbltext"><span class="astrk">&ast;</span>Date of Procedure</div>
+            <div class="col-4 col-md-auto -mt-2">
+                <div class="input-group input-group-sm mb-3">
+                    <input type="text" class="form-control inputGroupDOP" aria-label="Date Of Procedure" aria-describedby="dateprocd"
+                     placeholder="YYYY-MM-DD"
+                     value="{{ braces?.dateOfProcedure | date : 'yyyy-MM-dd' }}"
+                     [matDatepicker]="picker"
+                     (dateChange)="onChangeDateOfProcedure($event)"
+                     min="1990-01-01"
+                     max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+                     [ngClass]="{
+                            'is-invalid': submitted && f['dateOfProcedure'].errors
+                        }"
+                      readonly>
+                    <button class="btn btn-outline-secondary" id="dateprocd" (click)="picker.open()" type="button">
+                        <span class="material-symbols-outlined">
+                            event
+                            </span>
+                    </button>
+                    <div *ngIf="submitted && f['dateOfProcedure'].errors" class="form-check">
+                        <div *ngIf="f['dateOfProcedure'].errors['required']" class="invalid-feedback-data">
+                            Date of procedure is required
+                        </div>
+                    </div>
+                </div>
+                <mat-datepicker #picker ></mat-datepicker>
+            </div>
+        </div>
+        <!-- Collapse Tooth Numbers -->
+        <div class="grid collapse hide" id="collapseToothNumber">
+            <div class="col-11 col-offset-1">
+                <div class="grid">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Permanent Status Right</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaRightTopCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaRightBottomCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 fw-light">
+                                <span class="fw-bold">Permanent Status Left</span>
+                                <div class="row">
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaLeftTopCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 form-check">
+                                        <div
+                                            *ngFor="
+                                                let toothNumberValue of toothDetailsPermaLeftBottomCenter;
+                                                let i = index
+                                            "
+                                        >
+                                            <input
+                                                [checked]="toothNumberValue?.checked"
+                                                value="{{ toothNumberValue?.value + '-' + toothNumberValue?.label }}"
+                                                id="{{ toothNumberValue?.inputId }}"
+                                                class="form-check-input"
+                                                name="{{ toothNumberValue?.formControlName }}"
+                                                type="checkbox"
+                                                (change)="onCheckboxChangeToothNumbers($event)"
+                                            />
+                                            <label><span class="fw-bold"></span> - {{ toothNumberValue.label }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Horizontal Line -->
+        <div class="grid">
+            <div class="col-12 -mt-4 -mb-2"><hr /></div>
+        </div>
+        <!-- Form Fill-up -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <div class="col-auto ml-2"><label for="bracketPrescriptionId">Bracket Prescription:</label></div>
+                <div class="col-auto ml-3"><span id="bracketPrescriptionId">{{bracketPrescription?.values}}</span></div>
+            </div>
+            <div class="grid mt-1" *ngIf="showMaxillaryWireType">
+                <div class="col-auto ml-2"><label for="maxillaryWireTypeId">Maxillary (Wire Type):</label></div>
+                <div class="col-auto ml-3"><span id="maxillaryWireTypeId">{{maxillaryWireType?.values}}</span></div>
+            </div>
+            <div class="grid mt-1" *ngIf="showMandibularWireType">
+                <div class="col-auto ml-2"><label for="mandibularWireTypeId">Mandibular (Wire Type):</label></div>
+                <div class="col-auto ml-3"><span id="mandibularWireTypeId">{{mandibularWireType?.values}}</span></div>
+            </div>
+            <div class="grid mt-1">
+                <div class="col-auto ml-2"><label for="bracketHeightId">Bracket Height:</label></div>
+                <div class="col-6 ml-3 -mt-2"><input
+                    type="text"
+                    class="form-control form-control-sm"
+                    id="bracketHeightId"
+                    formControlName="bracketHeight"
+                    name="bracketHeight"
+                    placeholder=""
+                /></div>
+            </div>
+            <div class="grid">
+                <div class="col-auto ml-2"><label for="noteId">Note:</label></div>
+                <div class="col-7 ml-3 -mt-1">
+                    <textarea
+                        name="note"
+                        formControlName="note"
+                        class="form-control form-control-sm"
+                        id="noteId"
+                        cols="100"
+                        rows="3"
+                    ></textarea>
+                </div>
+            </div>
+            <div class="grid justify-content-center">
+                <div class="col-8"><hr /></div>
+            </div>
+            <div class="grid justify-content-center">
+                <!-- <div class="col-2 text-lg"></div> -->
+                <div class="col text-center">
+                    <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+                    <button
+                        *ngIf="newDataToInsert; else viewUpdate"
+                        type="submit"
+                        id="saveallnowid"
+                        class="btn btn-outline-primary btn-sm -mt-1"
+                    >
+                        Save
+                    </button>
+                    <ng-template #viewUpdate>
+                        <button type="submit" id="saveallnowid" class="btn btn-outline-primary btn-sm -mt-1">
+                            Update
+                        </button>
+                    </ng-template>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+<app-footer></app-footer>

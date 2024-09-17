@@ -1,0 +1,337 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="grid">
+    <div class="col-3 col-md-2 mb-3">
+      <h3>Periodontal Screening</h3>
+      <div *ngIf="recordAction == 'add-record'; else viewAction">
+        <div
+          *ngFor="
+            let psTMD of getPeriodontalScreeningTMDRequestList.controls;
+            let i = index
+          "
+          formArrayName="periodontalScreeningTMDRequestList"
+        >
+          <div
+            class="form-check"
+            *ngIf="
+              getPeriodontalScreeningTMDRequestList.controls[i].value
+                .labelName == 'Periodontal Screening'
+            "
+          >
+            <input
+              [checked]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.checked
+              "
+              [value]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.value
+              "
+              [id]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.inputId
+              "
+              [name]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              "
+              (change)="onCheckboxChange($event)"
+              class="form-check-input"
+              type="checkbox"
+            />
+            <label
+              class="form-check-label"
+              for="{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.inputId
+              }}"
+            >
+              <span class="fw-light">{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <ng-template #viewAction>
+        <div
+          *ngFor="
+            let psTMD of getPeriodontalScreeningTMDRequestList.controls;
+            let i = index
+          "
+          formArrayName="periodontalScreeningTMDRequestList"
+        >
+          <div
+            *ngIf="
+              getPeriodontalScreeningTMDRequestList.controls[i].value
+                .labelName == 'Periodontal Screening'
+            "
+          >
+            <div class="valign-center">
+              <mat-icon
+                *ngIf="
+                  getPeriodontalScreeningTMDRequestList.controls[i].value
+                    .checked
+                "
+                aria-hidden="false"
+                aria-label="Check icon"
+                fontIcon="check"
+              ></mat-icon>
+              <mat-icon
+                *ngIf="
+                  !getPeriodontalScreeningTMDRequestList.controls[i].value
+                    .checked
+                "
+                aria-hidden="false"
+                aria-label="Close icon"
+                fontIcon="close"
+              ></mat-icon>
+              &nbsp;
+              <span class="fw-light">{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="col-3 mb-3" formGroupName="occlusion">
+      <h3>Occlusion</h3>
+
+      <label for="classMolarId" class="font-semibold">Class (Molar)</label>
+      <input
+        type="text"
+        placeholder="Type Class (Molar) here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="classMolar"
+        formControlName="classMolar"
+        id="classMolarId"
+        *ngIf="recordAction == 'add-record'; else viewActionClassMolar"
+      />
+      <ng-template #viewActionClassMolar>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.occlusion?.classMolar }} </span
+        ><br />
+      </ng-template>
+      <label for="overjetId" class="font-semibold">Overjet</label>
+      <input
+        type="text"
+        placeholder="Type Overjet here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="overjet"
+        formControlName="overjet"
+        id="overjetId"
+        *ngIf="recordAction == 'add-record'; else viewActionOverjet"
+      />
+      <ng-template #viewActionOverjet>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.occlusion?.overjet }} </span
+        ><br />
+      </ng-template>
+      <label for="overbiteId" class="font-semibold">Overbite</label>
+      <input
+        type="text"
+        placeholder="Type Overbite here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="overbite"
+        formControlName="overbite"
+        id="overbiteId"
+        *ngIf="recordAction == 'add-record'; else viewActionOverbite"
+      />
+      <ng-template #viewActionOverbite>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.occlusion?.overbite }} </span
+        ><br />
+      </ng-template>
+      <label for="midlineDeviationId" class="font-semibold"
+        >Midline Deviation</label
+      >
+      <input
+        type="text"
+        placeholder="Type Midline Deviation here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="midlineDeviation"
+        formControlName="midlineDeviation"
+        id="midlineDeviationId"
+        *ngIf="recordAction == 'add-record'; else viewActionMidlineDeviation"
+      />
+      <ng-template #viewActionMidlineDeviation>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.occlusion?.midlineDeviation }} </span
+        ><br />
+      </ng-template>
+      <label for="crossbiteId" class="font-semibold">Crossbite</label>
+      <input
+        type="text"
+        placeholder="Type Crossbite here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="crossbite"
+        formControlName="crossbite"
+        id="crossbiteId"
+        *ngIf="recordAction == 'add-record'; else viewActionCrossbite"
+      />
+      <ng-template #viewActionCrossbite>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.occlusion?.crossbite }} </span
+        ><br />
+      </ng-template>
+    </div>
+    <div class="col-3 mb-3" formGroupName="appliances">
+      <h3>Appliances</h3>
+      <label for="orthodonticId" class="font-semibold">Orthodontic</label>
+      <input
+        type="text"
+        placeholder="Type Orthodontic here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="orthodontic"
+        formControlName="orthodontic"
+        id="orthodonticId"
+        *ngIf="recordAction == 'add-record'; else viewActionOrthodontic"
+      />
+      <ng-template #viewActionOrthodontic>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.appliances?.orthodontic }} </span
+        ><br />
+      </ng-template>
+      <label for="stayplateId" class="font-semibold">Stayplate</label>
+      <input
+        type="text"
+        placeholder="Type Stayplate here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="stayplate"
+        formControlName="stayplate"
+        id="stayplateId"
+        *ngIf="recordAction == 'add-record'; else viewActionStayplate"
+      />
+      <ng-template #viewActionStayplate>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.appliances?.stayplate }} </span
+        ><br />
+      </ng-template>
+      <label for="othersId" class="font-semibold">Others</label>
+      <input
+        type="text"
+        placeholder="Type Others here.."
+        class="form-control form-control-sm mb-1 -ml-2"
+        name="others"
+        formControlName="others"
+        id="othersId"
+        *ngIf="recordAction == 'add-record'; else viewActionOthers"
+      />
+      <ng-template #viewActionOthers>
+        <br />
+        <span class="mb-2 ml-2">
+          {{ preRequisiteModel?.appliances?.others }} </span
+        ><br />
+      </ng-template>
+    </div>
+    <div class="col-3">
+      <h3>TMD</h3>
+      <div *ngIf="recordAction == 'add-record'; else viewActionTMD">
+        <div
+          *ngFor="
+            let psTMD of getPeriodontalScreeningTMDRequestList.controls;
+            let i = index
+          "
+          formArrayName="periodontalScreeningTMDRequestList"
+        >
+          <div
+            class="form-check"
+            *ngIf="
+              getPeriodontalScreeningTMDRequestList.controls[i].value
+                .labelName == 'TMD'
+            "
+          >
+            <input
+              [checked]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.checked
+              "
+              [value]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.value
+              "
+              [id]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.inputId
+              "
+              [name]="
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              "
+              (change)="onCheckboxChange($event)"
+              class="form-check-input"
+              type="checkbox"
+            />
+            <label
+              class="form-check-label"
+              for="{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.inputId
+              }}"
+            >
+              <span class="fw-light">{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <ng-template #viewActionTMD>
+        <div
+          *ngFor="
+            let psTMD of getPeriodontalScreeningTMDRequestList.controls;
+            let i = index
+          "
+          formArrayName="periodontalScreeningTMDRequestList"
+        >
+          <div
+            *ngIf="
+              getPeriodontalScreeningTMDRequestList.controls[i].value
+                .labelName == 'TMD'
+            "
+          >
+            <div class="valign-center">
+              <mat-icon
+                *ngIf="
+                  getPeriodontalScreeningTMDRequestList.controls[i].value
+                    .checked
+                "
+                aria-hidden="false"
+                aria-label="Check icon"
+                fontIcon="check"
+              ></mat-icon>
+
+              <mat-icon
+                *ngIf="
+                  !getPeriodontalScreeningTMDRequestList.controls[i].value
+                    .checked
+                "
+                aria-hidden="false"
+                aria-label="Close icon"
+                fontIcon="close"
+              ></mat-icon>
+
+              &nbsp;
+              <span class="fw-light">{{
+                getPeriodontalScreeningTMDRequestList.controls[i].value.name
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div
+    class="grid justify-content-center mb-6"
+    *ngIf="recordAction == 'add-record'"
+  >
+    <!-- <div class="col-2 text-lg"></div> -->
+    <div class="col-2">
+      <label for="saveallnowid">Are you done? &nbsp; &nbsp;</label>
+      <button
+        type="submit"
+        id="saveallnowid"
+        class="btn btn-outline-primary btn-sm -mt-1"
+      >
+        Save All
+      </button>
+    </div>
+  </div>
+</form>
