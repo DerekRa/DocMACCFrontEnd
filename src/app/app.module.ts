@@ -68,7 +68,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DentalCertificationComponent } from './component/pages/treatment/intraOralTreatment/dental-certification/dental-certification.component';
-import { IntraOralTreatmentListComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-list/intra-oral-treatment-list.component';
+import { IntraOralTreatmentBillListComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-bill-list/intra-oral-treatment-bill-list.component';
 import { IntraOralTreatmentListDetailsComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-list-details/intra-oral-treatment-list-details.component';
 import { AppointmentsComponent } from './component/pages/treatment/intraOralTreatment/appointments/appointments.component';
 import { AddUpdateAppointmentComponent } from './component/pages/treatment/intraOralTreatment/add-update-appointment/add-update-appointment.component';
@@ -77,6 +77,11 @@ import { PrescriptionComponent } from './component/pages/treatment/intraOralTrea
 import { AddUpdatePrescriptionComponent } from './component/pages/treatment/intraOralTreatment/add-update-prescription/add-update-prescription.component';
 import { AddUpdateAutoPrescriptionComponent } from './component/pages/treatment/intraOralTreatment/add-update-auto-prescription/add-update-auto-prescription.component';
 import { OrthodonticTreatmentListComponent } from './component/pages/treatment/orthodocticTreatment/orthodontic-treatment-list/orthodontic-treatment-list.component';
+import { IntraoralBillBreakdownComponent } from './component/pages/bill/intraOralBill/intraoral-bill-breakdown/intraoral-bill-breakdown.component';
+import { AmountProcedureComponent } from './component/pages/bill/intraOralBill/amount-procedure/amount-procedure.component';
+import { AmountChargedHistoryComponent } from './component/pages/bill/intraOralBill/amount-charged-history/amount-charged-history.component';
+import { AmountPaidHistoryComponent } from './component/pages/bill/intraOralBill/amount-paid-history/amount-paid-history.component';
+import { PaymentProcedureComponent } from './component/pages/bill/intraOralBill/payment-procedure/payment-procedure.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -131,7 +136,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AddUpdateXrayTakenComponent,
     XrayTakenComponent,
     DentalCertificationComponent,
-    IntraOralTreatmentListComponent,
+    IntraOralTreatmentBillListComponent,
     IntraOralTreatmentListDetailsComponent,
     AppointmentsComponent,
     AddUpdateAppointmentComponent,
@@ -140,6 +145,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AddUpdatePrescriptionComponent,
     AddUpdateAutoPrescriptionComponent,
     OrthodonticTreatmentListComponent,
+    IntraoralBillBreakdownComponent,
+    AmountProcedureComponent,
+    PaymentProcedureComponent,
+    AmountChargedHistoryComponent,
+    AmountPaidHistoryComponent,
   ],
   imports: [
     BrowserModule,

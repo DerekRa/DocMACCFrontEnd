@@ -253,6 +253,30 @@
                     </button>
                   </div>
                 </div>
+                <div
+                  [hidden]="
+                    !(urlLocation == '/bill-records/intraoral/patients')
+                  "
+                >
+                  <div [hidden]="!intraOralCollection.includes(name.id)">
+                    <button
+                      (click)="viewIntraOralBill(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="intraOralCollection.includes(name.id)">
+                    <button
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                      disabled="true"
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
               </th>
               <td>{{ name.firstName }}</td>
               <td>{{ name.lastName }}</td>

@@ -1,0 +1,28 @@
+main {
+  padding-bottom: 40px;
+  .tblLabel {
+    width: 280px;
+    font-weight: 500;
+  }
+  .tblLabelTotal {
+    width: 255px;
+    font-weight: 600;
+  }
+  .tblValue {
+    width: 315px;
+    font-weight: 220;
+  }
+  .tblValueTotal {
+    width: 315px;
+    font-weight: 400;
+  }
+  .tblBtn {
+    width: 173px;
+  }
+  .lblHistory {
+    color: aliceblue;
+    text-decoration: none;
+    font-weight: 150;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,231 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="link-dark" routerLink="/bill-records/intraoral/patients"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/intraoral/patients/{{ id }}"
+            >Intraoral Bill List</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/intraoral/patients/{{ id }}/{{
+              dateOfProcedure
+            }}"
+            >Breakdown</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Amount Procedure</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-11 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <!-- Date of Procedure and Print -->
+    <div class="grid -mb-1">
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Date Of Procedure :&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-2 -mb-1">
+        &nbsp; {{ dateOfProcedure | date : "MMMM dd, YYYY" }}
+      </div>
+      <div class="col text-center">
+        <span>&nbsp;</span>
+      </div>
+      <div class="col-auto"></div>
+    </div>
+    <!-- Table -->
+    <div class="grid">
+      <div class="col col-sm-11 col-lg-6">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <table class="table table-sm">
+            <tbody>
+              <tr>
+                <td class="tdincnum">
+                  <br />
+                  <span class="icrnum ms-3 mt-5 me-3"
+                    >{{ procedureNumber }}.</span
+                  >
+                </td>
+                <td>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td class="tblLabel">Category</td>
+                        <td class="tblValue">{{ breakdown?.category }}</td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">Procedure Done</td>
+                        <td class="tblValue">{{ breakdown?.procedureDone }}</td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">Tooth Number</td>
+                        <td class="tblValue">{{ breakdown?.toothNumber }}</td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">
+                          <span class="astrk">&ast;</span>Amount Charged
+                        </td>
+                        <td class="tblValue">
+                          <input
+                            type="number"
+                            name="amountCharged"
+                            id="amountChargedId"
+                            formControlName="amountCharged"
+                            class="form-control form-control-sm"
+                            min="1"
+                            [ngClass]="{
+                              'is-invalid':
+                                submitted && f['amountCharged'].errors
+                            }"
+                          />
+                          <div
+                            *ngIf="submitted && f['amountCharged'].errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="f['amountCharged'].errors['required']">
+                              Amount Charged is required
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">
+                          <span class="astrk">&ast;</span>Discount
+                        </td>
+                        <td class="tblValue">
+                          <input
+                            type="number"
+                            name="discount"
+                            id="discountId"
+                            formControlName="discount"
+                            class="form-control form-control-sm"
+                            min="0"
+                            [ngClass]="{
+                              'is-invalid': submitted && f['discount'].errors
+                            }"
+                          />
+                          <div
+                            *ngIf="submitted && f['discount'].errors"
+                            class="invalid-feedback"
+                          >
+                            <div *ngIf="f['discount'].errors['required']">
+                              Discount is required
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">Amount Paid</td>
+                        <td class="tblValue">
+                          {{ breakdown?.amountPaid | number }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">Payment</td>
+                        <td class="tblValue">
+                          {{ breakdown?.payment | number }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="tblLabel">Balance</td>
+                        <td class="tblValue">
+                          {{ breakdown?.balance | number }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <!-- Note -->
+                  <div class="col-11 col-offset-1">
+                    <label for="serviceToAvailId"
+                      ><span class="astrk">&ast;</span>Note</label
+                    >
+                    <textarea
+                      name="note"
+                      formControlName="note"
+                      class="form-control form-control-sm"
+                      id="noteId"
+                      cols="20"
+                      rows="3"
+                      [ngClass]="{
+                        'is-invalid': submitted && f['note'].errors
+                      }"
+                    ></textarea>
+                    <div
+                      *ngIf="submitted && f['note'].errors"
+                      class="invalid-feedback"
+                    >
+                      <div *ngIf="f['note'].errors['required']">
+                        Note is required
+                      </div>
+                      <div *ngIf="f['note'].errors['minlength']">
+                        Note must be at least 2 characters
+                      </div>
+                      <div *ngIf="f['note'].errors['maxlength']">
+                        Note must be maximum of 255 characters
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <div class="grid justify-content-center mt-2">
+                    <!-- <div class="col-2 text-lg"></div> -->
+                    <div class="col-6 col-offset-4">
+                      <button
+                        type="submit"
+                        id="saveallnowid"
+                        class="btn btn-outline-primary btn-sm"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="submit"
+                        id="saveallnowid"
+                        class="btn btn-outline-primary btn-sm ms-2"
+                        routerLink="/bill-records/intraoral/patients/{{ id }}/{{
+                          dateOfProcedure
+                        }}"
+                      >
+                        Back
+                      </button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

@@ -1,0 +1,196 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="link-dark" routerLink="/bill-records/intraoral/patients"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/intraoral/patients/{{ id }}"
+            >Intraoral {{ pageLocation }} List</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Breakdown</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-11 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <!-- Date of Procedure and Print -->
+    <div class="grid -mb-1">
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Date Of Procedure :&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-2 -mb-1">
+        &nbsp; {{ dateOfProcedure | date : "MMMM dd, YYYY" }}
+      </div>
+      <div class="col text-center">
+        <span>&nbsp;</span>
+      </div>
+      <div class="col-auto">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="printPDFBillBreakdown(profileModel?.id)"
+        >
+          Print All
+        </button>
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="grid">
+      <div class="col col-sm-11 col-lg-6">
+        <table class="table table-sm">
+          <tbody>
+            <tr
+              *ngFor="
+                let breakdown of billBreakdown.billBreakdowns;
+                let i = index
+              "
+            >
+              <td class="tdincnum">
+                <br />
+                <span class="icrnum ms-3 mt-5">{{ i + 1 }}.</span>
+              </td>
+              <td class="tblBtn">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm ms-3 mb-1 mt-4"
+                  (click)="viewAmountProcedure(i)"
+                >
+                  Amount Procedure
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm ms-3 mb-1"
+                  (click)="viewPaymentProcedure(i)"
+                >
+                  Payment
+                </button>
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm ms-3"
+                  (click)="printPDFBillBreakdown(profileModel?.id)"
+                >
+                  Print
+                </button>
+              </td>
+              <td>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="tblLabel">Category</td>
+                      <td class="tblValue">{{ breakdown?.category }}</td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">Procedure Done</td>
+                      <td class="tblValue">{{ breakdown?.procedureDone }}</td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">Tooth Number</td>
+                      <td class="tblValue">{{ breakdown?.toothNumber }}</td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">
+                        Amount Charged
+                        <span
+                          class="badge rounded-pill bg-secondary lblHistory"
+                          (click)="viewAmountChargedHistory(i)"
+                          >History</span
+                        >
+                      </td>
+                      <td class="tblValue">
+                        {{ breakdown?.amountCharged | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">Discount</td>
+                      <td class="tblValue">
+                        {{ breakdown?.discount | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">
+                        Amount Paid
+                        <span
+                          class="badge rounded-pill bg-secondary lblHistory"
+                          (click)="viewAmountPaidHistory(i)"
+                          >History</span
+                        >
+                      </td>
+                      <td class="tblValue">
+                        {{ breakdown?.amountPaid | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">Payment</td>
+                      <td class="tblValue">
+                        {{ breakdown?.payment | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabel">Balance</td>
+                      <td class="tblValue">
+                        {{ breakdown?.balance | number }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td class="tblLabelTotal">Total Bill</td>
+                      <td class="tblValueTotal">
+                        {{ billBreakdown.totalBill | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabelTotal">Total Payment</td>
+                      <td class="tblValueTotal">
+                        {{ billBreakdown.totalPayment | number }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tblLabelTotal">Total Balance</td>
+                      <td class="tblValueTotal">
+                        {{ billBreakdown.totalBalance | number }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

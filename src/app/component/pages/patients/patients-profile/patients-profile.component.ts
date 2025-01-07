@@ -293,6 +293,10 @@ export class PatientsProfileComponent implements OnInit {
     console.log(id);
     this.router.navigate(['dental-records/treatment-plan/intraoral', id]);
   }
+  public viewIntraOralBill(id: any) {
+    console.log(id);
+    this.router.navigate(['bill-records/intraoral/patients', id]);
+  }
   public viewOrthodonticTreatment(id: any) {
     console.log(id);
     this.router.navigate(['dental-records/treatment-plan/orthodontic', id]);

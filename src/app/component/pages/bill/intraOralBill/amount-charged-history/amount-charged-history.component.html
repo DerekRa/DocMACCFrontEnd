@@ -5,14 +5,28 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a
-            class="link-dark"
-            routerLink="/dental-records/treatment-plan/intraoral"
+          <a class="link-dark" routerLink="/bill-records/intraoral/patients"
             >List of Patients</a
           >
         </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/intraoral/patients/{{ id }}"
+            >Intraoral Bill List</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/intraoral/patients/{{ id }}/{{
+              dateOfProcedure
+            }}"
+            >Breakdown</a
+          >
+        </li>
         <li class="breadcrumb-item active" aria-current="page">
-          <span>Intraoral Treatment List</span>
+          <span>Charged Amount History</span>
         </li>
       </ol>
     </nav>
@@ -49,7 +63,7 @@
         </select>
       </div>
       <div class="col text-center">
-        <span>&nbsp;</span>
+        <span>Date of Procedure : {{ dateOfProcedure | date }}</span>
       </div>
       <div class="col-auto">
         <input
@@ -63,12 +77,23 @@
     <!-- Table -->
     <div class="grid">
       <div class="col">
-        <table class="table table-sm table-bordered text-center align-middle">
+        <table class="table table-sm table-bordered">
           <thead>
             <tr class="table-primary">
               <th scope="col">
                 <div class="input-group">
-                  <div class="input-group-text theadStyle">Actions</div>
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    AmountCharged
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Charged amount type here.."
+                    (keyup)="onChangeChargedAmount($event)"
+                  />
                 </div>
               </th>
               <th scope="col">
@@ -77,13 +102,45 @@
                     class="input-group-text theadStyle"
                     (click)="onSortPage($event)"
                   >
-                    Date Of Procedure
+                    Discount
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Discount type here.."
+                    (keyup)="onChangeDiscount($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Note
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Note type here.."
+                    (keyup)="onChangeNote($event)"
+                  />
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Date
                   </div>
                   <input
                     type="date"
                     class="form-control"
                     placeholder="Choose Date here.."
-                    (change)="onChangeDateOfProcedure($event)"
+                    (change)="onChangeCreatedDate($event)"
                   />
                 </div>
               </th>
@@ -93,46 +150,13 @@
                     class="input-group-text theadStyle"
                     (click)="onSortPage($event)"
                   >
-                    Category
+                    In-Charge
                   </div>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Category type here.."
-                    (keyup)="onChangeCategory($event)"
-                  />
-                </div>
-              </th>
-              <th scope="col">
-                <div class="input-group">
-                  <div
-                    class="input-group-text theadStyle"
-                    (click)="onSortPage($event)"
-                  >
-                    Procedure Done
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Procedure Done type here.."
-                    (keyup)="onChangeProcedureDone($event)"
-                  />
-                </div>
-              </th>
-
-              <th scope="col">
-                <div class="input-group">
-                  <div
-                    class="input-group-text theadStyle"
-                    (click)="onSortPage($event)"
-                  >
-                    Total Balance
-                  </div>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Total Balance type here.."
-                    (keyup)="onChangeTotalBalance($event)"
+                    placeholder="In-Charge type here.."
+                    (keyup)="onChangeCreatedByName($event)"
                   />
                 </div>
               </th>
@@ -140,7 +164,7 @@
           </thead>
           <tbody
             *ngFor="
-              let treatmentPlan of intraOralTreatmentPlanData
+              let chargedHistory of amountChargedHistory
                 | paginate
                   : {
                       itemsPerPage: paginationSize,
@@ -150,43 +174,11 @@
             "
           >
             <tr>
-              <td class="fitWidth">
-                <button
-                  (click)="
-                    viewIntraOralTreatmentDetail(treatmentPlan?.dateOfProcedure)
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
-                >
-                  View
-                </button>
-                <button
-                  (click)="
-                    viewIntraOralTreatmentCertificate(
-                      treatmentPlan?.dateOfProcedure
-                    )
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
-                >
-                  Certification
-                </button>
-                <button
-                  (click)="
-                    viewIntraOralTreatmentPrescription(
-                      treatmentPlan?.dateOfProcedure
-                    )
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
-                >
-                  Prescription
-                </button>
-              </td>
-              <td>{{ treatmentPlan?.dateOfProcedure | date }}</td>
-              <td>{{ treatmentPlan?.category }}</td>
-              <td>{{ treatmentPlan?.procedureDone }}</td>
-              <td>{{ treatmentPlan?.totalBalance }}</td>
+              <td>{{ chargedHistory?.chargedAmount | number }}</td>
+              <td>{{ chargedHistory?.discount | number }}</td>
+              <td>{{ chargedHistory?.note }}</td>
+              <td>{{ chargedHistory?.createdDate | date }}</td>
+              <td>{{ chargedHistory?.createdByName }}</td>
             </tr>
           </tbody>
         </table>
@@ -208,7 +200,6 @@
         </div>
       </div>
     </div>
-    <app-appointments></app-appointments>
   </div>
 </main>
 <app-footer></app-footer>

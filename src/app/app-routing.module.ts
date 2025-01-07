@@ -27,13 +27,18 @@ import { AddUpdateOrthodonticExaminationComponent } from './component/pages/dent
 import { BracesHistoryComponent } from './component/pages/dental/dentalChartOrthodontic/braces-history/braces-history.component';
 import { DentalCertificationComponent } from './component/pages/treatment/intraOralTreatment/dental-certification/dental-certification.component';
 import { IntraOralTreatmentListDetailsComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-list-details/intra-oral-treatment-list-details.component';
-import { IntraOralTreatmentListComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-list/intra-oral-treatment-list.component';
+import { IntraOralTreatmentBillListComponent } from './component/pages/treatment/intraOralTreatment/intra-oral-treatment-bill-list/intra-oral-treatment-bill-list.component';
 import { AddUpdateAppointmentComponent } from './component/pages/treatment/intraOralTreatment/add-update-appointment/add-update-appointment.component';
 import { AppointmentHistoryComponent } from './component/pages/treatment/intraOralTreatment/appointment-history/appointment-history.component';
 import { PrescriptionComponent } from './component/pages/treatment/intraOralTreatment/prescription/prescription.component';
 import { AddUpdatePrescriptionComponent } from './component/pages/treatment/intraOralTreatment/add-update-prescription/add-update-prescription.component';
 import { AddUpdateAutoPrescriptionComponent } from './component/pages/treatment/intraOralTreatment/add-update-auto-prescription/add-update-auto-prescription.component';
 import { OrthodonticTreatmentListComponent } from './component/pages/treatment/orthodocticTreatment/orthodontic-treatment-list/orthodontic-treatment-list.component';
+import { IntraoralBillBreakdownComponent } from './component/pages/bill/intraOralBill/intraoral-bill-breakdown/intraoral-bill-breakdown.component';
+import { AmountProcedureComponent } from './component/pages/bill/intraOralBill/amount-procedure/amount-procedure.component';
+import { PaymentProcedureComponent } from './component/pages/bill/intraOralBill/payment-procedure/payment-procedure.component';
+import { AmountChargedHistoryComponent } from './component/pages/bill/intraOralBill/amount-charged-history/amount-charged-history.component';
+import { AmountPaidHistoryComponent } from './component/pages/bill/intraOralBill/amount-paid-history/amount-paid-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -118,6 +123,11 @@ const routes: Routes = [
   },
   {
     path: 'dental-records/treatment-plan/orthodontic',
+    title: 'Patients List',
+    component: PatientsProfileComponent,
+  },
+  {
+    path: 'bill-records/intraoral/patients',
     title: 'Patients List',
     component: PatientsProfileComponent,
   },
@@ -284,7 +294,15 @@ const routes: Routes = [
   {
     path: 'dental-records/treatment-plan/intraoral/:id',
     title: 'IntraOral Treatment List',
-    component: IntraOralTreatmentListComponent,
+    component: IntraOralTreatmentBillListComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id',
+    title: 'IntraOral Bill List',
+    component: IntraOralTreatmentBillListComponent,
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
@@ -295,6 +313,15 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id/:dateofProcedure',
+    title: 'IntraOral Bill Breakdown',
+    component: IntraoralBillBreakdownComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+
   {
     path: 'dental-records/treatment-plan/intraoral/:id/:dateofProcedure/certificate',
     title: 'IntraOral Treatment Certificate',
@@ -316,6 +343,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  //Treatment Prescription
   {
     path: 'dental-records/treatment-plan/prescription/:id/:dateofProcedure',
     title: 'Prescription',
@@ -323,6 +351,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  //Treatment Prescription
   {
     path: 'dental-records/treatment-plan/prescription/:id/:dateofProcedure/Add',
     title: 'Add Prescription',
@@ -330,6 +359,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  //Treatment Prescription
   {
     path: 'dental-records/treatment-plan/prescription/:id/:dateofProcedure/Add-Auto',
     title: 'Add Prescription',
@@ -337,7 +367,39 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-procedure/:procedureNumber',
+    title: 'IntraOral Bill Amount Procedure',
+    component: AmountProcedureComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id/:dateofProcedure/payment-procedure/:procedureNumber',
+    title: 'IntraOral Bill Payment',
+    component: PaymentProcedureComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-charged-history/:procedureNumber',
+    title: 'IntraOral Bill Amount Charged History',
+    component: AmountChargedHistoryComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill
+  {
+    path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-paid-history/:procedureNumber',
+    title: 'IntraOral Bill Payment History',
+    component: AmountPaidHistoryComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //ALL
   { path: '**', title: '404 Not Found', component: PageNotFoundComponent },
 ];
 

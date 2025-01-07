@@ -9,13 +9,22 @@ import { TreatmentPlanService } from 'src/app/service/treatmentPlan/treatment-pl
 // import { TreatmentPlanService } from 'src/app/service/treatment-plan.service';
 
 @Component({
-  selector: 'app-intra-oral-treatment-list',
-  templateUrl: './intra-oral-treatment-list.component.html',
-  styleUrls: ['./intra-oral-treatment-list.component.scss'],
+  selector: 'app-intra-oral-treatment-bill-list',
+  templateUrl: './intra-oral-treatment-bill-list.component.html',
+  styleUrls: ['./intra-oral-treatment-bill-list.component.scss'],
 })
-export class IntraOralTreatmentListComponent implements OnInit {
+export class IntraOralTreatmentBillListComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
+    const urlPathName = window.location.pathname;
+    const paramsURL = urlPathName.split('/');
+    console.log('paramsURL[1] = ' + paramsURL[1]);
+    if (paramsURL[1] == 'dental-records') {
+      this.pageLocation = 'Treatment';
+    } else if (paramsURL[1] == 'bill-records') {
+      this.pageLocation = 'Bill';
+    }
+    console.log('urlPathName = ' + urlPathName);
     this.onGetProfileModel();
     this.onGetTableData();
   }
@@ -31,6 +40,7 @@ export class IntraOralTreatmentListComponent implements OnInit {
   public pageNoDisplay: number = 1;
   public paginationSize: number = 10;
   public paginationTotalItems: number | any;
+  public pageLocation: string = '';
   public itemNameSearch: string = '**';
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
@@ -156,6 +166,15 @@ export class IntraOralTreatmentListComponent implements OnInit {
     if (dateOfProcedure !== undefined) {
       this.router.navigate([
         'dental-records/treatment-plan/intraoral/',
+        this.id,
+        dateOfProcedure,
+      ]);
+    }
+  }
+  public viewIntraOralBillBreakdown(dateOfProcedure: any) {
+    if (dateOfProcedure !== undefined) {
+      this.router.navigate([
+        'bill-records/intraoral/patients/',
         this.id,
         dateOfProcedure,
       ]);

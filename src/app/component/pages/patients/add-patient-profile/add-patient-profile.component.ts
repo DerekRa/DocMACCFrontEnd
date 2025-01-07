@@ -119,7 +119,9 @@ export class AddPatientProfileComponent implements OnInit {
       reader.onload = () => {
         const formData = new FormData();
 
+        formData.append('id', this.id);
         formData.append('file', file);
+        formData.append('imgLink', this.profileModelService.getImageURL());
 
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {
