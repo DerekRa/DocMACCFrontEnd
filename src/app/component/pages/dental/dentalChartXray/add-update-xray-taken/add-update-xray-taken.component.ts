@@ -7,7 +7,17 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { co } from '@fullcalendar/core/internal-common';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { XrayTakenImageTempRemove } from 'src/app/model/interface/xrayTakenModel/xray-taken-image-temp-remove';
 import { XrayTakenPermanentDataRequest } from 'src/app/model/interface/xrayTakenModel/xray-taken-permanent-data-request';
@@ -23,23 +33,34 @@ import { PreRequisiteRequirementService } from 'src/app/service/dentalRecord/pre
   styleUrls: ['./add-update-xray-taken.component.scss'],
 })
 export class AddUpdateXrayTakenComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.dentalChart = this.route.snapshot.params['dentalChart'];
     this.labelName = this.route.snapshot.params['labelName'];
     this.action = this.route.snapshot.params['action'];
     this.setExamType();
     this.onGetTempRemarkAndFiles();
+    this.form = this.formBuilder.group({
+      remarks: ['', [Validators.minLength(2), Validators.maxLength(255)]],
+    });
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
 
   constructor(
+    private readonly keycloak: KeycloakService,
     private preRequisiteRequirementService: PreRequisiteRequirementService,
     private profileModelService: ProfileModelService,
     private router: Router,
     private route: ActivatedRoute,
-    public alertService: AlertService
+    public alertService: AlertService,
+    private formBuilder: FormBuilder
   ) {}
   public id: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public dentalChart: any;
   public labelName: any;
   public action: any;
@@ -53,11 +74,17 @@ export class AddUpdateXrayTakenComponent implements OnInit {
   public xrayTakenTempImages: XrayTakenTempImageResponse[] = [];
   uploadProgress: number = 0;
   saveFiles = true;
+  public submitted = false;
   public options = {
     autoClose: false,
     keepAfterRouteChange: true,
   };
-
+  public form: FormGroup = new FormGroup({
+    remarks: new FormControl(''),
+  });
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
   @Output() private filesChangeEmiter: EventEmitter<File[]> =
     new EventEmitter();
 
@@ -85,7 +112,8 @@ export class AddUpdateXrayTakenComponent implements OnInit {
   private onGetTempRemarkAndFiles() {
     const getTempImages: XrayTakenTempImageRequest = {
       profileId: this.id,
-      createdBy: 1, // update later
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       location: 'temp',
       examinationType: this.dentalChart,
       labelName: this.labelName,
@@ -149,93 +177,133 @@ export class AddUpdateXrayTakenComponent implements OnInit {
     }
   }
   private saveTempRemarkAndFiles() {
-    //loopFiles()
-    for (let x = 0; x < this.files.length; x++) {
+    if (this.files.length > 0) {
+      console.log('this.files.length = ' + this.files.length);
       console.log('this.files:' + JSON.stringify(this.files));
-      const reader = new FileReader();
-      const formData = new FormData();
-      reader.readAsDataURL(this.files[x]);
-      reader.onload = () => {
-        formData.append('file', this.files[x]);
-        formData.append('profileId', this.id);
-        formData.append('createdBy', '1'); // update later
-        formData.append('location', 'temp');
-        formData.append('examinationType', this.dentalChart);
-        formData.append('labelName', this.labelName);
-        this.preRequisiteRequirementService
-          .uploadTempXrayImages(formData)
-          .subscribe(
-            (response: HttpEvent<CustomHttpResponse>) => {
-              switch (response.type) {
-                case HttpEventType.Sent:
-                  console.log('Request has been made!');
-                  break;
-                case HttpEventType.ResponseHeader:
-                  console.log('Response header has been received!');
-                  break;
-                case HttpEventType.UploadProgress:
-                  var eventTotal = response.total ? response.total : 0;
-                  this.uploadProgress = Math.round(
-                    (response.loaded / eventTotal) * 100
-                  );
-                  console.log(`Uploaded! ${this.uploadProgress}%`);
-                  break;
-                case HttpEventType.Response:
-                  console.log('Image Upload Successfully!');
-                  if (this.pictures.length > 0) {
-                    this.pictures[this.pictures.length++] =
-                      reader.result as string;
-                  } else {
-                    this.pictures[0] = reader.result as string;
-                  }
-                  console.log(response);
-                  const messageSplit = response?.body?.message
-                    ? response?.body?.message.split(':')
-                    : [];
-                  this.alertService.success('' + messageSplit[0], this.options);
-                  if (this.nameHashTypes.length > 0) {
-                    this.nameHashTypes[this.nameHashTypes.length++] =
-                      messageSplit[1];
-                  } else {
-                    this.nameHashTypes[0] = messageSplit[1];
-                  }
-                  if (this.filesSaved.length > 0) {
-                    console.log('file saved x =' + x);
-                    this.filesSaved[this.filesSaved.length++] = this.files[x];
-                  } else {
-                    this.filesSaved[0] = this.files[0];
-                  }
+      console.log('this.userProfile:' + JSON.stringify(this.userProfile));
+      console.log('this.dentalChart = ' + this.dentalChart);
+      console.log('this.labelName = ' + this.labelName);
+      console.log('this.id = ' + this.id);
+      console.log('this.remarks = ' + this.remarks);
 
-                  console.log(
-                    'this.filesSaved.length === ' + this.filesSaved.length
-                  );
-                  setTimeout(() => {
-                    this.uploadProgress = 0;
-                    if (this.files.length == x + 1) {
-                      console.log(
-                        'this.filesSaved.length = ' + this.filesSaved.length
-                      );
-                      console.log('this.files.length ' + this.files.length);
-                      this.saveFiles = false;
-                      this.files = [];
+      for (let x = 0; x < this.files.length; x++) {
+        console.log('this.files:' + JSON.stringify(this.files));
+        const reader = new FileReader();
+        const formData = new FormData();
+        reader.readAsDataURL(this.files[x]);
+        reader.onload = () => {
+          formData.append('file', this.files[x]);
+          formData.append('profileId', this.id);
+          formData.append('createdByName', this.userProfile?.firstName || ''); // update later
+          formData.append('createdById', this.userProfile?.id || ''); // update later
+          formData.append('location', 'temp');
+          formData.append('examinationType', this.dentalChart);
+          formData.append('labelName', this.labelName);
+          this.preRequisiteRequirementService
+            .uploadTempXrayImages(formData)
+            .subscribe(
+              (response: HttpEvent<CustomHttpResponse>) => {
+                switch (response.type) {
+                  case HttpEventType.Sent:
+                    console.log('Request has been made!');
+                    break;
+                  case HttpEventType.ResponseHeader:
+                    console.log('Response header has been received!');
+                    break;
+                  case HttpEventType.UploadProgress:
+                    var eventTotal = response.total ? response.total : 0;
+                    this.uploadProgress = Math.round(
+                      (response.loaded / eventTotal) * 100
+                    );
+                    console.log(`Uploaded! ${this.uploadProgress}%`);
+                    break;
+                  case HttpEventType.Response:
+                    console.log('Image Upload Successfully!');
+                    if (this.pictures.length > 0) {
+                      this.pictures[this.pictures.length++] =
+                        reader.result as string;
+                    } else {
+                      this.pictures[0] = reader.result as string;
                     }
-                  }, 1500);
-              }
-            },
-            (error: any) => {
-              const errorResponse: CustomHttpResponse = error['error'];
-              console.log('error:' + JSON.stringify(error));
-              if (errorResponse.httpStatus == 'BAD_REQUEST') {
+                    console.log(response);
+                    const messageSplit = response?.body?.message
+                      ? response?.body?.message.split(':')
+                      : [];
+                    this.alertService.success(
+                      '' + messageSplit[0],
+                      this.options
+                    );
+                    if (this.nameHashTypes.length > 0) {
+                      this.nameHashTypes[this.nameHashTypes.length++] =
+                        messageSplit[1];
+                    } else {
+                      this.nameHashTypes[0] = messageSplit[1];
+                    }
+                    if (this.filesSaved.length > 0) {
+                      console.log('file saved x =' + x);
+                      this.filesSaved[this.filesSaved.length++] = this.files[x];
+                    } else {
+                      this.filesSaved[0] = this.files[0];
+                    }
+
+                    console.log(
+                      'this.filesSaved.length === ' + this.filesSaved.length
+                    );
+                    setTimeout(() => {
+                      this.uploadProgress = 0;
+                      if (this.files.length == x + 1) {
+                        console.log(
+                          'this.filesSaved.length = ' + this.filesSaved.length
+                        );
+                        console.log('this.files.length ' + this.files.length);
+                        this.saveFiles = false;
+                        this.files = [];
+                      }
+                    }, 1500);
+                }
+              },
+              (error: any) => {
+                const errorResponse: CustomHttpResponse = error['error'];
                 console.log('errorResponse.message = ' + errorResponse.message);
-                this.alertService.error(errorResponse.message, this.options);
-              }
-            },
-            () => console.log('Done uploading informed consent images..')
-          );
-      };
+                if (error.status === 417) {
+                  console.log('error.statusText = ' + error.statusText);
+                  this.alertService.error(
+                    'Wrong file format. Only accept .jpg / .png',
+                    this.options
+                  );
+                }
+              },
+              () => console.log('Done uploading informed consent images..')
+            );
+        };
+      }
     }
   }
   public onSaveFiles() {
+    console.log('onSaveFiles called..');
+    this.submitted = true;
+    if (this.form.invalid) {
+      console.log('form is invalid');
+      this.alertService.error(
+        'Please fill out the remarks correctly.',
+        this.options
+      );
+      return;
+    }
+    this.remarks = this.form.value.remarks;
+    console.log('remarks = ' + this.remarks);
+    console.log('this.id = ' + this.id);
+    console.log('this.dentalChart = ' + this.dentalChart);
+    console.log('this.labelName = ' + this.labelName);
+    console.log('this.userProfile = ' + JSON.stringify(this.userProfile));
+    console.log('this.files.length = ' + this.files.length);
+    console.log('this.pictures.length = ' + this.pictures.length);
+    console.log('this.nameHashTypes.length = ' + this.nameHashTypes.length);
+    console.log('this.filesSaved.length = ' + this.filesSaved.length);
+    console.log(
+      'this.xrayTakenTempImages.length = ' + this.xrayTakenTempImages.length
+    );
+    console.log('this.saveFiles = ' + this.saveFiles);
     console.log('this.pictures.length = ' + this.files.length);
     console.log(
       'this.xrayTakenTempImages.length = ' + this.xrayTakenTempImages.length
@@ -246,11 +314,12 @@ export class AddUpdateXrayTakenComponent implements OnInit {
       const updateDataToPermanent: XrayTakenPermanentDataRequest = {
         xrayTakenId: 0,
         profileId: this.id,
-        updatedBy: 1, // update later
+        updatedByName: this.userProfile?.firstName || '',
+        updatedById: this.userProfile?.id || '',
         location: 'permanent',
         examinationType: this.dentalChart,
         labelName: this.labelName,
-        remarks: this.remarks,
+        remarks: this.form.value.remarks,
       };
       this.preRequisiteRequirementService
         .updateXrayTakenImageToPermanent(updateDataToPermanent)
@@ -259,10 +328,13 @@ export class AddUpdateXrayTakenComponent implements OnInit {
             console.log(response);
             if (response.httpStatus == 'OK') {
               this.options.autoClose = true;
-              this.alertService.success(response.message, this.options);
+
+              const messageSplit = response.message.split('-');
+
+              this.alertService.success(messageSplit[0], this.options);
               this.pictures = [];
               this.files = [];
-              this.remarks = '';
+              this.form.reset();
               this.saveFiles = true;
               // this.router.navigate([
               //     `/dental-records/dental-chart/intraoral-examination/xray-taken/periapical/${this.id}/`,
@@ -274,6 +346,7 @@ export class AddUpdateXrayTakenComponent implements OnInit {
             }
           },
           (error: any) => {
+            console.log('error in updating to permanent..');
             console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
@@ -297,7 +370,8 @@ export class AddUpdateXrayTakenComponent implements OnInit {
 
     const removeTempImage: XrayTakenImageTempRemove = {
       profileId: this.id,
-      createdBy: 1, // update later
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       location: 'temp',
       examinationType: this.dentalChart,
       labelName: this.labelName,

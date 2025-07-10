@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { IntraOralTreatmentPaginationRequest } from 'src/app/model/interface/treatmentPlanModel/intra-oral-treatment-pagination-request';
 import { IntraoralTreatmentPlanGroupResponse } from 'src/app/model/interface/treatmentPlanModel/intraoral-treatment-plan-group-response';
@@ -14,7 +16,11 @@ import { TreatmentPlanService } from 'src/app/service/treatmentPlan/treatment-pl
   styleUrls: ['./intra-oral-treatment-bill-list.component.scss'],
 })
 export class IntraOralTreatmentBillListComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
@@ -32,9 +38,12 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     private profileModelService: ProfileModelService,
     private treatmentPlanService: TreatmentPlanService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private readonly keycloak: KeycloakService
   ) {}
   public id: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public profileModel: ProfileModel | undefined;
   public intraOralTreatmentPlanData: IntraoralTreatmentPlanGroupResponse[] = [];
   public pageNoDisplay: number = 1;
@@ -61,7 +70,8 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
     const intraOralTreatmentPagination: IntraOralTreatmentPaginationRequest = {
       profileId: this.id,
-      createdBy: 10, // to change soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       pageNo: pageNo,
       pageSize: this.paginationSize,
       sortBy: this.sortBy,
@@ -71,7 +81,8 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     const intraOralTreatmentPaginationLength: IntraOralTreatmentPaginationRequest =
       {
         profileId: this.id,
-        createdBy: 10, // to change soon
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
         pageNo: 0,
         pageSize: 10000,
         sortBy: this.sortBy,
@@ -86,7 +97,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
           console.log(response);
           this.intraOralTreatmentPlanData = response;
         },
-        (error: any) => console.log(error),
+        (error: any) => console.log('the error is log::' + error),
         () => console.log('Done getting profiles..')
       );
 

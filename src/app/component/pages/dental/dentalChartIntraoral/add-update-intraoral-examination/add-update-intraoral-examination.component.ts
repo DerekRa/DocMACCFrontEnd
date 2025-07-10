@@ -187,6 +187,9 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   };
   public currentDate = new Date();
   public teethNumbering: any;
+  public removablePartialDentureNote: any;
+  public completeDentureNote: any;
+  public almostCompleteDentureNote: any;
   public toothDetailsTempRightTop: any[] = [];
   public toothDetailsTempLeftTop: any[] = [];
   public toothDetailsPermaRightTopCenter: any[] = [];
@@ -213,8 +216,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       formControlName: 'decayed',
       inputId: 'decayedId',
       group: 'Condition',
-      label: 'D - Decayed (Caries Indicated for Filling)',
-      name: 'Decayed (Caries Indicated for Filling)',
+      label: 'D - Decayed',
+      name: 'Decayed',
       value: 'Decayed',
       checked: false,
     },
@@ -574,9 +577,9 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       formControlName: 'extractionDueCaries',
       inputId: 'extractionDueCariesId',
       group: 'Surgery',
-      label: 'X - Extraction due to Caries',
-      name: 'Extraction due to Caries',
-      value: 'Extraction due to Caries',
+      label: 'X - Extraction',
+      name: 'Extraction',
+      value: 'Extraction',
       checked: false,
     },
     {
@@ -609,9 +612,6 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     restorationOnlayOther: new FormControl(''),
     restorationOnlayNote: new FormControl(''),
     prostheticsNote: new FormControl(''),
-    removablePartialDentureNote: new FormControl(''),
-    completeDentureNote: new FormControl(''),
-    almostCompleteDentureNote: new FormControl(''),
     surgeryReason: new FormControl(''),
     toothSurfaceNote: new FormControl(''),
   });
@@ -1444,6 +1444,25 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     this.resetAllCheckboxes();
     this.onGetData(this.id, this.teethNumbering, dateOfProcedure);
   }
+  onDentureNoteInput(event: any, index: number) {
+    console.log('onDentureNoteInput');
+    console.log(event.target.name);
+    console.log(event.target.value);
+    console.log(index);
+    if (event.target.name == 'dentureNote0') {
+      this.conditionProcedureSurfaceRemarksForm.patchValue({
+        removablePartialDentureNote: event.target.value,
+      });
+    } else if (event.target.name == 'dentureNote1') {
+      this.conditionProcedureSurfaceRemarksForm.patchValue({
+        completeDentureNote: event.target.value,
+      });
+    } else if (event.target.name == 'dentureNote2') {
+      this.conditionProcedureSurfaceRemarksForm.patchValue({
+        almostCompleteDentureNote: event.target.value,
+      });
+    }
+  }
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
@@ -1477,6 +1496,16 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       const restorationsOnlay =
         this.form.value['conditionProcedureGroupings']['restorationsOnlay'];
       const surgery = this.form.value['conditionProcedureGroupings']['surgery'];
+      console.log('-=-=-=-=-=-=-=denture-=-=-=-=-=-=-');
+      console.log(JSON.stringify(denture));
+      console.log('-=-=-=-=-=-=-=remarks-=-=-=-=-=-=-');
+      console.log(
+        JSON.stringify(
+          this.form.value['conditionProcedureGroupings'][
+            'conditionProcedureSurfaceRemarksResponse'
+          ]
+        )
+      );
       const combineGroupings = conditions
         .concat(denture)
         .concat(periodontal)

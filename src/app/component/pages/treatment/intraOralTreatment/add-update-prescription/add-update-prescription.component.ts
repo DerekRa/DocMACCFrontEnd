@@ -122,6 +122,8 @@ export class AddUpdatePrescriptionComponent implements OnInit {
               '"> Click here to view..</a>';
             this.options.autoClose = false;
             this.alertService.success(messageSplit[0] + strLink, this.options);
+            this.submitted = false;
+            this.form.reset();
           }
         },
         (error: any) => {

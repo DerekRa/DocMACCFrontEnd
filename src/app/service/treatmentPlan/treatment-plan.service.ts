@@ -7,21 +7,25 @@ import { IntraoralTreatmentPlanDetailResponse } from 'src/app/model/interface/tr
 import { IntraoralTreatmentPlanGroupResponse } from 'src/app/model/interface/treatmentPlanModel/intraoral-treatment-plan-group-response';
 import { OrthodonticTreatmentPaginationRequest } from 'src/app/model/interface/treatmentPlanModel/orthodontic-treatment-pagination-request';
 import { OrthodonticTreatmentResponse } from 'src/app/model/interface/treatmentPlanModel/orthodontic-treatment-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/treatmentPlan';
+// const baseUrl = 'http://localhost:9090/api/v1/treatmentPlan';
 // const baseUrl = 'http://localhost:8088/api/v1/treatmentPlan';
 @Injectable({
   providedIn: 'root',
 })
 export class TreatmentPlanService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/treatmentPlan`;
+  }
 
   public getIntraOralTreatmentListPagination(
     intraOralTreatmentPaginationRequest: IntraOralTreatmentPaginationRequest
   ): Observable<IntraoralTreatmentPlanGroupResponse[]> {
     return this.http
       .get<IntraoralTreatmentPlanGroupResponse[]>(
-        `${baseUrl}/intraOral/group`,
+        `${this.baseUrl}/intraOral/group`,
         {
           params: this.convertToHttpParams(intraOralTreatmentPaginationRequest),
         }
@@ -33,7 +37,7 @@ export class TreatmentPlanService {
   ): Observable<IntraoralTreatmentPlanDetailResponse[]> {
     return this.http
       .get<IntraoralTreatmentPlanDetailResponse[]>(
-        `${baseUrl}/intraOral/detail`,
+        `${this.baseUrl}/intraOral/detail`,
         {
           params: this.convertToHttpParams(
             intraOralTreatmentDetailPaginationRequest
@@ -46,7 +50,7 @@ export class TreatmentPlanService {
     orthodonticTreatmentDetailPaginationRequest: OrthodonticTreatmentPaginationRequest
   ): Observable<OrthodonticTreatmentResponse[]> {
     return this.http
-      .get<OrthodonticTreatmentResponse[]>(`${baseUrl}/orthodontic`, {
+      .get<OrthodonticTreatmentResponse[]>(`${this.baseUrl}/orthodontic`, {
         params: this.convertToHttpParams(
           orthodonticTreatmentDetailPaginationRequest
         ),

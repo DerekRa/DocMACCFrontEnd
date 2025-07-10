@@ -8,6 +8,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
 import { MedicalQuestionsModel } from 'src/app/model/interface/medicalHistoryModel/medical-questions-model';
 import { Question } from 'src/app/model/interface/medicalHistoryModel/question';
@@ -175,14 +177,21 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     bloodPressureDate: new FormControl(''),
   });
   public submitted = false;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     private route: ActivatedRoute,
     public alertService: AlertService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private readonly keycloak: KeycloakService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     if (this.urlCurrentLocation() == 'update-patient') {
       this.urlLocation = 'Update';
     }
@@ -238,7 +247,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         this.form = this.fb.group({
           id: [this.medicalModel?.questions?.id],
           goodHealth: [
-            this.medicalModel?.questions?.medicalTreatment,
+            this.medicalModel?.questions?.goodHealth,
             this.validatorData('one'),
           ],
           medicalTreatment: [
@@ -301,7 +310,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           otherHaveYouHadAnyOfTheFollowing: [
             this.medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing,
           ],
-          bloodPressureDate: [this.medicalModel?.medicalModel?.createdAt],
+          bloodPressureDate: [this.medicalModel?.medicalModel?.createdDateTime],
         });
         if (this.medicalModel?.questions?.medicalTreatment == 'No') {
           this.form.controls['conditionTreated'].disable();
@@ -435,7 +444,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     if (this.urlCurrentLocation() === 'add-patient') {
       const addMedicalModel: MedicalQuestionsModel = {
         medicalModel: {
-          createdBy: 'Kenzou',
+          createdByName: this.userProfile?.firstName || '',
+          createdById: this.userProfile?.id || '',
           profileId: this.id,
         },
         questions: question,
@@ -471,7 +481,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       const updateMedicalModel: MedicalQuestionsModel = {
         medicalModel: {
           id: this.medicalModel?.medicalModel.id,
-          updatedBy: 'Killua',
+          updatedByName: this.userProfile?.firstName || '',
+          updatedById: this.userProfile?.id || '',
         },
         questions: question,
       };

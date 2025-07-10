@@ -82,6 +82,15 @@ import { AmountProcedureComponent } from './component/pages/bill/intraOralBill/a
 import { AmountChargedHistoryComponent } from './component/pages/bill/intraOralBill/amount-charged-history/amount-charged-history.component';
 import { AmountPaidHistoryComponent } from './component/pages/bill/intraOralBill/amount-paid-history/amount-paid-history.component';
 import { PaymentProcedureComponent } from './component/pages/bill/intraOralBill/payment-procedure/payment-procedure.component';
+import { AddUpdateBillComponent } from './component/pages/bill/orthodonticBill/add-update-bill/add-update-bill.component';
+import { BillBreakdownComponent } from './component/pages/bill/orthodonticBill/bill-breakdown/bill-breakdown.component';
+import { AddUpdatePaymentComponent } from './component/pages/bill/orthodonticBill/add-update-payment/add-update-payment.component';
+import { AddUpdateAdditionalChargeComponent } from './component/pages/bill/orthodonticBill/add-update-additional-charge/add-update-additional-charge.component';
+import { PaymentHistoryComponent } from './component/pages/bill/orthodonticBill/payment-history/payment-history.component';
+import { AdditionalChargeHistoryComponent } from './component/pages/bill/orthodonticBill/additional-charge-history/additional-charge-history.component';
+import { BillHistoryComponent } from './component/pages/bill/orthodonticBill/bill-history/bill-history.component';
+import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
+import { BillChangesHistoryComponent } from './component/pages/bill/orthodonticBill/bill-changes-history/bill-changes-history.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -105,6 +114,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AppComponent,
     HeaderComponent,
     FooterComponent,
+    PageNotFoundComponent,
     HomeComponent,
     HomeDialogComponent,
     AddUpdateEventComponent,
@@ -150,6 +160,14 @@ function initializeKeycloak(keycloak: KeycloakService) {
     PaymentProcedureComponent,
     AmountChargedHistoryComponent,
     AmountPaidHistoryComponent,
+    AddUpdateBillComponent,
+    BillBreakdownComponent,
+    AddUpdatePaymentComponent,
+    AddUpdateAdditionalChargeComponent,
+    PaymentHistoryComponent,
+    AdditionalChargeHistoryComponent,
+    BillHistoryComponent,
+    BillChangesHistoryComponent,
   ],
   imports: [
     BrowserModule,

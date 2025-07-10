@@ -123,13 +123,13 @@
                     class="input-group-text theadStyle"
                     (click)="onSortPage($event)"
                   >
-                    Brand Name
+                    Generic Name
                   </div>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Brand Name type here.."
-                    (keyup)="onChangeBrandName($event)"
+                    placeholder="Generic Name type here.."
+                    (keyup)="onChangeGenericName($event)"
                   />
                 </div>
               </th>
@@ -139,13 +139,13 @@
                     class="input-group-text theadStyle"
                     (click)="onSortPage($event)"
                   >
-                    Generic Name
+                    Brand Name
                   </div>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Generic Name type here.."
-                    (keyup)="onChangeGenericName($event)"
+                    placeholder="Brand Name type here.."
+                    (keyup)="onChangeBrandName($event)"
                   />
                 </div>
               </th>
@@ -222,8 +222,8 @@
                   Delete
                 </button>
               </td>
-              <td [width]="260">{{ prescription?.brandName }}</td>
               <td [width]="300">{{ prescription?.genericName }}</td>
+              <td [width]="260">{{ prescription?.brandName }}</td>
               <td [width]="120">{{ prescription?.dispense }}</td>
               <td [width]="150">{{ prescription?.dosage }}</td>
               <td>{{ prescription?.remarks }}</td>

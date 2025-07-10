@@ -11,7 +11,12 @@
       </div>
     </div>
     <div class="grid">
-      <div class="col col-sm-11 text-xl">Walk-in</div>
+      <div class="col col-sm-11 text-xl" [hidden]="category == 'registered'">
+        Walk-in
+      </div>
+      <div class="col col-sm-11 text-xl" [hidden]="category == 'walk-in'">
+        Patient
+      </div>
       <div class="col-auto">
         <a
           routerLink="/home"
@@ -75,6 +80,7 @@
                 name="lastName"
                 formControlName="lastName"
                 id="lname"
+                [readOnly]="category == 'registered' ? true : false"
                 [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }"
               />
               <div
@@ -100,6 +106,7 @@
                 name="firstName"
                 formControlName="firstName"
                 id="fname"
+                [readOnly]="category == 'registered' ? true : false"
                 [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }"
               />
               <div
@@ -120,6 +127,7 @@
                 ><span class="astrk">&ast;</span>Cell Number</label
               >
               <input
+                [readOnly]="category == 'registered' ? true : false"
                 type="text"
                 formControlName="cellNumber"
                 class="form-control form-control-sm"
@@ -206,6 +214,14 @@
               (click)="pickerdate.open()"
               type="button"
             >
+              <!-- <mat-icon
+                  aria-hidden="false"
+                  aria-label="Example time icon"
+                  fontIcon="schedule"
+                ></mat-icon> -->
+
+              <span class="material-icons md-24">calendar_month</span>
+              <!-- <mat-icon>schedule</mat-icon> -->
               <!-- <svg [cIcon]="icons.cilCalendar"></svg> -->
             </button>
           </div>
@@ -245,6 +261,7 @@
               (click)="fullTime.open()"
               type="button"
             >
+              <span class="material-icons md-24">schedule</span>
               <!-- <svg
                 [cIcon]="icons.cilClock"
                 size="sm"

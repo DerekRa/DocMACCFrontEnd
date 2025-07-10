@@ -1,7 +1,8 @@
 export interface XrayTakenTempImageRequest {
-    profileId: Number;
-    createdBy: Number;
-    examinationType: string;
-    labelName: string;
-    location: string
+  profileId: Number;
+  createdByName: string;
+  createdById: string;
+  examinationType: string;
+  labelName: string;
+  location: string;
 }

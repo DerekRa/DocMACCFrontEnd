@@ -7,22 +7,26 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
 import { MedicalQuestionsModel } from 'src/app/model/interface/medicalHistoryModel/medical-questions-model';
 import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/delete-profile';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/medical';
+// const baseUrl = 'http://localhost:9090/api/v1/medical';
 // const baseUrl = 'http://localhost:8008/api/v1/medical';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MedicalHistoryService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/medical`;
+  }
 
   public getActivePatients(): Observable<ActiveProfiles[]> {
-    return this.http.get<ActiveProfiles[]>(`${baseUrl}/activePatients`);
+    return this.http.get<ActiveProfiles[]>(`${this.baseUrl}/activePatients`);
   }
 
   public getMedicalModel(number: number): Observable<MedicalModel> {
-    return this.http.get<MedicalModel>(`${baseUrl}/${number}`).pipe(
+    return this.http.get<MedicalModel>(`${this.baseUrl}/${number}`).pipe(
       retry(3),
       catchError((error: any) => {
         return of();
@@ -34,7 +38,7 @@ export class MedicalHistoryService {
     medicalQuestionsModel: MedicalQuestionsModel
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}`, medicalQuestionsModel)
+      .post<CustomHttpResponse>(`${this.baseUrl}`, medicalQuestionsModel)
       .pipe(retry(3));
   }
 
@@ -42,7 +46,7 @@ export class MedicalHistoryService {
     medicalQuestionsModel: MedicalQuestionsModel
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}`, medicalQuestionsModel)
+      .put<CustomHttpResponse>(`${this.baseUrl}`, medicalQuestionsModel)
       .pipe(retry(3));
   }
 
@@ -50,7 +54,7 @@ export class MedicalHistoryService {
     deleteProfile: DeleteProfileOrMedical
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}/delete`, deleteProfile)
+      .put<CustomHttpResponse>(`${this.baseUrl}/delete`, deleteProfile)
       .pipe(retry(3));
   }
 }

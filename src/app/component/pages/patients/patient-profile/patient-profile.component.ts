@@ -7,9 +7,11 @@ import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/del
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
-import { ExportPdfService } from 'src/app/service/clientProfile/export-pdf.service';
+import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { MedicalHistoryService } from 'src/app/service/medicalHistory/medical-history.service';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
   selector: 'app-patient-profile',
@@ -25,15 +27,22 @@ export class PatientProfileComponent implements OnInit {
     autoClose: false,
     keepAfterRouteChange: true,
   };
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     private exportPdfService: ExportPdfService,
     public alertService: AlertService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly keycloak: KeycloakService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel(this.id);
     this.onGetMedicalModel(this.id);

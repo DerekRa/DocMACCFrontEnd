@@ -27,7 +27,7 @@ export class BracesHistoryComponent implements OnInit {
     console.log(paramsURL[5]);
     console.log(paramsURL[6]);
     this.action = paramsURL[6];
-    console.log('urlPathName = ' + urlPathName);
+    console.log('this.action = ' + this.action);
   }
   constructor(
     private profileModelService: ProfileModelService,
@@ -80,31 +80,63 @@ export class BracesHistoryComponent implements OnInit {
       orderBy: this.orderBy,
       findItem: itemSearch,
     };
+    console.log('this.action----=-=');
+    const urlPathName = window.location.pathname;
+    const paramsURL = urlPathName.split('/');
+    this.action = paramsURL[6];
+    console.log(this.action);
+    if (this.action == 'orthodontic-recent') {
+      console.log('here at latest orthodontic......');
+      this.orthodonticExaminationService
+        .getOrthodonticExaminationPaginationLatest(bracesPaginationRequest)
+        .subscribe(
+          (response: OrthodonticExaminationResponse[]) => {
+            console.log('response');
+            console.log(response);
+            this.bracesHistoryData = response;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting profiles..')
+        );
 
-    this.orthodonticExaminationService
-      .getOrthodonticExaminationPagination(bracesPaginationRequest)
-      .subscribe(
-        (response: OrthodonticExaminationResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.bracesHistoryData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      this.orthodonticExaminationService
+        .getOrthodonticExaminationPaginationLatest(bracesPaginationLength)
+        .subscribe(
+          (response: OrthodonticExaminationResponse[]) => {
+            console.log('response for paginationTotalItems');
+            console.log(response);
+            console.log(response.length);
+            this.paginationTotalItems = response.length;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting profiles..')
+        );
+    } else {
+      this.orthodonticExaminationService
+        .getOrthodonticExaminationPagination(bracesPaginationRequest)
+        .subscribe(
+          (response: OrthodonticExaminationResponse[]) => {
+            console.log('response');
+            console.log(response);
+            this.bracesHistoryData = response;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting profiles..')
+        );
 
-    this.orthodonticExaminationService
-      .getOrthodonticExaminationPagination(bracesPaginationLength)
-      .subscribe(
-        (response: OrthodonticExaminationResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      this.orthodonticExaminationService
+        .getOrthodonticExaminationPagination(bracesPaginationLength)
+        .subscribe(
+          (response: OrthodonticExaminationResponse[]) => {
+            console.log('response for paginationTotalItems');
+            console.log(response);
+            console.log(response.length);
+            this.paginationTotalItems = response.length;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting profiles..')
+        );
+    }
 
     console.log('paginationSize = ' + this.paginationSize);
     console.log('pageNoDisplay = ' + this.pageNoDisplay);

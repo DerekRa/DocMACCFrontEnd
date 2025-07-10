@@ -5,9 +5,9 @@ import { Physician } from './physician';
 import { Question } from './question';
 
 export interface MedicalModel {
-    medicalModel: MedicalStatus;
-    physician: Physician[];
-    questions: Question;
-    informedConsents: InformedConsent[];
-    medicalClearances: MedicalClearance[];
+  medicalModel: MedicalStatus;
+  physician: Physician[];
+  questions: Question;
+  informedConsents: InformedConsent[];
+  medicalClearances: MedicalClearance[];
 }

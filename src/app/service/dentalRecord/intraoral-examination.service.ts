@@ -9,17 +9,23 @@ import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartMode
 import { ToothHistoryPaginationRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-request';
 import { ToothHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-response';
 import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/intraOral';
+// const baseUrl = 'http://localhost:9090/api/v1/intraOral';
 // const baseUrl = 'http://localhost:8085/api/v1/intraOral';
 @Injectable({
   providedIn: 'root',
 })
 export class IntraoralExaminationService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/intraoral`;
+  }
 
   public getActivePatients(): Observable<ActiveProfiles[]> {
-    return this.http.get<ActiveProfiles[]>(`${baseUrl}/patientsWithRecords`);
+    return this.http.get<ActiveProfiles[]>(
+      `${this.baseUrl}/patientsWithRecords`
+    );
   }
   public getIntraOralDisplay(
     profileId: number,
@@ -30,7 +36,7 @@ export class IntraoralExaminationService {
   ): Observable<DentalChartDesignResponse[]> {
     return this.http
       .get<DentalChartDesignResponse[]>(
-        `${baseUrl}/images/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${sorting}`
+        `${this.baseUrl}/images/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${sorting}`
       )
       .pipe(retry(3));
   }
@@ -43,7 +49,7 @@ export class IntraoralExaminationService {
   ): Observable<ToothNumbersDentalChart[]> {
     return this.http
       .get<ToothNumbersDentalChart[]>(
-        `${baseUrl}/toothNumbers/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${sorting}`
+        `${this.baseUrl}/toothNumbers/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${sorting}`
       )
       .pipe(retry(3));
   }
@@ -51,12 +57,12 @@ export class IntraoralExaminationService {
     formData: FormData
   ): Observable<DentalChartDesignResponse[]> {
     return this.http
-      .get<DentalChartDesignResponse[]>(`${baseUrl}/${formData}`)
+      .get<DentalChartDesignResponse[]>(`${this.baseUrl}/${formData}`)
       .pipe(retry(3));
   }
   public getImage(imageName: string): string {
     // return this.http.get<any>(`${baseUrl}/images/${imageName}`);
-    return baseUrl + `/images/${imageName}`;
+    return this.baseUrl + `/images/${imageName}`;
   }
   public getIntraOralExaminationByNumber(
     profileId: number,
@@ -65,7 +71,7 @@ export class IntraoralExaminationService {
   ): Observable<IntraoralExamination> {
     return this.http
       .get<IntraoralExamination>(
-        `${baseUrl}/${profileId}/${teethNumbering}/${dateOfProcedure}`
+        `${this.baseUrl}/${profileId}/${teethNumbering}/${dateOfProcedure}`
       )
       .pipe(retry(3));
   }
@@ -74,24 +80,31 @@ export class IntraoralExaminationService {
     teethNumbering: number
   ): Observable<IntraoralExamination> {
     return this.http
-      .get<IntraoralExamination>(`${baseUrl}/${profileId}/${teethNumbering}`)
+      .get<IntraoralExamination>(
+        `${this.baseUrl}/${profileId}/${teethNumbering}`
+      )
       .pipe(retry(3));
   }
   public createIntraOralExaminationModel(
     conditionProcedureModelRequest: ConditionProcedureModelRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}`, conditionProcedureModelRequest)
+      .post<CustomHttpResponse>(
+        `${this.baseUrl}`,
+        conditionProcedureModelRequest
+      )
       .pipe(retry(3));
   }
   public getToothHistoryPagination(
     paginationData: ToothHistoryPaginationRequest
   ): Observable<ToothHistoryPaginationResponse[]> {
     console.log(
-      'url = ' + `${baseUrl}/history` + this.convertToHttpParams(paginationData)
+      'url = ' +
+        `${this.baseUrl}/history` +
+        this.convertToHttpParams(paginationData)
     );
     return this.http
-      .get<ToothHistoryPaginationResponse[]>(`${baseUrl}/history`, {
+      .get<ToothHistoryPaginationResponse[]>(`${this.baseUrl}/history`, {
         params: this.convertToHttpParams(paginationData),
       })
       .pipe(retry(3));

@@ -1,10 +1,12 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BillBreakdownResponse } from 'src/app/model/interface/billModel/bill-breakdown-response';
-import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/bill-breakdwon-request';
+import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown-response';
+import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdwon-request';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { IntraoralBillService } from 'src/app/service/billRecord/intraoral-bill.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
+import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 
 @Component({
   selector: 'app-intraoral-bill-breakdown',
@@ -31,6 +33,7 @@ export class IntraoralBillBreakdownComponent implements OnInit {
   constructor(
     private profileModelService: ProfileModelService,
     private intraoralBillService: IntraoralBillService,
+    private exportPdfService: ExportPdfService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -39,6 +42,7 @@ export class IntraoralBillBreakdownComponent implements OnInit {
   public billBreakdown: BillBreakdownResponse | any = {};
   public pageLocation: string = '';
   public dateOfProcedure: string = '';
+  public percentDone: number = 0;
   public onGetProfileModel(): void {
     this.profileModelService.getProfileModel(this.id).subscribe(
       (response) => {
@@ -139,34 +143,82 @@ export class IntraoralBillBreakdownComponent implements OnInit {
     }
   }
   public printPDFBillBreakdown(id: any) {
-    //   this.exportPdfService.getExportPDFProfile(id).subscribe(
-    //     (response: any) => {
-    //       if (response.type === HttpEventType.DownloadProgress) {
-    //         this.percentDone = Math.round(
-    //           (100 * response.loaded) / response.total
-    //         );
-    //         console.log(`Downloaded ${this.percentDone}%`);
-    //       }
-    //       var file = new Blob([response], { type: 'application/pdf' });
-    //       var fileURL = URL.createObjectURL(file);
-    //       // if you want to open PDF in new tab
-    //       // window.open(response);
-    //       var a = document.createElement('a');
-    //       a.href = fileURL;
-    //       a.target = '_blank';
-    //       a.download = this.profileModel?.name?.lastName
-    //         ? this.profileModel?.name?.lastName +
-    //           this.profileModel?.name?.firstName +
-    //           this.profileModel?.name?.middleName +
-    //           '.pdf'
-    //         : 'blankpage.pdf';
-    //       document.body.appendChild(a);
-    //       a.click();
-    //     },
-    //     (error: any) => {
-    //       console.log(error);
-    //     },
-    //     () => console.log('Done getting pdf profile..')
-    //   );
+    this.exportPdfService
+      .getExportPDFIntraOralBillGroup(id, this.dateOfProcedure)
+      .subscribe(
+        (response: any) => {
+          if (response.type === HttpEventType.DownloadProgress) {
+            this.percentDone = Math.round(
+              (100 * response.loaded) / response.total
+            );
+            console.log(`Downloaded ${this.percentDone}%`);
+          }
+          var file = new Blob([response], { type: 'application/pdf' });
+          var fileURL = URL.createObjectURL(file);
+          // if you want to open PDF in new tab
+          // window.open(response);
+          var a = document.createElement('a');
+          a.href = fileURL;
+          a.target = '_blank';
+          a.download = this.profileModel?.name?.lastName
+            ? this.profileModel?.name?.lastName +
+              this.profileModel?.name?.firstName +
+              this.profileModel?.name?.middleName +
+              '_Bills' +
+              '.pdf'
+            : 'blankpage.pdf';
+          document.body.appendChild(a);
+          a.click();
+        },
+        (error: any) => {
+          console.log(error);
+        },
+        () => console.log('Done getting pdf profile..')
+      );
+  }
+  public printPDFBillIndividual(id: any, breakdown: any) {
+    console.log('breakdown.procedureDone ===== ' + breakdown.procedureDone);
+    console.log(
+      'breakdown.procedureDone ===== ' +
+        breakdown.procedureDone.replaceAll(' ', '+')
+    );
+    this.exportPdfService
+      .getExportPDFIntraOralBillIndividual(
+        id,
+        this.dateOfProcedure,
+        breakdown.category,
+        breakdown.procedureDone,
+        breakdown.toothNumber
+      )
+      .subscribe(
+        (response: any) => {
+          if (response.type === HttpEventType.DownloadProgress) {
+            this.percentDone = Math.round(
+              (100 * response.loaded) / response.total
+            );
+            console.log(`Downloaded ${this.percentDone}%`);
+          }
+          var file = new Blob([response], { type: 'application/pdf' });
+          var fileURL = URL.createObjectURL(file);
+          // if you want to open PDF in new tab
+          // window.open(response);
+          var a = document.createElement('a');
+          a.href = fileURL;
+          a.target = '_blank';
+          a.download = this.profileModel?.name?.lastName
+            ? this.profileModel?.name?.lastName +
+              this.profileModel?.name?.firstName +
+              this.profileModel?.name?.middleName +
+              '_Bill' +
+              '.pdf'
+            : 'blankpage.pdf';
+          document.body.appendChild(a);
+          a.click();
+        },
+        (error: any) => {
+          console.log(error);
+        },
+        () => console.log('Done getting pdf profile..')
+      );
   }
 }

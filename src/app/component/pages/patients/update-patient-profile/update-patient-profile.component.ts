@@ -7,6 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
@@ -50,13 +52,20 @@ export class UpdatePatientProfileComponent implements OnInit {
     keepAfterRouteChange: false,
   };
   public submitted: boolean = false;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly keycloak: KeycloakService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel(this.id);
   }
@@ -108,7 +117,8 @@ export class UpdatePatientProfileComponent implements OnInit {
         emailAddress: this.form.value['emailAddress'],
         homeAddress: this.form.value['homeAddress'],
       },
-      updatedBy: 'Kenz',
+      updatedByName: this.userProfile?.firstName || '',
+      updatedById: this.userProfile?.id || '',
     };
     this.profileModelService.updateProfileModel(profileModelUpdate).subscribe(
       (response: CustomHttpResponse) => {
@@ -141,6 +151,7 @@ export class UpdatePatientProfileComponent implements OnInit {
         formData.append('id', this.id);
         formData.append('file', file);
         formData.append('imgLink', this.profileModelService.getImageURL());
+        console.log(this.profileModelService.getImageURL());
 
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {

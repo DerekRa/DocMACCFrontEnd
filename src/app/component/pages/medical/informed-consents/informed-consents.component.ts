@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { ImageDetails } from 'src/app/model/interface/preProcedureModel/image-details';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
@@ -40,15 +42,18 @@ export class InformedConsentsComponent implements OnInit {
     autoClose: false,
     keepAfterRouteChange: true,
   };
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
 
   constructor(
+    private readonly keycloak: KeycloakService,
     private preProcedureRequirementService: PreProcedureRequirementService,
     private profileModelService: ProfileModelService,
     private router: Router,
     private route: ActivatedRoute,
     public alertService: AlertService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.item_name = this.route.snapshot.params['itemName'];
     this.breadcrumb_title =
@@ -57,6 +62,10 @@ export class InformedConsentsComponent implements OnInit {
         : 'Medical Clearance';
     this.onGetTableData();
     this.onGetProfileModel(this.id);
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
 
   private onGetTableData() {
@@ -157,9 +166,11 @@ export class InformedConsentsComponent implements OnInit {
   public deletePreProcedureRequirement() {
     this.preProcedureRequirementService
       .deletePreProcedureRequirement(
-        'informedConsents',
+        this.item_name,
         'permanent',
-        this.imgNameDelete
+        this.imgNameDelete,
+        this.userProfile?.firstName || '',
+        this.userProfile?.id || ''
       )
       .subscribe(
         (response: CustomHttpResponse) => {
@@ -199,7 +210,9 @@ export class InformedConsentsComponent implements OnInit {
     formData.append('hashName', hashName);
     formData.append('itemName', this.item_name);
     formData.append('location', 'permanent');
-    formData.append('updatedBy', this.id);
+    formData.append('profileId', this.id);
+    formData.append('updatedByName', this.userProfile?.firstName || '');
+    formData.append('updatedById', this.userProfile?.id || '');
     this.preProcedureRequirementService.updateDisplayImage(formData).subscribe(
       (response: CustomHttpResponse) => {
         console.log(response);

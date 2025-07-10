@@ -142,8 +142,8 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
             profileId: [this.braces?.profileId],
             toothNumber: [this.braces?.toothNumber],
             dateOfProcedure: [dop, Validators.required],
-            bracketHeight: [this.braces?.bracketHeight],
-            note: [this.braces?.note],
+            bracketHeight: [this.braces?.bracketHeight, Validators.required],
+            note: [this.braces?.note, Validators.required],
           });
           // this.toothNumbersId = [];
           this.toothNumbersValue = [];
@@ -317,13 +317,22 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
   onChangeDateOfProcedure(event: MatDatepickerInputEvent<Date>) {
     console.log(event.value?.toLocaleDateString('en-US', { month: 'numeric' }));
     console.log(event.value?.toLocaleDateString('en-US', { day: 'numeric' }));
+    console.log(event);
+    console.log(event.value);
+    let month =
+      event.value?.toLocaleDateString('en-US', { month: 'numeric' }).length == 1
+        ? '0' + event.value?.toLocaleDateString('en-US', { month: 'numeric' })
+        : event.value?.toLocaleDateString('en-US', { month: 'numeric' });
+    let day =
+      event.value?.toLocaleDateString('en-US', { day: 'numeric' }).length == 1
+        ? '0' + event.value?.toLocaleDateString('en-US', { day: 'numeric' })
+        : event.value?.toLocaleDateString('en-US', { day: 'numeric' });
     const dateOfProcedure =
       event.value?.toLocaleDateString('en-US', { year: 'numeric' }) +
       '-' +
-      event.value?.toLocaleDateString('en-US', { month: 'numeric' }) +
+      month +
       '-' +
-      event.value?.toLocaleDateString('en-US', { day: 'numeric' }) +
-      '-';
+      day;
 
     this.onGetData(dateOfProcedure);
   }
@@ -339,17 +348,23 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     if (this.toothNumbersValue.length == 0) {
       return;
     }
+    if (this.form.invalid) {
+      return;
+    }
 
     for (let i = 0; i < this.toothNumbersValue.length; i++) {
       console.log('tooth number = ' + this.toothNumbersValue[i]);
     }
-
+    const dateFormat = this.datepipe.transform(
+      this.form.value['dateOfProcedure'],
+      'yyyy-MM-dd'
+    );
     for (let i = 0; i < this.toothNumbersValue.length; i++) {
       const orthodonticExamination: OrthodonticExamination = {
         profileId: this.id,
         createdBy: 10, // update soon
         toothNumber: this.toothNumbersValue[i],
-        dateOfProcedure: this.form.value['dateOfProcedure'],
+        dateOfProcedure: dateFormat + '',
         wireType: this.showMandibularWireType
           ? 'MandibularWireType'
           : 'MaxillaryWireType',

@@ -5,7 +5,7 @@ import { PrescriptionPaginationRequest } from 'src/app/model/interface/prescript
 import { PrescriptionResponse } from 'src/app/model/interface/prescriptionModel/prescription-response';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { AlertService } from 'src/app/service/_alert/alert.service';
-import { ExportPdfService } from 'src/app/service/clientProfile/export-pdf.service';
+import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { PrescriptionService } from 'src/app/service/treatmentPlan/prescription.service';
 

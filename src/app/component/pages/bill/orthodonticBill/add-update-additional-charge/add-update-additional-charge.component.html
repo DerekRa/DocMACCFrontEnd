@@ -1,0 +1,161 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="link-dark" routerLink="/bill-records/orthodontic/patients"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/orthodontic/patients/{{ id }}"
+            aria-current="page"
+            >Orthodontic Bill List</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/orthodontic/patients/{{ id }}/{{
+              billId
+            }}/{{ dateOfBill }}"
+            aria-current="page"
+            >Breakdown</a
+          >
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Additional Charge</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-9 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col col-sm-12 col-lg-8 col-auto">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-3 col-auto tblLabel">Total Bill</div>
+            <div class="col col-lg-7 ms-2 tblValue">
+              {{ billData.totalBill }}
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-3 col-auto tblLabel">
+              Total Remaining Bill (Balance)
+            </div>
+            <div class="col col-lg-7 ms-2 tblValue">
+              {{ billData.totalBalance }}
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-3 col-auto tblLabel">Total Amount Paid</div>
+            <div class="col col-lg-7 ms-2 tblValue">
+              {{ billData.totalAmountPaid }}
+            </div>
+          </div>
+          <hr />
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-3 col-auto tblLabel">
+              <span class="astrk">&ast;</span>Additional Charge
+            </div>
+            <div class="col col-lg-7 ms-2 tblValue">
+              <input
+                type="number"
+                name="additionalCharge"
+                id="additionalChargeId"
+                formControlName="additionalCharge"
+                class="form-control form-control-sm"
+                min="1"
+                [ngClass]="{
+                  'is-invalid': submitted && f['additionalCharge'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['additionalCharge'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['additionalCharge'].errors['required']">
+                  Additional Charge is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid" [hidden]="urlLocation == 'add-charge'">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-3 col-auto tblLabel">
+              <span class="astrk">&ast;</span>Reason
+            </div>
+            <div class="col col-lg-7 ms-2 tblValue">
+              <textarea
+                name="reason"
+                formControlName="reason"
+                class="form-control form-control-sm"
+                id="reasonId"
+                cols="32"
+                rows="3"
+                [ngClass]="{
+                  'is-invalid': submitted && f['reason'].errors
+                }"
+              ></textarea>
+              <div
+                *ngIf="submitted && f['reason'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['reason'].errors['required']">
+                  Reason is required
+                </div>
+                <div *ngIf="f['reason'].errors['minlength']">
+                  Reason must be at least 2 characters
+                </div>
+                <div *ngIf="f['reason'].errors['maxlength']">
+                  Reason must be maximum of 255 characters
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid justify-content-center mt-2">
+            <!-- <div class="col-2 text-lg"></div> -->
+            <div class="col-6 col-offset-4">
+              <button
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm"
+              >
+                Save
+              </button>
+              <button
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm ms-2"
+                routerLink="/bill-records/orthodontic/patients/{{ id }}/{{
+                  billId
+                }}/{{ dateOfBill }}"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

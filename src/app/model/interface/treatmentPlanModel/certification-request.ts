@@ -1,7 +1,8 @@
 export interface CertificationRequest {
-    profileId: number;
-    createdBy: number;
-    diagnosis: string;
-    recommendations: string;
-    dateOfProcedure: string;
+  profileId: number;
+  createdByName: string;
+  createdById: string;
+  diagnosis: string;
+  recommendations: string;
+  dateOfProcedure: string;
 }

@@ -7,6 +7,8 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
@@ -55,14 +57,20 @@ export class AddPatientProfileComponent implements OnInit {
     autoClose: false,
     keepAfterRouteChange: true,
   };
-
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
     public alertService: AlertService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private readonly keycloak: KeycloakService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     if (this.profileModel == undefined) {
       this.form = this.formBuilder.group({
         id: [''],
@@ -220,7 +228,8 @@ export class AddPatientProfileComponent implements OnInit {
         referralName: this.form.value['referralName'],
         reasonDentalConsultation: this.form.value['reasonDentalConsultation'],
       },
-      createdBy: 'Kenzer',
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
     };
     this.profileModelService.createProfileModel(addProfileModel).subscribe(
       (response: CustomHttpResponse) => {

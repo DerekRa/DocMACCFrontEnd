@@ -6,6 +6,8 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { Appliances } from 'src/app/model/interface/preRequisiteModel/appliances';
 import { Occlusion } from 'src/app/model/interface/preRequisiteModel/occlusion';
 import { PreRequisiteDto } from 'src/app/model/interface/preRequisiteModel/pre-requisite-dto';
@@ -21,6 +23,7 @@ import { PreRequisiteRequirementService } from 'src/app/service/dentalRecord/pre
 })
 export class PreRequisitesComponent implements OnInit {
   constructor(
+    private readonly keycloak: KeycloakService,
     // private IntraoralExaminationService: IntraoralExaminationService,
     // private profileModelService: ProfileModelService,
     private preRequisiteRequirementService: PreRequisiteRequirementService,
@@ -50,14 +53,20 @@ export class PreRequisitesComponent implements OnInit {
       });
     }
   }
-  ngOnInit(): void {
-    // this.setExamType();
+  async ngOnInit(): Promise<void> {
+    this.setExamType();
     this.onGetPreRequisite();
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
 
   @Input('idData') id: any;
   @Input('recordData') recordAction: any;
   @Input('examUrlData') examUrl: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public examinationType: any;
   public submitted = false;
   public preRequisiteModel: PreRequisiteModel | undefined;
@@ -178,11 +187,15 @@ export class PreRequisitesComponent implements OnInit {
       profileId: this.id,
       examinationType: this.examUrl,
     };
+    console.log('getPreRequisite below');
+    console.log(getPreRequisite);
     this.preRequisiteRequirementService
       .getPreRequisite(getPreRequisite)
       .subscribe(
         (response: PreRequisiteModel) => {
           this.preRequisiteModel = response;
+          console.log('this.preRequisiteModel below..');
+          console.log(this.preRequisiteModel);
           this.preRequisiteModel.periodontalScreeningTMDRequestList = this
             .preRequisiteModel?.periodontalScreeningTMDRequestList
             ? this.preRequisiteModel.periodontalScreeningTMDRequestList
@@ -258,10 +271,10 @@ export class PreRequisitesComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
-
     const preRequisiteModelSave: PreRequisiteModel = {
       profileId: this.id,
-      createdBy: 1, // update soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       examinationType: this.examinationType,
       periodontalScreeningTMDRequestList:
         this.form.value.periodontalScreeningTMDRequestList,

@@ -83,6 +83,27 @@ export class AddUpdateAppointmentComponent implements OnInit {
       () => console.log('Done getting single profile..')
     );
   }
+  private convert(time: string) {
+    let [hour, modifier] = time.split(':');
+    let min = parseInt(modifier).toString().padStart(2, '0');
+    let index = modifier.toLowerCase().indexOf('m');
+    let meridian = modifier.slice(index - 1);
+    let hr = parseInt(hour);
+
+    if (hour === '12') {
+      hr = 0;
+    }
+
+    if (meridian == 'PM') {
+      hr = hr + 12;
+    }
+
+    hour = hr.toString().padStart(2, '0');
+
+    let time24hr = `${hour}:${min}`;
+
+    return time24hr;
+  }
   onSubmit() {
     this.submitted = true;
     console.log('form value =-=-= ' + JSON.stringify(this.form.value));
@@ -96,16 +117,16 @@ export class AddUpdateAppointmentComponent implements OnInit {
       this.form.value['rangeDateFrom'],
       'yyyy-MM-dd'
     );
+    const timeFormat = this.convert(this.form.value['rangeTimeFrom']);
+    console.log('timeFormat == ' + timeFormat);
     const regularPatientRequest: RegularPatientRequest = {
       profileId: this.id,
       createdByName: this.userProfile?.firstName || '',
       createdById: this.userProfile?.id || '',
       eventTitle: this.form.value['eventTitle'],
       serviceToAvail: this.form.value['serviceToAvail'],
-      rangeDateTimeFrom:
-        dateFormat + 'T' + this.form.value['rangeTimeFrom'] + ':00',
-      rangeDateTimeTo:
-        dateFormat + 'T' + this.form.value['rangeTimeFrom'] + ':00',
+      rangeDateTimeFrom: dateFormat + 'T' + timeFormat,
+      rangeDateTimeTo: dateFormat + 'T' + timeFormat,
     };
 
     this.patientAppointmentService

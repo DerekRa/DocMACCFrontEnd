@@ -11,24 +11,30 @@ import { XrayTakenPaginationDataRequest } from 'src/app/model/interface/xrayTake
 import { XrayTakenPermanentDataRequest } from 'src/app/model/interface/xrayTakenModel/xray-taken-permanent-data-request';
 import { XrayTakenTempImageRequest } from 'src/app/model/interface/xrayTakenModel/xray-taken-temp-image-request';
 import { XrayTakenTempImageResponse } from 'src/app/model/interface/xrayTakenModel/xray-taken-temp-image-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/preRequisite';
+// const baseUrl = 'http://localhost:9090/api/v1/preRequisite';
 // const baseUrl = 'http://localhost:8086/api/v1/preRequisite';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PreRequisiteRequirementService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/preRequisite`;
+  }
 
   public getXrayTakenPagination(
     paginationData: XrayTakenPaginationDataRequest
   ): Observable<XrayTakenImageDetails[]> {
     console.log(
-      'url = ' + `${baseUrl}/details` + this.convertToHttpParams(paginationData)
+      'url = ' +
+        `${this.baseUrl}/images/details` +
+        this.convertToHttpParams(paginationData)
     );
     return this.http
-      .get<XrayTakenImageDetails[]>(`${baseUrl}/images/details`, {
+      .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/details`, {
         params: this.convertToHttpParams(paginationData),
       })
       .pipe(retry(3));
@@ -36,14 +42,14 @@ export class PreRequisiteRequirementService {
 
   public getXrayTakenDisplay(
     displayDataRequest: XrayTakenDisplayDataRequest
-  ): Observable<XrayTakenImageDetails> {
+  ): Observable<XrayTakenImageDetails[]> {
     console.log(
       'url = ' +
-        `${baseUrl}/display` +
+        `${this.baseUrl}/images/display` +
         this.convertToHttpParams(displayDataRequest)
     );
     return this.http
-      .get<XrayTakenImageDetails>(`${baseUrl}/images/display`, {
+      .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/display`, {
         params: this.convertToHttpParams(displayDataRequest),
       })
       .pipe(retry(3));
@@ -53,10 +59,10 @@ export class PreRequisiteRequirementService {
     tempImages: XrayTakenTempImageRequest
   ): Observable<XrayTakenTempImageResponse[]> {
     console.log(
-      'url = ' + `${baseUrl}/temp` + this.convertToHttpParams(tempImages)
+      'url = ' + `${this.baseUrl}/temp` + this.convertToHttpParams(tempImages)
     );
     return this.http
-      .get<XrayTakenTempImageResponse[]>(`${baseUrl}/images/temp`, {
+      .get<XrayTakenTempImageResponse[]>(`${this.baseUrl}/images/temp`, {
         params: this.convertToHttpParams(tempImages),
       })
       .pipe(retry(3));
@@ -66,10 +72,10 @@ export class PreRequisiteRequirementService {
     getPreRequisite: PreRequisiteDto
   ): Observable<PreRequisiteModel> {
     console.log(
-      'url = ' + `${baseUrl}` + this.convertToHttpParams(getPreRequisite)
+      'url = ' + `${this.baseUrl}` + this.convertToHttpParams(getPreRequisite)
     );
     return this.http
-      .get<PreRequisiteModel>(`${baseUrl}`, {
+      .get<PreRequisiteModel>(`${this.baseUrl}`, {
         params: this.convertToHttpParams(getPreRequisite),
       })
       .pipe(retry(3));
@@ -86,17 +92,21 @@ export class PreRequisiteRequirementService {
   public uploadTempXrayImages(
     formData: FormData
   ): Observable<HttpEvent<CustomHttpResponse>> {
-    return this.http.post<CustomHttpResponse>(`${baseUrl}/images`, formData, {
-      reportProgress: true,
-      observe: 'events',
-    });
+    return this.http.post<CustomHttpResponse>(
+      `${this.baseUrl}/images`,
+      formData,
+      {
+        reportProgress: true,
+        observe: 'events',
+      }
+    );
   }
 
   public createPreRequisite(
     preRequisiteModel: PreRequisiteModel
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}`, preRequisiteModel)
+      .post<CustomHttpResponse>(`${this.baseUrl}`, preRequisiteModel)
       .pipe(retry(3));
   }
 
@@ -105,7 +115,7 @@ export class PreRequisiteRequirementService {
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(
-        `${baseUrl}/images`,
+        `${this.baseUrl}/images`,
         xrayTakenPermanentDataRequest
       )
       .pipe(retry(3));
@@ -116,7 +126,7 @@ export class PreRequisiteRequirementService {
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(
-        `${baseUrl}/images/display`,
+        `${this.baseUrl}/images/display`,
         xrayTakenPermanentDataRequest
       )
       .pipe(retry(3));
@@ -126,7 +136,7 @@ export class PreRequisiteRequirementService {
     xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .delete<CustomHttpResponse>(`${baseUrl}/images`, {
+      .delete<CustomHttpResponse>(`${this.baseUrl}/images`, {
         params: this.convertToHttpParams(xrayTakenPermanentDataRequest),
       })
       .pipe(retry(3));
@@ -136,7 +146,7 @@ export class PreRequisiteRequirementService {
     removeTempImage: XrayTakenImageTempRemove
   ): Observable<CustomHttpResponse> {
     return this.http
-      .delete<CustomHttpResponse>(`${baseUrl}/images/temp`, {
+      .delete<CustomHttpResponse>(`${this.baseUrl}/images/temp`, {
         params: this.convertToHttpParams(removeTempImage),
       })
       .pipe(retry(3));

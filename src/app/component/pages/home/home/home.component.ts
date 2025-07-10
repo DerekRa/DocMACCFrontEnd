@@ -69,6 +69,10 @@ export class HomeComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,listMonth', //timeGridWeek,timeGridDay,
     },
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+    },
     plugins: [dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin],
     //dayMaxEventRows: true,
     views: {
@@ -109,7 +113,7 @@ export class HomeComponent implements OnInit {
   onGetAppointmentData() {
     this.patientAppointmentService.getAllPatientAppointment().subscribe(
       (response: any) => {
-        console.log('response');
+        console.log('====----==response');
         console.log(response.body);
         this.appointments = response.body;
       },
@@ -175,6 +179,10 @@ export class HomeComponent implements OnInit {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,listMonth', //timeGridWeek,timeGridDay,
+      },
+      eventTimeFormat: {
+        hour: 'numeric',
+        minute: '2-digit',
       },
       footerToolbar: {
         left: 'addNewEvent',

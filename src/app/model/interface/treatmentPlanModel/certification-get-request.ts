@@ -1,5 +1,6 @@
 export interface CertificationGetRequest {
-    profileId: number;
-    createdBy: number;
-    dateOfProcedure: string;
+  profileId: number;
+  createdByName: string;
+  createdById: string;
+  dateOfProcedure: string;
 }

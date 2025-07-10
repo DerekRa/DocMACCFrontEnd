@@ -1,240 +1,360 @@
 <!-- Xray Taken Title -->
 <div class="grid">
-    <div class="col">
-        <div class="row"><h3>X-ray Taken</h3></div>
-    </div>
+  <div class="col">
+    <div class="row"><h3>X-ray Taken</h3></div>
+  </div>
 </div>
 <!-- Xray Taken Data -->
 <div class="grid">
-    <div class="col-3"><span class="text-lg">Periapical</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewPeriapicalHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{periapicalImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="periapicalImageDetails?.imageList!==null; else viewEmptyPeriapical">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of periapicalImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                />
-            </div>
-        </div>
+  <div class="col-3">
+    <span class="text-lg">Periapical</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewPeriapicalHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      periapicalImageDetails && periapicalImageDetails.length > 0;
+      else viewEmptyPeriapical
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of periapicalImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          class="img-thumbnail h-4rem w-4rem"
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
     </div>
-    <ng-template #viewEmptyPeriapical>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <div class="col-3"><span class="text-lg">Panoramic</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewPanoramicHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{panoramicImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="panoramicImageDetails?.imageList!==null; else viewEmptyPanoramic">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of panoramicImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                />
-            </div>
-        </div>
+  </div>
+  <ng-template #viewEmptyPeriapical>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
     </div>
-    <ng-template #viewEmptyPanoramic>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <div class="col-3"><span class="text-lg">Cephalo-metric</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewCephaloMetricHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{cephaloMetricImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="cephaloMetricImageDetails?.imageList!==null; else viewEmptyCephaloMetric">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of cephaloMetricImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                />
-            </div>
-        </div>
+  </ng-template>
+  <div class="col-3">
+    <span class="text-lg">Panoramic</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewPanoramicHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      panoramicImageDetails && panoramicImageDetails.length > 0;
+      else viewEmptyPanoramic
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of panoramicImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          class="img-thumbnail h-4rem w-4rem"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
     </div>
-    <ng-template #viewEmptyCephaloMetric>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <div class="col-3"><span class="text-lg">Occlusal (Upper)</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewOcclusalUpperHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{occlusalUpperImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="occlusalUpperImageDetails?.imageList!==null; else viewEmptyOcclusalUpper">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of occlusalUpperImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                />
-            </div>
-        </div>
+  </div>
+  <ng-template #viewEmptyPanoramic>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
     </div>
-    <ng-template #viewEmptyOcclusalUpper>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <div class="col-3"><span class="text-lg">Occlusal (Lower)</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewOcclusalLowerHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{occlusalLowerImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="occlusalLowerImageDetails?.examinationType!==null; else viewEmptyOcclusalLower">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of occlusalLowerImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                />
-            </div>
-        </div>
+  </ng-template>
+  <div class="col-3">
+    <span class="text-lg">Cephalo-metric</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewCephaloMetricHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      cephaloMetricImageDetails && cephaloMetricImageDetails.length > 0;
+      else viewEmptyCephaloMetric
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of cephaloMetricImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          class="img-thumbnail h-4rem w-4rem"
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
     </div>
-    <ng-template #viewEmptyOcclusalLower>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
-    <div class="col-3"><span class="text-lg">Others</span> &nbsp;
-        <button
-            *ngIf="recordAction == 'add-record'"
-            type="button"
-            class="btn btn-outline-primary btn-sm -mt-1"
-            (click)="onViewOthersHistory(profileModel?.id)"
-        >
-            History
-        </button><br>
-        <span class="fw-lighter">{{othersImageDetails?.remarks}}</span></div>
-    <div class="col-3" *ngIf="othersImageDetails?.imageList!==null; else viewEmptyOthers">
-        <div class="grid">
-            <div class="col-sm-3 mb-3" *ngFor="let images of othersImageDetails?.imageList; let i = index">
-                <img
-                    src="{{ images.imgLink }}"
-                    class="img-thumbnail -mt-3 h-5rem w-5rem"
-                    alt="{{ images.hashName }}"
-                    
-                    (click)="updateViewItem(images.hashNameType, images.originalName, images.imgLink)"
-                    data-bs-toggle="modal"
-                    data-bs-target="#displayImageModalToggle"
-                />
-            </div>
-        </div>
+  </div>
+  <ng-template #viewEmptyCephaloMetric>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
     </div>
-    <ng-template #viewEmptyOthers>
-        <div class="col-3">
-            <div class="grid">
-                <div class="col-sm-3 mb-3">
-                    <img src="{{ picture }}" class="img-thumbnail -mt-3 h-5rem w-5em" alt="..." />
-                </div>
-            </div>
-        </div>
-    </ng-template>
+  </ng-template>
+  <div class="col-3">
+    <span class="text-lg">Occlusal (Upper)</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewOcclusalUpperHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      occlusalUpperImageDetails && occlusalUpperImageDetails.length > 0;
+      else viewEmptyOcclusalUpper
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of occlusalUpperImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          class="img-thumbnail h-4rem w-4rem"
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
+    </div>
+  </div>
+  <ng-template #viewEmptyOcclusalUpper>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
+    </div>
+  </ng-template>
+  <div class="col-3">
+    <span class="text-lg">Occlusal (Lower)</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewOcclusalLowerHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      occlusalLowerImageDetails && occlusalLowerImageDetails.length > 0;
+      else viewEmptyOcclusalLower
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of occlusalLowerImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          class="img-thumbnail h-4rem w-4rem"
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
+    </div>
+  </div>
+  <ng-template #viewEmptyOcclusalLower>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
+    </div>
+  </ng-template>
+  <div class="col-3">
+    <span class="text-lg">Others</span> &nbsp;
+    <button
+      *ngIf="recordAction == 'add-record'"
+      type="button"
+      class="btn btn-outline-primary btn-sm -mt-1"
+      (click)="onViewOthersHistory(profileModel?.id)"
+    >
+      History</button
+    ><br />
+  </div>
+  <div
+    class="col-3"
+    *ngIf="
+      othersImageDetails && othersImageDetails.length > 0;
+      else viewEmptyOthers
+    "
+  >
+    <div class="grid">
+      <span *ngFor="let images of othersImageDetails; let i = index">
+        <img
+          *ngFor="let img of images?.imageList; let i = index"
+          src="{{ img.imgLink }}"
+          alt="{{ img.hashName }}"
+          (click)="
+            updateViewItem(
+              img.hashNameType,
+              img.originalName,
+              img.imgLink,
+              images?.remarks || ''
+            )
+          "
+          class="img-thumbnail h-4rem w-4rem"
+          data-bs-toggle="modal"
+          data-bs-target="#displayImageModalToggle"
+        />
+      </span>
+    </div>
+  </div>
+  <ng-template #viewEmptyOthers>
+    <div class="col-3">
+      <div class="grid">
+        <span>
+          <img
+            src="{{ picture }}"
+            class="img-thumbnail -mt-3 h-4rem w-4rem"
+            alt="..."
+          />
+        </span>
+      </div>
+    </div>
+  </ng-template>
 </div>
 <!-- Modal Display Image For Xray Taken -->
 <div
-class="modal fade"
-id="displayImageModalToggle"
-tabindex="-1"
-aria-labelledby="displayImageModalToggleLabel"
-aria-hidden="true"
+  class="modal fade"
+  id="displayImageModalToggle"
+  tabindex="-1"
+  aria-labelledby="displayImageModalToggleLabel"
+  aria-hidden="true"
 >
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <p class="modal-title lbltext" id="displayImageModalToggleLabel">{{ imgNameOriginal }}</p>
-                <button
-                    type="button"
-                    class="btn-close btn-sm"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                ></button>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        {{ imgNameOriginal }}
+        <button
+          type="button"
+          class="btn-close btn-sm"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <p class="fw-lighter"><b>Remarks</b>: {{ remarks }}</p>
             </div>
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <div class="row">
-                        <img src="{{ imgLink }}" height="auto" width="auto" alt="{{ hashName }}" />
-                    </div>
-                </div>
-            </div>
+          </div>
+          <div class="row">
+            <img
+              src="{{ imgLink }}"
+              height="auto"
+              width="auto"
+              alt="{{ hashName }}"
+            />
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

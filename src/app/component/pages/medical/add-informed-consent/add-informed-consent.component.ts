@@ -8,6 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
 import { PreProcedureRequirementService } from 'src/app/service/medicalHistory/pre-procedure-requirement.service';
@@ -31,6 +33,8 @@ export class AddInformedConsentComponent implements OnInit {
   uploadProgress: number = 0;
   saveFiles = true;
   hashNames: string[] = [];
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   @Output() private filesChangeEmiter: EventEmitter<File[]> =
     new EventEmitter();
 
@@ -44,18 +48,24 @@ export class AddInformedConsentComponent implements OnInit {
   @HostBinding('style.min-width') private minWidth = '500px';
   @HostBinding('style.max-width') private maxWidth = '500px';
   constructor(
+    private readonly keycloak: KeycloakService,
     private route: ActivatedRoute,
     private router: Router,
     public alertService: AlertService,
     private preProcedureRequirementService: PreProcedureRequirementService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.item_name = this.route.snapshot.params['itemName'];
     this.breadcrumb_title =
       this.item_name == 'informedConsents'
         ? 'Informed Consents'
         : 'Medical Clearance';
+
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
   @HostListener('dragover', ['$event']) public onDragOver(evt: any) {
     evt.preventDefault();
@@ -136,7 +146,9 @@ export class AddInformedConsentComponent implements OnInit {
         formData.append('file', this.files[x]);
         formData.append('itemName', this.item_name);
         formData.append('location', location);
-        formData.append('createdBy', this.id);
+        formData.append('profileId', this.id);
+        formData.append('createdByName', this.userProfile?.firstName || '');
+        formData.append('createdById', this.userProfile?.id || '');
 
         this.preProcedureRequirementService.uploadImages(formData).subscribe(
           (response: HttpEvent<CustomHttpResponse>) => {
@@ -211,7 +223,9 @@ export class AddInformedConsentComponent implements OnInit {
         formData.append('hashNameType', this.hashNames[x]);
         formData.append('itemName', this.item_name);
         formData.append('location', 'permanent');
-        formData.append('updatedBy', this.id);
+        formData.append('profileId', this.id);
+        formData.append('updatedByName', this.userProfile?.firstName || '');
+        formData.append('updatedById', this.userProfile?.id || '');
         console.log('this.hashNames:' + this.hashNames[x]);
         this.preProcedureRequirementService.updateImages(formData).subscribe(
           (response: CustomHttpResponse) => {

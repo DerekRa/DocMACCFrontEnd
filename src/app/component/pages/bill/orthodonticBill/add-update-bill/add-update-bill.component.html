@@ -1,0 +1,259 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="link-dark" routerLink="/bill-records/orthodontic/patients"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item" [hidden]="urlLocation == 'add-record'">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/orthodontic/patients/{{ id }}"
+            aria-current="page"
+            >Orthodontic Bill List</a
+          >
+        </li>
+        <li
+          class="breadcrumb-item"
+          [hidden]="
+            urlLocation == 'add-from-view-record' || urlLocation == 'add-record'
+          "
+        >
+          <a
+            class="link-dark"
+            routerLink="/bill-records/orthodontic/patients/{{ id }}/{{
+              billId
+            }}/{{ dateOfBill }}"
+            aria-current="page"
+            >Breakdown</a
+          >
+        </li>
+        <li
+          class="breadcrumb-item active"
+          [hidden]="urlLocation == 'add-record' || urlLocation == 'update-bill'"
+          aria-current="page"
+        >
+          <span>Add</span>
+        </li>
+        <li
+          class="breadcrumb-item active"
+          [hidden]="
+            urlLocation == 'add-from-view-record' ||
+            urlLocation == 'update-bill'
+          "
+          aria-current="page"
+        >
+          <span>Add Orthodontic Bill</span>
+        </li>
+        <li
+          class="breadcrumb-item active"
+          [hidden]="
+            urlLocation == 'add-from-view-record' || urlLocation == 'add-record'
+          "
+          aria-current="page"
+        >
+          <span>Update</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-9 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <!-- Date of Bill, Print, Update, Add, Pay -->
+    <div
+      class="grid -mb-1"
+      [hidden]="
+        urlLocation == 'add-from-view-record' || urlLocation == 'add-record'
+      "
+    >
+      <!-- Date Of Bill -->
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Date Of Bill :&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-2 -mb-1">
+        &nbsp; {{ dateOfBill | date : "MMMM dd, YYYY" }}
+      </div>
+      <!-- Empty Title -->
+      <div class="col text-center">
+        <span>&nbsp;</span>
+      </div>
+      <!-- Print, Update, Add, Pay -->
+      <div class="col-auto mb-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="viewBillHistory()"
+        >
+          History
+        </button>
+      </div>
+    </div>
+    <!-- Column Grid -->
+    <div class="grid">
+      <div class="col col-sm-12 col-lg-8">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-1 col-auto tblLabel">
+              <span class="astrk">&ast;</span>Bill Name
+            </div>
+            <div class="col col-lg-10 ms-2 tblValue">
+              <input
+                type="text"
+                name="billName"
+                id="billNameId"
+                formControlName="billName"
+                class="form-control form-control-sm"
+                [ngClass]="{
+                  'is-invalid': submitted && f['billName'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['billName'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['billName'].errors['required']">
+                  Bill Name is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-1 col-auto tblLabel">
+              <span class="astrk">&ast;</span>Total Bill
+            </div>
+            <div class="col col-lg-10 ms-2 tblValue">
+              <input
+                type="number"
+                name="totalBill"
+                id="totalBillId"
+                formControlName="totalBill"
+                class="form-control form-control-sm"
+                min="1"
+                [ngClass]="{
+                  'is-invalid': submitted && f['totalBill'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['totalBill'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['totalBill'].errors['required']">
+                  Total Bill is required
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="grid"
+            [hidden]="
+              urlLocation == 'add-from-view-record' ||
+              urlLocation == 'add-record'
+            "
+          >
+            <div class="col col-lg-1 col-auto colSpce"></div>
+            <div class="col col-lg-1 col-auto tblLabel">
+              <span class="astrk">&ast;</span>Reason
+            </div>
+            <div class="col col-lg-10 col-auto col-sm-6 -mt-2">
+              <!-- Reason -->
+              <div class="col col-auto">
+                <textarea
+                  name="reason"
+                  formControlName="reason"
+                  class="form-control form-control-sm"
+                  id="reasonId"
+                  cols="32"
+                  rows="3"
+                  [ngClass]="{
+                    'is-invalid': submitted && f['reason'].errors
+                  }"
+                ></textarea>
+                <div
+                  *ngIf="submitted && f['reason'].errors"
+                  class="invalid-feedback"
+                >
+                  <div *ngIf="f['reason'].errors['required']">
+                    Reason is required
+                  </div>
+                  <div *ngIf="f['reason'].errors['minlength']">
+                    Reason must be at least 2 characters
+                  </div>
+                  <div *ngIf="f['reason'].errors['maxlength']">
+                    Reason must be maximum of 255 characters
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="grid justify-content-center mt-2">
+            <!-- <div class="col-2 text-lg"></div> -->
+            <div class="col-6 col-offset-4">
+              <button
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm"
+              >
+                Save
+              </button>
+              <button
+                [hidden]="
+                  urlLocation == 'add-from-view-record' ||
+                  urlLocation == 'update-bill'
+                "
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm ms-2"
+                routerLink="/bill-records/orthodontic/patients"
+              >
+                Back
+              </button>
+              <button
+                [hidden]="
+                  urlLocation == 'add-record' || urlLocation == 'update-bill'
+                "
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm ms-2"
+                routerLink="/bill-records/orthodontic/patients/{{ id }}"
+              >
+                Back
+              </button>
+              <button
+                [hidden]="
+                  urlLocation == 'add-from-view-record' ||
+                  urlLocation == 'add-record'
+                "
+                type="submit"
+                id="saveallnowid"
+                class="btn btn-outline-primary btn-sm ms-2"
+                routerLink="/bill-records/orthodontic/patients/{{ id }}/{{
+                  billId
+                }}/{{ dateOfBill }}"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

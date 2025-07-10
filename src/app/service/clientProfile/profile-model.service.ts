@@ -11,20 +11,24 @@ import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model
 import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/delete-profile';
 import { Name } from 'src/app/model/interface/profileModel/name';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/profile';
+// const baseUrl = 'http://localhost:9090/api/v1/profile';
 // const baseUrl = 'http://localhost:8009/api/v1/profile';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfileModelService {
-  constructor(private http: HttpClient) {}
-
-  public getProfileModelList(): Observable<ProfileModelList> {
-    return this.http.get<ProfileModelList>(`${baseUrl}`);
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/profile`;
   }
 
+  public getProfileModelList(): Observable<ProfileModelList> {
+    return this.http.get<ProfileModelList>(`${this.baseUrl}`);
+  }
+  // Not using right now
   public getProfileModelListPerPage(
     pageNo: number,
     pageSize: number,
@@ -32,7 +36,7 @@ export class ProfileModelService {
     orderBy: string
   ): Observable<HttpResponse<ProfileModelList>> {
     return this.http.get<ProfileModelList>(
-      `${baseUrl}/pagingAndSorting/${pageNo}/${pageSize}/${sortBy}/${orderBy}`,
+      `${this.baseUrl}/pagingAndSorting/${pageNo}/${pageSize}/${sortBy}/${orderBy}`,
       {
         observe: 'response',
         withCredentials: true,
@@ -49,7 +53,7 @@ export class ProfileModelService {
   ): Observable<HttpResponse<Name[]>> {
     return this.http
       .get<Name[]>(
-        `${baseUrl}/pagingAndSorting/names/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${lastName}`,
+        `${this.baseUrl}/pagingAndSorting/names/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${lastName}`,
         {
           observe: 'response',
           withCredentials: true,
@@ -59,7 +63,7 @@ export class ProfileModelService {
   }
 
   public getProfileModel(number: number): Observable<ProfileModel> {
-    return this.http.get<ProfileModel>(`${baseUrl}/${number}`).pipe(
+    return this.http.get<ProfileModel>(`${this.baseUrl}/${number}`).pipe(
       retry(3),
       catchError((error: any) => {
         return of();
@@ -68,20 +72,20 @@ export class ProfileModelService {
   }
 
   public getImageURL(): string {
-    return baseUrl + '/picture/';
+    return this.baseUrl + '/picture/';
   }
 
   public createProfileModel(
     profileModel: ProfileModel
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}`, profileModel)
+      .post<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
       .pipe(retry(3));
   }
 
   public uploadPicture(formData: FormData): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}/picture`, formData)
+      .post<CustomHttpResponse>(`${this.baseUrl}/picture`, formData)
       .pipe(retry(3));
   }
 
@@ -89,7 +93,7 @@ export class ProfileModelService {
     profileModel: ProfileModel
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}`, profileModel)
+      .put<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
       .pipe(retry(3));
   }
 
@@ -97,7 +101,7 @@ export class ProfileModelService {
     deleteProfile: DeleteProfileOrMedical
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}/delete`, deleteProfile)
+      .put<CustomHttpResponse>(`${this.baseUrl}/delete`, deleteProfile)
       .pipe(retry(3));
   }
 }

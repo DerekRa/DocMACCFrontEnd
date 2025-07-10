@@ -8,6 +8,8 @@ import { AlertService } from 'src/app/service/_alert/alert.service';
 import { PreRequisiteRequirementService } from 'src/app/service/dentalRecord/pre-requisite-requirement.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
   selector: 'app-xray-taken',
@@ -15,16 +17,21 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
   styleUrls: ['./xray-taken.component.scss'],
 })
 export class XrayTakenComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.dentalChart = this.route.snapshot.params['dentalChart'];
     this.labelName = this.route.snapshot.params['labelName'];
     this.setExamType();
     this.onGetTableData();
     this.onGetProfileModel(this.id);
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
 
   constructor(
+    private readonly keycloak: KeycloakService,
     private preRequisiteRequirementService: PreRequisiteRequirementService,
     private profileModelService: ProfileModelService,
     private router: Router,
@@ -32,6 +39,8 @@ export class XrayTakenComponent implements OnInit {
     public alertService: AlertService
   ) {}
   public id: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public dentalChart: any;
   public labelName: any;
   public examType: any;
@@ -96,6 +105,8 @@ export class XrayTakenComponent implements OnInit {
       .subscribe(
         (response: XrayTakenImageDetails[]) => {
           this.xrayTakenImageDetails = response;
+          console.log('xrayTakenImageDetails: ');
+          console.log(this.xrayTakenImageDetails);
         },
         (error: any) => console.log(error),
         () => console.log('Done getting profiles..')
@@ -125,7 +136,8 @@ export class XrayTakenComponent implements OnInit {
     const xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest = {
       xrayTakenId: xrayTakenId,
       profileId: this.id,
-      updatedBy: 1,
+      updatedByName: this.userProfile?.firstName || '',
+      updatedById: this.userProfile?.id || '',
       location: 'permanent',
       examinationType: this.dentalChart,
       labelName: this.labelName,
@@ -154,7 +166,8 @@ export class XrayTakenComponent implements OnInit {
       let xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest = {
         xrayTakenId: this.xrayTakenImageDetailDelete?.xrayTakenId,
         profileId: this.id,
-        updatedBy: 1,
+        updatedByName: this.userProfile?.firstName || '',
+        updatedById: this.userProfile?.id || '',
         location: 'permanent',
         examinationType: this.dentalChart,
         labelName: this.labelName,

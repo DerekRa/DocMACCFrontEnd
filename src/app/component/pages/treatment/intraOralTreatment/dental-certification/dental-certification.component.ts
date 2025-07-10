@@ -14,9 +14,11 @@ import { CertificationGetRequest } from 'src/app/model/interface/treatmentPlanMo
 import { CertificationRequest } from 'src/app/model/interface/treatmentPlanModel/certification-request';
 import { CertificationResponse } from 'src/app/model/interface/treatmentPlanModel/certification-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
-import { ExportPdfService } from 'src/app/service/clientProfile/export-pdf.service';
+import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { DentalCertificateService } from 'src/app/service/treatmentPlan/dental-certificate.service';
+import { KeycloakProfile } from 'keycloak-js';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-dental-certification',
@@ -24,7 +26,11 @@ import { DentalCertificateService } from 'src/app/service/treatmentPlan/dental-c
   styleUrls: ['./dental-certification.component.scss'],
 })
 export class DentalCertificationComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.dateOfProcedure = this.route.snapshot.params['dateofProcedure'];
     this.onGetProfileModel();
@@ -36,9 +42,12 @@ export class DentalCertificationComponent implements OnInit {
     private exportPdfService: ExportPdfService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    public alertService: AlertService
+    public alertService: AlertService,
+    private readonly keycloak: KeycloakService
   ) {}
   public id: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public dateOfProcedure: string = '';
   public profileModel: ProfileModel | undefined;
   public certificationData: CertificationResponse | undefined;
@@ -69,7 +78,8 @@ export class DentalCertificationComponent implements OnInit {
   public onGetData() {
     const certificationRequest: CertificationGetRequest = {
       profileId: this.id,
-      createdBy: 10, //coming soon on user management
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       dateOfProcedure: this.dateOfProcedure,
     };
     this.dentalCertificateService
@@ -79,7 +89,7 @@ export class DentalCertificationComponent implements OnInit {
           this.certificationData = response;
           console.log('this.certificationData = ' + this.certificationData);
           console.log(this.certificationData);
-          if (this.certificationData?.createdAt == null) {
+          if (this.certificationData?.createdByName == null) {
             this.newDataToInsert = true;
           } else {
             this.newDataToInsert = false;
@@ -92,7 +102,7 @@ export class DentalCertificationComponent implements OnInit {
           this.certificationData = error;
           console.log('this.certificationData = ' + this.certificationData);
           console.log(this.certificationData);
-          if (this.certificationData?.createdAt == null) {
+          if (this.certificationData?.createdByName == null) {
             this.newDataToInsert = true;
           } else {
             this.newDataToInsert = false;
@@ -110,7 +120,12 @@ export class DentalCertificationComponent implements OnInit {
   }
   public printPDFCertificate() {
     this.exportPdfService
-      .getExportPDFCertificate(this.id, this.dateOfProcedure, 10)
+      .getExportPDFCertificate(
+        this.id,
+        this.dateOfProcedure,
+        this.userProfile?.firstName || '',
+        this.userProfile?.id || ''
+      )
       .subscribe(
         (response: any) => {
           if (response.type === HttpEventType.DownloadProgress) {
@@ -155,11 +170,7 @@ export class DentalCertificationComponent implements OnInit {
       ],
       recommendations: [
         this.certificationData?.recommendations,
-        [
-          Validators.required,
-          Validators.minLength(2),
-          Validators.maxLength(255),
-        ],
+        [Validators.minLength(2), Validators.maxLength(255)],
       ],
       dateOfProcedure: [this.dateOfProcedure, Validators.required],
     });
@@ -177,10 +188,7 @@ export class DentalCertificationComponent implements OnInit {
       console.log('return empty diag and reom 000');
       return;
     }
-    if (
-      this.form.value['diagnosis'] == '' ||
-      this.form.value['recommendations'] == ''
-    ) {
+    if (this.form.value['diagnosis'] == '') {
       console.log('return empty diag and reom');
       return;
     }
@@ -188,7 +196,8 @@ export class DentalCertificationComponent implements OnInit {
     // CertificationRequest
     const certificationRequest: CertificationRequest = {
       profileId: this.id,
-      createdBy: 10, // update soon on user management
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       dateOfProcedure: this.dateOfProcedure,
       diagnosis: this.form.value['diagnosis'],
       recommendations: this.form.value['recommendations'],

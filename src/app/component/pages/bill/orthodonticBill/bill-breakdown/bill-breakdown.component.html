@@ -1,0 +1,258 @@
+<app-header></app-header>
+<main>
+  <div class="container">
+    <!-- Label -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a class="link-dark" routerLink="/bill-records/orthodontic/patients"
+            >List of Patients</a
+          >
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            class="link-dark"
+            routerLink="/bill-records/orthodontic/patients/{{ id }}"
+            >Orthodontic Bill List</a
+          >
+        </li>
+
+        <li class="breadcrumb-item active" aria-current="page">
+          <span>Breakdown</span>
+        </li>
+      </ol>
+    </nav>
+    <!-- Name -->
+    <div class="grid">
+      <div class="col-11 text-xl">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+    </div>
+    <!-- Date of Bill, Print, Update, Add, Pay -->
+    <div class="grid -mb-1">
+      <!-- Date Of Bill -->
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Date Of Bill :&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-2 -mb-1">
+        &nbsp; {{ dateOfBill | date : "MMMM dd, YYYY" }}
+      </div>
+      <!-- Empty Title -->
+      <div class="col text-center">
+        <span>&nbsp;</span>
+      </div>
+      <!-- Print, Update, Add, Pay -->
+      <div class="col-auto mb-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="printPDFBillBreakdown()"
+        >
+          Print All
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="updateBill()"
+        >
+          Update Bill
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="addAdditionalCharge()"
+        >
+          Add Charge
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+          (click)="addPayment()"
+        >
+          Pay Now
+        </button>
+      </div>
+    </div>
+    <!-- Show per page And Search All -->
+    <div class="grid mb-2">
+      <div class="col-auto me-auto ml-2">
+        <label for="selectDisplay" class="mt-2"
+          >Show per page:&nbsp;&nbsp;</label
+        >
+      </div>
+      <div class="col-auto mt-1 -mb-1">
+        <select
+          class="form-select form-select-sm mb-1"
+          (change)="onChangeShowPage($event)"
+          style="width: auto"
+        >
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="40">40</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      <div class="col text-center">
+        <span>&nbsp;</span>
+      </div>
+      <div class="col-auto">
+        <input
+          class="form-control-sm mt-1"
+          type="text"
+          (keyup)="onChangeSearchAll($event)"
+          placeholder="Search type here.."
+        />
+      </div>
+    </div>
+    <!-- Table -->
+    <div class="grid">
+      <div class="col col-sm-11">
+        <table class="table table-sm">
+          <!-- Table Body -->
+          <tbody
+            *ngFor="
+              let breakdown of billBreakdown
+                | paginate
+                  : {
+                      itemsPerPage: paginationSize,
+                      currentPage: pageNoDisplay,
+                      totalItems: paginationTotalItems
+                    };
+              let i = index
+            "
+          >
+            <tr>
+              <td>
+                <div class="grid">
+                  <!-- Ordering -->
+                  <div class="col col-lg-1 col-auto colSpceOrdering"></div>
+                  <!-- Ordering -->
+                  <div class="col col-lg-1 col-auto colSpceOrdering">
+                    <br />
+                    <span>{{ i + 1 }}.</span>
+                  </div>
+                  <!-- Action -->
+                  <div class="col col-lg-2 col-auto colSpceActions">
+                    <button
+                      [hidden]="breakdown?.transactionType == 'Payment'"
+                      type="button"
+                      class="btn btn-outline-primary btn-sm ms-3 mb-1 mt-4"
+                      (click)="updateAdditionalCharge(breakdown?.id)"
+                    >
+                      Update
+                    </button>
+                    <button
+                      [hidden]="
+                        breakdown?.transactionType == 'AdditionalCharge'
+                      "
+                      type="button"
+                      class="btn btn-outline-primary btn-sm ms-3 mb-1 mt-4"
+                      (click)="updatePayment(breakdown?.id)"
+                    >
+                      Update
+                    </button>
+                    <br />
+                    <br />
+                    <button
+                      type="button"
+                      class="btn btn-outline-primary btn-sm ms-3"
+                      (click)="printPDFBillIndividual()"
+                    >
+                      Print
+                    </button>
+                  </div>
+                  <!-- Data -->
+                  <div class="col col-lg-8 col-auto">
+                    <!-- Date -->
+                    <label class="tblLabel">Date</label>
+                    <span class="tblValue p-2">{{
+                      breakdown?.createdDate | date : " MMMM dd, YYYY"
+                    }}</span>
+                    <br />
+                    <!-- Total Bill -->
+                    <label class="tblLabel">Total Bill</label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.totalBill | number }}</span
+                    >
+                    <br />
+                    <!-- Additional Charge -->
+                    <label class="tblLabel"
+                      >Additional Charge
+                      <span
+                        [hidden]="breakdown?.transactionType == 'Payment'"
+                        class="badge rounded-pill bg-secondary lblHistory"
+                        (click)="viewAdditionalChargeHistory(breakdown?.id)"
+                        >History</span
+                      ></label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.additionalChargeAmount | number }}</span
+                    >
+                    <br />
+                    <!-- Payment -->
+                    <label class="tblLabel"
+                      >Payment
+                      <span
+                        [hidden]="
+                          breakdown?.transactionType == 'AdditionalCharge'
+                        "
+                        class="badge rounded-pill bg-secondary lblHistory"
+                        (click)="viewPaymentHistory(breakdown?.id)"
+                        >History</span
+                      ></label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.paymentAmount | number }}</span
+                    >
+                    <br />
+                    <!-- Note -->
+                    <label class="tblLabel">Note</label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.paymentNote }}</span
+                    >
+                    <br />
+                    <!-- Total Amount Paid -->
+                    <label class="tblLabel">Total Amount Paid</label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.totalAmountPaid | number }}</span
+                    >
+                    <br />
+                    <!-- Balance -->
+                    <label class="tblLabel">Balance</label
+                    ><span class="tblValue p-2">
+                      {{ breakdown?.balance | number }}</span
+                    >
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Total and Pagination -->
+    <div class="grid">
+      <div class="col -mt-3">
+        <label>Total items: {{ paginationTotalItems }}</label>
+      </div>
+      <div class="col-auto">
+        <div class="paginationStyle -mt-2 align-items-end">
+          <pagination-controls
+            previousLabel="Prev"
+            nextLabel="Next"
+            [responsive]="true"
+            (pageChange)="handlePageChange($event)"
+          ></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<app-footer></app-footer>

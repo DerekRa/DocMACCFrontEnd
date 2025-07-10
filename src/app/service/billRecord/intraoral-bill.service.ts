@@ -5,29 +5,32 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, EMPTY, Observable, retry, throwError } from 'rxjs';
-import { AmountChargedRequest } from 'src/app/model/interface/billModel/amount-charged-request';
-import { AmountChargedResponse } from 'src/app/model/interface/billModel/amount-charged-response';
-import { AmountData } from 'src/app/model/interface/billModel/amount-data';
-import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/amount-data-pagination-request';
-import { AmountPaymentRequest } from 'src/app/model/interface/billModel/amount-payment-request';
-import { AmountPaymentResponse } from 'src/app/model/interface/billModel/amount-payment-response';
-import { BillBreakdown } from 'src/app/model/interface/billModel/bill-breakdown';
-import { BillBreakdownResponse } from 'src/app/model/interface/billModel/bill-breakdown-response';
-import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/bill-breakdwon-request';
+import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
+import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
+import { AmountData } from 'src/app/model/interface/billModel/intraOralBill/amount-data';
+import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
+import { AmountPaymentRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-payment-request';
+import { AmountPaymentResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-payment-response';
+import { BillBreakdown } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown';
+import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown-response';
+import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdwon-request';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/bill';
 @Injectable({
   providedIn: 'root',
 })
 export class IntraoralBillService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/intraOralBill`;
+  }
 
   public getBillTotalBreakdown(
     billBreakdwonRequest: BillBreakdwonRequest
   ): Observable<BillBreakdownResponse> {
     return this.http
-      .get<BillBreakdownResponse>(`${baseUrl}/totalBreakdown`, {
+      .get<BillBreakdownResponse>(`${this.baseUrl}/totalBreakdown`, {
         params: this.convertToHttpParams(billBreakdwonRequest),
       })
       .pipe(
@@ -39,7 +42,7 @@ export class IntraoralBillService {
     amountDataRequest: AmountData
   ): Observable<BillBreakdown> {
     return this.http
-      .get<BillBreakdown>(`${baseUrl}/breakdown`, {
+      .get<BillBreakdown>(`${this.baseUrl}/breakdown`, {
         params: this.convertToHttpParams(amountDataRequest),
       })
       .pipe(
@@ -51,7 +54,7 @@ export class IntraoralBillService {
     amountDataPaginationRequest: AmountDataPaginationRequest
   ): Observable<AmountChargedResponse[]> {
     return this.http
-      .get<AmountChargedResponse[]>(`${baseUrl}/amountCharged`, {
+      .get<AmountChargedResponse[]>(`${this.baseUrl}/amountCharged`, {
         params: this.convertToHttpParams(amountDataPaginationRequest),
       })
       .pipe(retry(3));
@@ -60,7 +63,7 @@ export class IntraoralBillService {
     amountDataPaginationRequest: AmountDataPaginationRequest
   ): Observable<AmountPaymentResponse[]> {
     return this.http
-      .get<AmountPaymentResponse[]>(`${baseUrl}/amountPayment`, {
+      .get<AmountPaymentResponse[]>(`${this.baseUrl}/amountPayment`, {
         params: this.convertToHttpParams(amountDataPaginationRequest),
       })
       .pipe(retry(3));
@@ -70,7 +73,7 @@ export class IntraoralBillService {
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
-        `${baseUrl}/amountCharged`,
+        `${this.baseUrl}/amountCharged`,
         amountChargedRequest
       )
       .pipe(retry(3));
@@ -80,7 +83,7 @@ export class IntraoralBillService {
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
-        `${baseUrl}/amountPayment`,
+        `${this.baseUrl}/amountPayment`,
         amountPaymentRequest
       )
       .pipe(retry(3));

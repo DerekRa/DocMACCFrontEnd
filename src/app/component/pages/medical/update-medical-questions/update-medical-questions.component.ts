@@ -15,6 +15,8 @@ import { AlertService } from 'src/app/service/_alert/alert.service';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { MedicalHistoryService } from 'src/app/service/medicalHistory/medical-history.service';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 
 @Component({
   selector: 'app-update-medical-questions',
@@ -73,19 +75,26 @@ export class UpdateMedicalQuestionsComponent implements OnInit {
     otherHaveYouHadAnyOfTheFollowing: new FormControl(''),
     bloodPressureDate: new FormControl(''),
   });
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly keycloak: KeycloakService
   ) {
     this.formAllergies = this.fb.group({
       allergies: this.fb.array([], [Validators.required]),
     });
   }
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel(this.id);
     this.onGetMedicalModel(this.id);
@@ -304,7 +313,8 @@ export class UpdateMedicalQuestionsComponent implements OnInit {
     console.log('question == ' + JSON.stringify(question));
     const addMedicalModel: MedicalModel = {
       medicalModel: {
-        createdBy: 'Kenzou',
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
         profileId: this.id,
       },
       physician: [],

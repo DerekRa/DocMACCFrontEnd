@@ -48,14 +48,15 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
   public imgLink: any;
   public hashName: any;
   public imgNameOriginal: any;
+  public remarks: any;
   public examLink: any;
   public examinationType: any;
-  public periapicalImageDetails: XrayTakenImageDetails | undefined;
-  public panoramicImageDetails: XrayTakenImageDetails | undefined;
-  public cephaloMetricImageDetails: XrayTakenImageDetails | undefined;
-  public occlusalUpperImageDetails: XrayTakenImageDetails | undefined;
-  public occlusalLowerImageDetails: XrayTakenImageDetails | undefined;
-  public othersImageDetails: XrayTakenImageDetails | undefined;
+  public periapicalImageDetails: XrayTakenImageDetails[] | undefined;
+  public panoramicImageDetails: XrayTakenImageDetails[] | undefined;
+  public cephaloMetricImageDetails: XrayTakenImageDetails[] | undefined;
+  public occlusalUpperImageDetails: XrayTakenImageDetails[] | undefined;
+  public occlusalLowerImageDetails: XrayTakenImageDetails[] | undefined;
+  public othersImageDetails: XrayTakenImageDetails[] | undefined;
   public picture: string = 'assets/images/img2x2.png';
 
   private setExamType() {
@@ -78,13 +79,15 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
     this.preRequisiteRequirementService
       .getXrayTakenDisplay(displayDataRequest)
       .subscribe(
-        (response: XrayTakenImageDetails) => {
+        (response: XrayTakenImageDetails[]) => {
           switch (labelName) {
             case 'Periapical':
               this.periapicalImageDetails = response;
               break;
             case 'Panoramic':
               this.panoramicImageDetails = response;
+              console.log('====-=-=-=-panoramicImageDetails: ');
+              console.log(this.panoramicImageDetails);
               break;
             case 'CephaloMetric':
               this.cephaloMetricImageDetails = response;
@@ -159,10 +162,12 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
   public updateViewItem(
     hashNameType: string,
     originalName: string,
-    imgLink: string
+    imgLink: string,
+    remarks: string
   ) {
     this.hashName = hashNameType;
     this.imgNameOriginal = originalName;
     this.imgLink = imgLink;
+    this.remarks = remarks;
   }
 }

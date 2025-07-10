@@ -11,29 +11,35 @@ import { BracketRequest } from 'src/app/model/interface/dentalChartModel/orthodo
 import { BracketLatestRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-latest-request';
 import { BracketResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-response';
 import { BracketPaginationRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-pagination-request';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/orthodontic';
+// const baseUrl = 'http://localhost:9090/api/v1/orthodontic';
 // const baseUrl = 'http://localhost:8087/api/v1/orthodontic';
 @Injectable({
   providedIn: 'root',
 })
 export class OrthodonticExaminationService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/orthodontic`;
+  }
   public getActivePatients(): Observable<ActiveProfiles[]> {
-    return this.http.get<ActiveProfiles[]>(`${baseUrl}/patientsWithRecords`);
+    return this.http.get<ActiveProfiles[]>(
+      `${this.baseUrl}/patientsWithRecords`
+    );
   }
   public createBracketPrescriptionWireTypes(
     bracketRequest: BracketRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}/bracket`, bracketRequest)
+      .post<CustomHttpResponse>(`${this.baseUrl}/bracket`, bracketRequest)
       .pipe(retry(3));
   }
   public getBracketPrescriptionWireTypesLatest(
     bracketLatestRequest: BracketLatestRequest
   ): Observable<BracketResponse> {
     return this.http
-      .get<BracketResponse>(`${baseUrl}/bracket/latest`, {
+      .get<BracketResponse>(`${this.baseUrl}/bracket/latest`, {
         params: this.convertToHttpParams(bracketLatestRequest),
       })
       .pipe(retry(3));
@@ -42,7 +48,7 @@ export class OrthodonticExaminationService {
     bracketPaginationRequest: BracketPaginationRequest
   ): Observable<BracketResponse[]> {
     return this.http
-      .get<BracketResponse[]>(`${baseUrl}/bracket`, {
+      .get<BracketResponse[]>(`${this.baseUrl}/bracket`, {
         params: this.convertToHttpParams(bracketPaginationRequest),
       })
       .pipe(retry(3));
@@ -51,25 +57,43 @@ export class OrthodonticExaminationService {
     orthodonticExamination: OrthodonticExamination
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}/braces`, orthodonticExamination)
+      .post<CustomHttpResponse>(
+        `${this.baseUrl}/braces`,
+        orthodonticExamination
+      )
       .pipe(retry(3));
   }
   public getOrthodonticExaminationLatest(
     orthodonticExaminationLatest: OrthodonticExaminationLatest
   ): Observable<OrthodonticExaminationResponse> {
     return this.http
-      .get<OrthodonticExaminationResponse>(`${baseUrl}/braces/latest`, {
-        params: this.convertToHttpParams(orthodonticExaminationLatest),
-      })
+      .get<OrthodonticExaminationResponse>(
+        `${this.baseUrl}/braces/latest-date`,
+        {
+          params: this.convertToHttpParams(orthodonticExaminationLatest),
+        }
+      )
       .pipe(retry(3));
   }
   public getOrthodonticExaminationPagination(
     orthodonticExaminationPagination: OrthodonticExaminationPagination
   ): Observable<OrthodonticExaminationResponse[]> {
     return this.http
-      .get<OrthodonticExaminationResponse[]>(`${baseUrl}/braces`, {
+      .get<OrthodonticExaminationResponse[]>(`${this.baseUrl}/braces`, {
         params: this.convertToHttpParams(orthodonticExaminationPagination),
       })
+      .pipe(retry(3));
+  }
+  public getOrthodonticExaminationPaginationLatest(
+    orthodonticExaminationPagination: OrthodonticExaminationPagination
+  ): Observable<OrthodonticExaminationResponse[]> {
+    return this.http
+      .get<OrthodonticExaminationResponse[]>(
+        `${this.baseUrl}/braces/latest-process`,
+        {
+          params: this.convertToHttpParams(orthodonticExaminationPagination),
+        }
+      )
       .pipe(retry(3));
   }
   public convertToHttpParams(request: any): HttpParams {

@@ -1,9 +1,10 @@
 export interface XrayTakenPermanentDataRequest {
-    xrayTakenId?: Number;
-    profileId: Number;
-    updatedBy?: Number;
-    location: string;
-    examinationType: string;
-    labelName: string;
-    remarks?: string;
+  xrayTakenId?: Number;
+  profileId: Number;
+  updatedByName?: string;
+  updatedById?: string;
+  location: string;
+  examinationType: string;
+  labelName: string;
+  remarks?: string;
 }

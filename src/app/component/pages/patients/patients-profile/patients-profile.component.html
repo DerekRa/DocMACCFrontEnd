@@ -39,6 +39,7 @@
           placeholder="Search All type here.."
         />
       </div>
+      <!-- Add Profile - Patient Profile -->
       <div class="col-1" [hidden]="!(urlLocation == '/patients-profile')">
         <button
           class="btn btn-outline-dark btn-sm float-end"
@@ -53,6 +54,7 @@
     <div class="grid">
       <div class="col">
         <table class="table table-sm table-bordered">
+          <!-- Header -->
           <thead>
             <tr class="table-primary">
               <th scope="col" class="theadStyle">Actions</th>
@@ -106,6 +108,7 @@
               </th>
             </tr>
           </thead>
+          <!-- Body -->
           <tbody
             *ngFor="
               let name of nameList
@@ -119,6 +122,7 @@
           >
             <tr>
               <th scope="row">
+                <!-- Patient Profile Actions -->
                 <div [hidden]="!(urlLocation == '/patients-profile')">
                   <button
                     (click)="viewPatientProfile(name.id)"
@@ -128,6 +132,7 @@
                     View
                   </button>
                 </div>
+                <!-- Medical History Actions -->
                 <div [hidden]="!(urlLocation == '/medical-history/patients')">
                   <div [hidden]="!medicalHistoryCollection.includes(name.id)">
                     <button
@@ -148,6 +153,7 @@
                     </button>
                   </div>
                 </div>
+                <!-- Intraoral Examination Actions -->
                 <div
                   [hidden]="
                     !(
@@ -175,6 +181,7 @@
                     </button>
                   </div>
                 </div>
+                <!-- Orthodontic Examination Actions -->
                 <div
                   [hidden]="
                     !(
@@ -183,7 +190,7 @@
                     )
                   "
                 >
-                  <div [hidden]="!orthodonticCollection.includes(name.id)">
+                  <div [hidden]="!orthodonticExamCollection.includes(name.id)">
                     <button
                       (click)="viewOrthodonticExam(name.id)"
                       class="btn btn-outline-success btn-sm"
@@ -192,7 +199,7 @@
                       View
                     </button>
                   </div>
-                  <div [hidden]="orthodonticCollection.includes(name.id)">
+                  <div [hidden]="orthodonticExamCollection.includes(name.id)">
                     <button
                       (click)="addOrthodonticExam(name.id)"
                       class="btn btn-outline-danger btn-sm"
@@ -202,6 +209,7 @@
                     </button>
                   </div>
                 </div>
+                <!-- Intraoral Treatment Plan Actions -->
                 <div
                   [hidden]="
                     !(urlLocation == '/dental-records/treatment-plan/intraoral')
@@ -226,6 +234,7 @@
                     </button>
                   </div>
                 </div>
+                <!-- Orthodonctic Treatment Plan Actions -->
                 <div
                   [hidden]="
                     !(
@@ -234,7 +243,7 @@
                     )
                   "
                 >
-                  <div [hidden]="!orthodonticCollection.includes(name.id)">
+                  <div [hidden]="!orthodonticExamCollection.includes(name.id)">
                     <button
                       (click)="viewOrthodonticTreatment(name.id)"
                       class="btn btn-outline-success btn-sm"
@@ -243,7 +252,7 @@
                       View
                     </button>
                   </div>
-                  <div [hidden]="orthodonticCollection.includes(name.id)">
+                  <div [hidden]="orthodonticExamCollection.includes(name.id)">
                     <button
                       class="btn btn-outline-success btn-sm"
                       type="button"
@@ -253,6 +262,7 @@
                     </button>
                   </div>
                 </div>
+                <!-- Intraoral Bill Actions -->
                 <div
                   [hidden]="
                     !(urlLocation == '/bill-records/intraoral/patients')
@@ -274,6 +284,31 @@
                       disabled="true"
                     >
                       View
+                    </button>
+                  </div>
+                </div>
+                <!-- Orthodontic Bill Actions -->
+                <div
+                  [hidden]="
+                    !(urlLocation == '/bill-records/orthodontic/patients')
+                  "
+                >
+                  <div [hidden]="!orthodonticBillCollection.includes(name.id)">
+                    <button
+                      (click)="viewOrthodonticBill(name.id)"
+                      class="btn btn-outline-success btn-sm"
+                      type="button"
+                    >
+                      View
+                    </button>
+                  </div>
+                  <div [hidden]="orthodonticBillCollection.includes(name.id)">
+                    <button
+                      (click)="addOrthodonticBill(name.id)"
+                      class="btn btn-outline-danger btn-sm"
+                      type="button"
+                    >
+                      Add
                     </button>
                   </div>
                 </div>

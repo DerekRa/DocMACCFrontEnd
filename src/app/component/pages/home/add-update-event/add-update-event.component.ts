@@ -39,6 +39,7 @@ export class AddUpdateEventComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.category = this.route.snapshot.params['category'];
+    console.log('category==' + this.category);
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
@@ -220,8 +221,11 @@ export class AddUpdateEventComponent implements OnInit {
             console.log(response);
             if (response.httpStatus == 'OK') {
               const messageSplit = response.message.split(':');
+
               const strLink =
-                '<a href="/home/appointment/walk-in/' +
+                '<a href="/home/appointment/' +
+                this.category +
+                '/' +
                 messageSplit[1] +
                 '"> Click here to view..</a>';
               this.options.autoClose = false;

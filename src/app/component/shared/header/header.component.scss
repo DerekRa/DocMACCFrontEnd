@@ -3,14 +3,16 @@
 header {
   font-size: 18px;
   nav {
+    position: relative;
     background: $bgColor;
     margin: 0 0 40px 0;
     .dropdown:hover > .dropdown-menu {
       display: block;
+      position: absolute;
     }
-    .dropdown:hover > .dropdown-item {
-      display: block;
-    }
+    // .dropdown:hover > .dropdown-item {
+    //   display: block;
+    // }
   }
   .valign-center {
     display: inline-flex;

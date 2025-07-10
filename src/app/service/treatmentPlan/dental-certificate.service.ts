@@ -5,26 +5,30 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
 import { CertificationGetRequest } from 'src/app/model/interface/treatmentPlanModel/certification-get-request';
 import { CertificationRequest } from 'src/app/model/interface/treatmentPlanModel/certification-request';
 import { CertificationResponse } from 'src/app/model/interface/treatmentPlanModel/certification-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/certification';
+// const baseUrl = 'http://localhost:9090/api/v1/certification';
 // const baseUrl = 'http://localhost:8089/api/v1/certification';
 @Injectable({
   providedIn: 'root',
 })
 export class DentalCertificateService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/certification`;
+  }
   public createCertification(
     certificationRequest: CertificationRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}`, certificationRequest)
+      .post<CustomHttpResponse>(`${this.baseUrl}`, certificationRequest)
       .pipe(retry(3));
   }
   public getCertification(
     certificationRequest: CertificationGetRequest
   ): Observable<CertificationResponse> {
     return this.http
-      .get<CertificationResponse>(`${baseUrl}`, {
+      .get<CertificationResponse>(`${this.baseUrl}`, {
         params: this.convertToHttpParams(certificationRequest),
       })
       .pipe(retry(3));
@@ -33,7 +37,7 @@ export class DentalCertificateService {
     certificationRequest: CertificationRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}`, certificationRequest)
+      .put<CustomHttpResponse>(`${this.baseUrl}`, certificationRequest)
       .pipe(retry(3));
   }
   //   public updateProfileModel(certificationRequest: CertificationRequest): Observable<CustomHttpResponse> {

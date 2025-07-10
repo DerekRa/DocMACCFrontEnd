@@ -17,20 +17,24 @@ import { WalkInPatientUpdateRequest } from 'src/app/model/interface/appointmentM
 import { KeycloakService } from 'keycloak-angular';
 import { RegularAppointmentRequest } from 'src/app/model/interface/appointmentModel/regular-appointment-request';
 import { RegularAppointmentLatestResponse } from 'src/app/model/interface/appointmentModel/regular-appointment-latest-response';
+import { environment } from 'src/environments/environment';
 
-const baseUrl = 'http://localhost:9090/api/v1/appointment';
+// const baseUrl = 'http://localhost:9090/api/v1/appointment';
 // const baseUrl = 'http://localhost:8004/api/v1/appointment'; #old / direct endpoint
 @Injectable({
   providedIn: 'root',
 })
 export class PatientAppointmentService {
-  constructor(private http: HttpClient) {}
+  private baseUrl: string = '';
+  constructor(private http: HttpClient) {
+    this.baseUrl = `http://${environment.localhost}:9090/api/v1/appointment`;
+  }
 
   public getAllPatientAppointment(): Observable<
     HttpResponse<EventTitleResponse[]>
   > {
     return this.http
-      .get<EventTitleResponse[]>(`${baseUrl}`, {
+      .get<EventTitleResponse[]>(`${this.baseUrl}`, {
         observe: 'response',
         withCredentials: true,
       })
@@ -42,7 +46,7 @@ export class PatientAppointmentService {
   ): Observable<PatientAppointmentResponse> {
     return this.http
       .get<PatientAppointmentResponse>(
-        `${baseUrl}/${appointmentId}/${category}`
+        `${this.baseUrl}/${appointmentId}/${category}`
       )
       .pipe(retry(3));
   }
@@ -50,7 +54,7 @@ export class PatientAppointmentService {
     regularAppointmentRequest: RegularAppointmentRequest
   ): Observable<RegularAppointmentLatestResponse> {
     return this.http
-      .get<RegularAppointmentLatestResponse>(`${baseUrl}/regular`, {
+      .get<RegularAppointmentLatestResponse>(`${this.baseUrl}/regular`, {
         params: this.convertToHttpParams(regularAppointmentRequest),
       })
       .pipe(retry(3));
@@ -59,37 +63,43 @@ export class PatientAppointmentService {
     patientPaginationRequest: PatientPaginationRequest
   ): Observable<RegularAppointmentLatestResponse[]> {
     return this.http
-      .get<RegularAppointmentLatestResponse[]>(`${baseUrl}/regular/history`, {
-        params: this.convertToHttpParams(patientPaginationRequest),
-      })
+      .get<RegularAppointmentLatestResponse[]>(
+        `${this.baseUrl}/regular/history`,
+        {
+          params: this.convertToHttpParams(patientPaginationRequest),
+        }
+      )
       .pipe(retry(3));
   }
   public createWalkInAppointment(
     walkInPatientRequest: WalkInPatientRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}/walkin`, walkInPatientRequest)
+      .post<CustomHttpResponse>(`${this.baseUrl}/walkin`, walkInPatientRequest)
       .pipe(retry(3));
   }
   public updateWalkInAppointment(
     walkInPatientRequest: WalkInPatientUpdateRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .put<CustomHttpResponse>(`${baseUrl}/walkin`, walkInPatientRequest)
+      .put<CustomHttpResponse>(`${this.baseUrl}/walkin`, walkInPatientRequest)
       .pipe(retry(3));
   }
   public removeAppointment(
     appointmentId: string
   ): Observable<CustomHttpResponse> {
     return this.http
-      .delete<CustomHttpResponse>(`${baseUrl}/${appointmentId}`)
+      .delete<CustomHttpResponse>(`${this.baseUrl}/${appointmentId}`)
       .pipe(retry(3));
   }
   public createRegularAppointment(
     regularPatientRequest: RegularPatientRequest
   ): Observable<CustomHttpResponse> {
     return this.http
-      .post<CustomHttpResponse>(`${baseUrl}/regular`, regularPatientRequest)
+      .post<CustomHttpResponse>(
+        `${this.baseUrl}/regular`,
+        regularPatientRequest
+      )
       .pipe(retry(3));
   }
   public convertToHttpParams(request: any): HttpParams {

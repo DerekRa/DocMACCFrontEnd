@@ -39,8 +39,17 @@ import { AmountProcedureComponent } from './component/pages/bill/intraOralBill/a
 import { PaymentProcedureComponent } from './component/pages/bill/intraOralBill/payment-procedure/payment-procedure.component';
 import { AmountChargedHistoryComponent } from './component/pages/bill/intraOralBill/amount-charged-history/amount-charged-history.component';
 import { AmountPaidHistoryComponent } from './component/pages/bill/intraOralBill/amount-paid-history/amount-paid-history.component';
+import { BillHistoryComponent } from './component/pages/bill/orthodonticBill/bill-history/bill-history.component';
+import { AddUpdateBillComponent } from './component/pages/bill/orthodonticBill/add-update-bill/add-update-bill.component';
+import { BillBreakdownComponent } from './component/pages/bill/orthodonticBill/bill-breakdown/bill-breakdown.component';
+import { BillChangesHistoryComponent } from './component/pages/bill/orthodonticBill/bill-changes-history/bill-changes-history.component';
+import { AddUpdateAdditionalChargeComponent } from './component/pages/bill/orthodonticBill/add-update-additional-charge/add-update-additional-charge.component';
+import { AddUpdatePaymentComponent } from './component/pages/bill/orthodonticBill/add-update-payment/add-update-payment.component';
+import { PaymentHistoryComponent } from './component/pages/bill/orthodonticBill/payment-history/payment-history.component';
+import { AdditionalChargeHistoryComponent } from './component/pages/bill/orthodonticBill/additional-charge-history/additional-charge-history.component';
 
 const routes: Routes = [
+  //Home
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
@@ -49,6 +58,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Appointment
   {
     path: 'home/appointment',
     title: 'Add Appointment',
@@ -63,6 +73,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Patient Profile
   {
     path: 'patients-profile',
     title: 'Patients Profile',
@@ -91,7 +102,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'ADMIN'] },
   },
-
+  // Patient List
   {
     path: 'medical-history/patients',
     title: 'Patients List',
@@ -99,7 +110,6 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-
   {
     path: 'dental-records/dental-chart/intraoral-examination',
     title: 'Patients List',
@@ -131,6 +141,13 @@ const routes: Routes = [
     title: 'Patients List',
     component: PatientsProfileComponent,
   },
+  {
+    path: 'bill-records/orthodontic/patients',
+    title: 'Patients List',
+    component: PatientsProfileComponent,
+  },
+  // Patient List Ends Here
+  // Medical History
   {
     path: 'medical-history/add-patient/:id',
     title: 'Add Medical Health Check',
@@ -193,6 +210,8 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Dental Records
+  // IntraOral Examination
   {
     path: 'dental-records/dental-chart/intraoral-examination/:record-action/:id',
     title: 'Add Intra-Oral Examination',
@@ -214,6 +233,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Xray Taken
   {
     path: 'dental-records/dental-chart/xray-taken/:dentalChart/:labelName/:id',
     title: 'Xray Taken',
@@ -228,6 +248,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Orthodontic Examination
   {
     path: 'dental-records/dental-chart/orthodontic-examination/:record-action/:id',
     title: 'View Orthodontic Examination',
@@ -284,6 +305,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
+  // Treatment Plan
   {
     path: 'dental-records/treatment-plan/orthodontic/:id',
     title: 'IntraOral Treatment List',
@@ -299,6 +321,7 @@ const routes: Routes = [
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   //Bill
+  // Intraoral
   {
     path: 'bill-records/intraoral/patients/:id',
     title: 'IntraOral Bill List',
@@ -367,7 +390,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-  //Bill
+  //Bill - Intraoral
   {
     path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-procedure/:procedureNumber',
     title: 'IntraOral Bill Amount Procedure',
@@ -375,7 +398,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-  //Bill
+  //Bill - Intraoral
   {
     path: 'bill-records/intraoral/patients/:id/:dateofProcedure/payment-procedure/:procedureNumber',
     title: 'IntraOral Bill Payment',
@@ -383,7 +406,7 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-  //Bill
+  //Bill - Intraoral
   {
     path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-charged-history/:procedureNumber',
     title: 'IntraOral Bill Amount Charged History',
@@ -391,13 +414,109 @@ const routes: Routes = [
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
-  //Bill
+  //Bill - Intraoral
   {
     path: 'bill-records/intraoral/patients/:id/:dateofProcedure/amount-paid-history/:procedureNumber',
     title: 'IntraOral Bill Payment History',
     component: AmountPaidHistoryComponent,
     canActivate: [AuthKeyClockGuard],
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - vew list of bills of a patient
+  {
+    path: 'bill-records/orthodontic/patients/:id',
+    title: 'Orthodontic Bills',
+    component: BillHistoryComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - add bill
+  {
+    path: 'bill-records/orthodontic/patients/:id/add-record',
+    title: 'Add Orthodontic Bill',
+    component: AddUpdateBillComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - add bill
+  {
+    path: 'bill-records/orthodontic/patients/:id/add-from-view-record',
+    title: 'Add Orthodontic Bill',
+    component: AddUpdateBillComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - vew list of breakdown of a bill
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill',
+    title: 'Orthodontic Bill Breakdown',
+    component: BillBreakdownComponent,
+    // canActivate: [AuthKeyClockGuard],
+    // data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - update bill
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/update-bill',
+    title: 'Update Orthodontic Bill',
+    component: AddUpdateBillComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - view list of bill changes
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/history',
+    title: 'Orthodontic Bill Changes',
+    component: BillChangesHistoryComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - add additional charge
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/add-charge',
+    title: 'Orthodontic Bill Add Charge',
+    component: AddUpdateAdditionalChargeComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - add payment
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/payment',
+    title: 'Orthodontic Bill Payment',
+    component: AddUpdatePaymentComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - update payment
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/update-payment/:transactionId',
+    title: 'Orthodontic Bill Update Payment',
+    component: AddUpdatePaymentComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - update additional charge
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/update-additional-charge/:transactionId',
+    title: 'Orthodontic Bill Update Additional Charge',
+    component: AddUpdateAdditionalChargeComponent,
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - view payment changes history
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/payment-changes-history/:transactionId',
+    title: 'Orthodontic Bill Payment History',
+    component: PaymentHistoryComponent,
+    // canActivate: [AuthKeyClockGuard],
+    // data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+  },
+  //Bill - Orthodontic - view additional charge changes history
+  {
+    path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/additional-charge-changes-history/:transactionId',
+    title: 'Orthodontic Bill Additional Charge History',
+    component: AdditionalChargeHistoryComponent,
+    // canActivate: [AuthKeyClockGuard],
+    // data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   //ALL
   { path: '**', title: '404 Not Found', component: PageNotFoundComponent },
