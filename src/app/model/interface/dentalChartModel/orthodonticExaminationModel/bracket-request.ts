@@ -1,6 +1,7 @@
 export interface BracketRequest {
-    profileId: number;
-    createdBy: number;
-    category: string;
-    values: string;
+  profileId: number;
+  createdByName: string;
+  createdById: string;
+  category: string;
+  values: string;
 }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
 import { IntraoralExamination } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/intraoral-examination';
 import { BracketLatestRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-latest-request';
@@ -19,7 +21,11 @@ import { OrthodonticExaminationService } from 'src/app/service/dentalRecord/orth
   styleUrls: ['./orthodontic-examination.component.scss'],
 })
 export class OrthodonticExaminationComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel();
     this.getImageTeeth('addTeeth.png');
@@ -36,7 +42,6 @@ export class OrthodonticExaminationComponent implements OnInit {
     this.getBracketPrescriptionWireTypes('BracketPrescription');
     this.getBracketPrescriptionWireTypes('MaxillaryWireType');
     this.getBracketPrescriptionWireTypes('MandibularWireType');
-    console.log('this.recordAction = ' + this.recordAction);
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
     if (paramsURL[4] == 'add-record') {
@@ -66,8 +71,11 @@ export class OrthodonticExaminationComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public alertService: AlertService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private readonly keycloak: KeycloakService
   ) {}
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public id: any;
   public recordAction: any;
   public bracesAction: any;
@@ -247,7 +255,8 @@ export class OrthodonticExaminationComponent implements OnInit {
     }
     const bracketRequest: BracketRequest = {
       profileId: this.id,
-      createdBy: 10, // update soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       category: 'BracketPrescription',
       values: this.formBracketPrescription.value.bracketPrescription,
     };
@@ -265,7 +274,8 @@ export class OrthodonticExaminationComponent implements OnInit {
     }
     const bracketRequest: BracketRequest = {
       profileId: this.id,
-      createdBy: 10, // update soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       category: 'MaxillaryWireType',
       values: this.formMaxillaryWireType.value.maxillaryWireType,
     };
@@ -283,7 +293,8 @@ export class OrthodonticExaminationComponent implements OnInit {
     }
     const bracketRequest: BracketRequest = {
       profileId: this.id,
-      createdBy: 10, // update soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       category: 'MandibularWireType',
       values: this.formMandibularWireType.value.mandibularWireType,
     };

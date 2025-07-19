@@ -7,6 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { Physician } from 'src/app/model/interface/medicalHistoryModel/physician';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
@@ -33,14 +35,21 @@ export class AddUpdatePhysicianComponent {
     officeNumber: new FormControl(''),
     specialty: new FormControl(''),
   });
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
     public alertService: AlertService,
-    private physicianHistoryService: PhysicianHistoryService
+    private physicianHistoryService: PhysicianHistoryService,
+    private readonly keycloak: KeycloakService
   ) {}
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.action = this.route.snapshot.params['action'];
     this.form = this.formBuilder.group({
@@ -88,18 +97,20 @@ export class AddUpdatePhysicianComponent {
   }
   onSubmit(): void {
     this.submitted = true;
-    //console.log('form value =-=-= ' + JSON.stringify(this.form.value));
+    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
     if (this.form.invalid) {
       return;
     }
     console.log('this.urlCurrentLocation()  = ' + this.urlCurrentLocation());
     if (this.urlCurrentLocation() === 'Add') {
       const addPhysician: Physician = {
+        profileId: this.id,
         fullName: this.form.value['fullName'],
         officeAddress: this.form.value['officeAddress'],
         officeNumber: this.form.value['officeNumber'],
         specialty: this.form.value['specialty'],
-        createdBy: this.id,
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
       };
       this.physicianHistoryService
         .createPhysicianHistory(addPhysician)

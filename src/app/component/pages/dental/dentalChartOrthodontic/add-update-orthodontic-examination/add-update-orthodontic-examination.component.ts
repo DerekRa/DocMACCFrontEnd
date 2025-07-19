@@ -9,6 +9,8 @@ import {
 } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/tooth-numbers-dental-chart';
 import { BracketLatestRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-latest-request';
 import { BracketResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-response';
@@ -28,7 +30,11 @@ import { OrthodonticExaminationService } from 'src/app/service/dentalRecord/orth
   styleUrls: ['./add-update-orthodontic-examination.component.scss'],
 })
 export class AddUpdateOrthodonticExaminationComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.teethNumbering = this.route.snapshot.params['teethNumbering'];
     this.onGetProfileModel();
@@ -69,8 +75,11 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     private route: ActivatedRoute,
     public datepipe: DatePipe,
     private fb: FormBuilder, // public datepipe: DatePipe
-    public alertService: AlertService
+    public alertService: AlertService,
+    private readonly keycloak: KeycloakService
   ) {}
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public id: any;
   public teethNumbering: any;
   public profileModel: ProfileModel | undefined;
@@ -362,7 +371,8 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     for (let i = 0; i < this.toothNumbersValue.length; i++) {
       const orthodonticExamination: OrthodonticExamination = {
         profileId: this.id,
-        createdBy: 10, // update soon
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
         toothNumber: this.toothNumbersValue[i],
         dateOfProcedure: dateFormat + '',
         wireType: this.showMandibularWireType

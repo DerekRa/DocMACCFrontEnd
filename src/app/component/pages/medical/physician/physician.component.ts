@@ -7,6 +7,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { Physician } from 'src/app/model/interface/medicalHistoryModel/physician';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
@@ -36,7 +38,13 @@ export class PhysicianComponent implements OnInit {
     officeNumber: new FormControl(''),
     specialty: new FormControl(''),
   });
-  ngOnInit(): void {
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.physicianId = this.route.snapshot.params['physicianId'];
     this.action = this.route.snapshot.params['action'];
@@ -50,7 +58,8 @@ export class PhysicianComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    public alertService: AlertService
+    public alertService: AlertService,
+    private readonly keycloak: KeycloakService
   ) {}
   urlCurrentLocation() {
     const urlPathName = window.location.pathname;
@@ -60,7 +69,8 @@ export class PhysicianComponent implements OnInit {
   public onGetProfileModel(): void {
     this.profileModelService.getProfileModel(this.id).subscribe(
       (response) => {
-        console.log('res prof=' + response);
+        console.log('res prof=');
+        console.log(response);
         this.profileModel = response;
       },
       (error: any) => {
@@ -74,8 +84,12 @@ export class PhysicianComponent implements OnInit {
       .getPhysician(this.id, this.physicianId)
       .subscribe(
         (response) => {
-          console.log('res physician=' + response);
+          console.log('res physician=');
+          console.log(response);
           this.physician = response;
+          if (this.urlCurrentLocation() === 'Update') {
+            this.updatePhysician();
+          }
         },
         (error: any) => {
           console.log(error);
@@ -86,7 +100,9 @@ export class PhysicianComponent implements OnInit {
   public deletePhysician() {
     const physician: Physician = {
       id: this.physicianId,
-      createdBy: this.id,
+      profileId: this.id,
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
     };
     console.log('delete noiw');
     this.physicianHistoryService.deletePhysician(physician).subscribe(
@@ -158,17 +174,20 @@ export class PhysicianComponent implements OnInit {
   }
   public savePhysician() {
     if (this.action === 'Update') {
+      console.log('form value =-=-= ' + JSON.stringify(this.form.value));
       this.submitted = true;
       if (this.form.invalid) {
         return;
       }
       const physician: Physician = {
         id: this.physician?.id,
+        profileId: this.id,
         fullName: this.form.value['fullName'],
         officeAddress: this.form.value['officeAddress'],
         officeNumber: this.form.value['officeNumber'],
         specialty: this.form.value['specialty'],
-        createdBy: this.id,
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
       };
       console.log('physician == ' + JSON.stringify(physician));
       this.physicianHistoryService.updatePhysicianHistory(physician).subscribe(

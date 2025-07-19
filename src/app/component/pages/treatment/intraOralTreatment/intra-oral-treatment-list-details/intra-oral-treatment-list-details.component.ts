@@ -147,6 +147,13 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
     this.sortBy = 'toothNumber';
     this.onGetTableData();
   }
+  public onChangeNote(event: any) {
+    this.itemNameSearch = event.target.value;
+    console.log('itemNameSearch');
+    console.log(this.itemNameSearch);
+    this.sortBy = 'note';
+    this.onGetTableData();
+  }
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

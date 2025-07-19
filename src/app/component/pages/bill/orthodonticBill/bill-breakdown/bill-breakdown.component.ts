@@ -79,7 +79,7 @@ export class BillBreakdownComponent implements OnInit {
         this.billBreakdown = response;
       },
       (error: any) => {
-        console.log('the error is log::' + error);
+        console.log('the error is log here::' + JSON.stringify(error));
         this.billBreakdown = [];
       },
       () => console.log('Done getting orthodontic breakown list..')

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { BracketPaginationRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-pagination-request';
 import { BracketResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-response';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
@@ -12,7 +14,11 @@ import { OrthodonticExaminationService } from 'src/app/service/dentalRecord/orth
   styleUrls: ['./bracket-history.component.scss'],
 })
 export class BracketHistoryComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel();
     const urlPathName = window.location.pathname;
@@ -32,8 +38,11 @@ export class BracketHistoryComponent implements OnInit {
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticExaminationService: OrthodonticExaminationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly keycloak: KeycloakService
   ) {}
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public id: any;
   public action: any;
   public categoryTitle: any;
@@ -66,7 +75,8 @@ export class BracketHistoryComponent implements OnInit {
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
     const bracketPaginationRequest: BracketPaginationRequest = {
       profileId: this.id,
-      createdBy: 10, // to change soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       category: this.category,
       pageNo: pageNo,
       pageSize: this.paginationSize,
@@ -76,7 +86,8 @@ export class BracketHistoryComponent implements OnInit {
     };
     const bracketPaginationRequestLength: BracketPaginationRequest = {
       profileId: this.id,
-      createdBy: 10, // to change soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       category: this.category,
       pageNo: 0,
       pageSize: 10000,

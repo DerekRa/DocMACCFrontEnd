@@ -27,6 +27,8 @@ import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartMode
 import { IntraoralExaminationService } from 'src/app/service/dentalRecord/intraoral-examination.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
+import { KeycloakProfile } from 'keycloak-js';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-add-update-intraoral-examination',
@@ -34,7 +36,11 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
   styleUrls: ['./add-update-intraoral-examination.component.scss'],
 })
 export class AddUpdateIntraoralExaminationComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.teethNumbering = this.route.snapshot.params['teethNumbering'];
     let currentDateTime = this.datepipe.transform(
@@ -76,6 +82,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     }
   }
   constructor(
+    private readonly keycloak: KeycloakService,
     private intraoralExaminationService: IntraoralExaminationService,
     private profileModelService: ProfileModelService,
     private router: Router,
@@ -181,6 +188,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     });
   }
   public id: any;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public options = {
     autoClose: false,
     keepAfterRouteChange: true,
@@ -1522,6 +1531,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         profileId: this.form.value['profileId'],
         dentalChartDesignId: this.toothNumbersId[i],
         dateOfProcedure: this.form.value['dateOfProcedure'],
+        createdByName: this.userProfile?.firstName || '',
+        createdById: this.userProfile?.id || '',
         conditionProcedureRequests: conditionProcedureRequests,
         conditionProcedureRemarksRequests:
           this.form.value['conditionProcedureGroupings'][

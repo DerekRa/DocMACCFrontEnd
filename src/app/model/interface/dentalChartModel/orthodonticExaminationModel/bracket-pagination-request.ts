@@ -1,10 +1,11 @@
 export interface BracketPaginationRequest {
-    profileId: number;
-    createdBy: number;
-    category: string;
-    pageNo: number;
-    pageSize: number;
-    sortBy: string;
-    orderBy: string;
-    findItem: string;
+  profileId: number;
+  createdByName: string;
+  createdById: string;
+  category: string;
+  pageNo: number;
+  pageSize: number;
+  sortBy: string;
+  orderBy: string;
+  findItem: string;
 }

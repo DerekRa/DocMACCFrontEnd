@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { KeycloakService } from 'keycloak-angular';
+import { KeycloakProfile } from 'keycloak-js';
 import { OrthodonticExaminationPagination } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-pagination';
 import { OrthodonticExaminationResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-response';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
@@ -12,7 +14,11 @@ import { OrthodonticExaminationService } from 'src/app/service/dentalRecord/orth
   styleUrls: ['./braces-history.component.scss'],
 })
 export class BracesHistoryComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
     this.id = this.route.snapshot.params['id'];
     this.teethNumbering = this.route.snapshot.params['teethNumbering'];
     this.onGetProfileModel();
@@ -32,8 +38,11 @@ export class BracesHistoryComponent implements OnInit {
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticExaminationService: OrthodonticExaminationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly keycloak: KeycloakService
   ) {}
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public id: any;
   public teethNumbering: any;
   public action: any;
@@ -62,7 +71,8 @@ export class BracesHistoryComponent implements OnInit {
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
     const bracesPaginationRequest: OrthodonticExaminationPagination = {
       profileId: this.id,
-      createdBy: 10, // to change soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       toothNumber: this.teethNumbering,
       pageNo: pageNo,
       pageSize: this.paginationSize,
@@ -72,7 +82,8 @@ export class BracesHistoryComponent implements OnInit {
     };
     const bracesPaginationLength: OrthodonticExaminationPagination = {
       profileId: this.id,
-      createdBy: 10, // to change soon
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
       toothNumber: this.teethNumbering,
       pageNo: 0,
       pageSize: 10000,
@@ -150,7 +161,7 @@ export class BracesHistoryComponent implements OnInit {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
     if (event.target.innerText.replace(/\s/g, '') == 'DateOfProcedure') {
-      this.sortBy = 'createdDate';
+      this.sortBy = 'dateOfProcedure';
     } else if (event.target.innerText.replace(/\s/g, '') == 'BracketHeight') {
       this.sortBy = 'bracketHeight';
     } else if (event.target.innerText.replace(/\s/g, '') == 'Note') {

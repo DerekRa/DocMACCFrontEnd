@@ -5,10 +5,10 @@ export interface RegularAppointmentLatestResponse {
   end: Date;
   profileId: number;
   createdDate: Date;
-  createdAt: Date;
+  createdDateTime: Date;
   createdByName: string;
   createdById: string;
-  updatedAt: Date;
+  updatedDateTime: Date;
   updatedByName: string;
   updatedById: string;
 }
