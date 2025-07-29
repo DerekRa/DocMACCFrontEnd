@@ -63,7 +63,7 @@
               Diagnosis must be at least 2 characters
             </div>
             <div *ngIf="f['diagnosis'].errors['maxlength']">
-              Diagnosis must be maximum of 255 characters
+              Diagnosis must be maximum of 1000 characters
             </div>
           </div>
           <ng-template #viewUpdateDiagnosis>{{
@@ -95,7 +95,7 @@
               Recommendations must be at least 2 characters
             </div>
             <div *ngIf="f['recommendations'].errors['maxlength']">
-              Recommendations must be maximum of 255 characters
+              Recommendations must be maximum of 1000 characters
             </div>
           </div>
         </div>

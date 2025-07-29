@@ -165,12 +165,12 @@ export class DentalCertificationComponent implements OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(255),
+          Validators.maxLength(1000),
         ],
       ],
       recommendations: [
         this.certificationData?.recommendations,
-        [Validators.minLength(2), Validators.maxLength(255)],
+        [Validators.minLength(2), Validators.maxLength(1000)],
       ],
       dateOfProcedure: [this.dateOfProcedure, Validators.required],
     });

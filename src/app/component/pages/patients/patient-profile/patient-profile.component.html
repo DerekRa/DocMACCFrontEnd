@@ -190,12 +190,13 @@
                   let i = index
                 "
               >
-                <li *ngIf="haveFollowing.checked">
+                <li class="bulletsans" *ngIf="haveFollowing.checked">
                   {{ haveFollowing.name }}
                 </li>
               </div>
             </div>
             <li
+              class="bulletsans"
               *ngIf="medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing"
             >
               {{ medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing }}
@@ -220,10 +221,15 @@
                   let i = index
                 "
               >
-                <li *ngIf="allergy.checked">{{ allergy.name }}</li>
+                <li class="bulletsans" *ngIf="allergy.checked">
+                  {{ allergy.name }}
+                </li>
               </div>
             </div>
-            <li *ngIf="medicalModel?.questions?.otherAllergies">
+            <li
+              class="bulletsans"
+              *ngIf="medicalModel?.questions?.otherAllergies"
+            >
               {{ medicalModel?.questions?.otherAllergies }}
             </li>
           </div>

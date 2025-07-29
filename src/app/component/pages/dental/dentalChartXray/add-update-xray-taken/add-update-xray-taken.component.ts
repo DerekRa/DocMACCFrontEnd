@@ -34,18 +34,23 @@ import { PreRequisiteRequirementService } from 'src/app/service/dentalRecord/pre
 })
 export class AddUpdateXrayTakenComponent implements OnInit {
   async ngOnInit(): Promise<void> {
-    this.id = this.route.snapshot.params['id'];
-    this.dentalChart = this.route.snapshot.params['dentalChart'];
-    this.labelName = this.route.snapshot.params['labelName'];
-    this.action = this.route.snapshot.params['action'];
-    this.setExamType();
-    this.onGetTempRemarkAndFiles();
-    this.form = this.formBuilder.group({
-      remarks: ['', [Validators.minLength(2), Validators.maxLength(255)]],
-    });
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
+      this.id = this.route.snapshot.params['id'];
+      this.dentalChart = this.route.snapshot.params['dentalChart'];
+      this.labelName = this.route.snapshot.params['labelName'];
+      this.action = this.route.snapshot.params['action'];
+      this.setExamType();
+      this.onGetTempRemarkAndFiles();
+      this.form = this.formBuilder.group({
+        remarks: ['', [Validators.minLength(2), Validators.maxLength(1000)]],
+      });
+      console.log('this.id = ' + this.id);
+      console.log('this.dentalChart = ' + this.dentalChart);
+      console.log('this.labelName = ' + this.labelName);
+      console.log('this.action = ' + this.action);
+      console.log('this.userProfile = ' + JSON.stringify(this.userProfile));
     }
   }
 
@@ -122,7 +127,7 @@ export class AddUpdateXrayTakenComponent implements OnInit {
       .getXrayTakenTempImages(getTempImages)
       .subscribe(
         (responseTempImges: XrayTakenTempImageResponse[]) => {
-          console.log('response');
+          console.log('response -=-=-=-=-=-====');
           console.log(responseTempImges);
           this.xrayTakenTempImages = responseTempImges;
           for (let i = 0; i < this.xrayTakenTempImages.length; i++) {
@@ -158,7 +163,10 @@ export class AddUpdateXrayTakenComponent implements OnInit {
           }
           console.log('pictures length = ' + this.pictures.length);
         },
-        (error: any) => console.log(error),
+        (error: any) => {
+          console.log('error in getting temp images..');
+          console.log(error);
+        },
         () => console.log('Done getting profiles..')
       );
   }

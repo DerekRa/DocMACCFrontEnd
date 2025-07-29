@@ -92,6 +92,8 @@ export class InformedConsentsComponent implements OnInit {
       )
       .subscribe(
         (response: ImageDetails[]) => {
+          console.log('response: ' + response);
+          console.log(response);
           this.imageDetails = response;
         },
         (error: any) => console.log(error),

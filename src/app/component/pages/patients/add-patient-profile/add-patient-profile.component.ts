@@ -75,10 +75,31 @@ export class AddPatientProfileComponent implements OnInit {
       this.form = this.formBuilder.group({
         id: [''],
         imgLink: this.picture,
-        lastName: ['', [Validators.required, Validators.minLength(2)]],
-        middleName: ['', [Validators.required, Validators.minLength(2)]],
-        firstName: ['', [Validators.required, Validators.minLength(2)]],
-        nickName: ['', [Validators.minLength(2)]],
+        lastName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ],
+        ],
+        middleName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ],
+        ],
+        firstName: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
+          ],
+        ],
+        nickName: ['', [Validators.minLength(2), Validators.maxLength(100)]],
         birthday: ['', [Validators.required]],
         gender: ['', [Validators.required]],
         age: [{ value: '', disabled: true }, [Validators.required]],
@@ -90,7 +111,7 @@ export class AddPatientProfileComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.maxLength(255),
+            Validators.maxLength(1000),
           ],
         ],
         homeNumber: ['', [Validators.minLength(2)]],
@@ -111,7 +132,7 @@ export class AddPatientProfileComponent implements OnInit {
         ],
         reasonDentalConsultation: [
           '',
-          [Validators.minLength(2), Validators.maxLength(255)],
+          [Validators.minLength(2), Validators.maxLength(1000)],
         ],
       });
     }
@@ -295,19 +316,31 @@ export class AddPatientProfileComponent implements OnInit {
           id: [this.profileModel?.id],
           lastName: [
             this.profileModel?.name?.lastName,
-            [Validators.required, Validators.minLength(2)],
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(100),
+            ],
           ],
           middleName: [
             this.profileModel?.name?.middleName,
-            [Validators.required, Validators.minLength(2)],
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(100),
+            ],
           ],
           firstName: [
             this.profileModel?.name?.firstName,
-            [Validators.required, Validators.minLength(2)],
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(100),
+            ],
           ],
           nickName: [
             this.profileModel?.name?.nickName,
-            [Validators.minLength(2)],
+            [Validators.minLength(2), Validators.maxLength(100)],
           ],
           religion: [
             this.profileModel?.religion,
@@ -323,7 +356,11 @@ export class AddPatientProfileComponent implements OnInit {
           ],
           homeAddress: [
             this.profileModel?.contactDetail?.homeAddress,
-            [Validators.required, Validators.minLength(2)],
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(1000),
+            ],
           ],
           homeNumber: [
             this.profileModel?.contactDetail?.contactNumber?.homeNumber,
@@ -367,7 +404,7 @@ export class AddPatientProfileComponent implements OnInit {
           ],
           reasonDentalConsultation: [
             this.profileModel?.minor?.reasonDentalConsultation,
-            [Validators.minLength(2)],
+            [Validators.minLength(2), Validators.maxLength(1000)],
           ],
         });
       },

@@ -59,6 +59,7 @@ export class MedicalQuestionsComponent implements OnInit {
   public onGetMedicalModel(id: number): void {
     this.medicalHistoryService.getMedicalModel(id).subscribe(
       (response: MedicalModel) => {
+        console.log(response);
         console.log('res -=-=' + JSON.stringify(response));
         this.medicalModel = response;
         console.log(
