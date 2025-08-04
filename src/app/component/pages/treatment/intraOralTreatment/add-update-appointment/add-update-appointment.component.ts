@@ -44,8 +44,22 @@ export class AddUpdateAppointmentComponent implements OnInit {
     console.log(this.userProfile);
     this.onGetProfileModel();
     this.form = this.formBuilder.group({
-      eventTitle: ['', [Validators.required, Validators.minLength(2)]],
-      serviceToAvail: ['', [Validators.required, Validators.minLength(2)]],
+      eventTitle: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(100),
+        ],
+      ],
+      serviceToAvail: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(255),
+        ],
+      ],
       rangeDateFrom: ['', Validators.required],
       rangeTimeFrom: ['', Validators.required],
     });

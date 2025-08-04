@@ -67,6 +67,9 @@
                 <div *ngIf="f['eventTitle'].errors['minlength']">
                   Event Title must be at least 2 characters
                 </div>
+                <div *ngIf="f['eventTitle'].errors['maxlength']">
+                  Event Title must be maximum of 100 characters
+                </div>
               </div>
             </div>
           </div>
