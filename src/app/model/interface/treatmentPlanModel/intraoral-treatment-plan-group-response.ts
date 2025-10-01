@@ -1,6 +1,7 @@
 export interface IntraoralTreatmentPlanGroupResponse {
-    totalBalance: number;
-    category: string;
-    procedureDone: string;
-    dateOfProcedure: string;
+  totalBalance: number;
+  category: string;
+  procedureDoneTreatment: string;
+  procedureDoneBilling: string;
+  dateOfProcedure: string;
 }

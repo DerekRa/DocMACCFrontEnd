@@ -227,7 +227,7 @@ const routes: Routes = [
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   {
-    path: 'dental-records/dental-chart/intraoral-examination/view-record/:id/procedure/:teethNumbering/:action',
+    path: 'dental-records/dental-chart/intraoral-examination/view-record/:id/:history/:teethNumbering/:action',
     title: 'Tooth History',
     component: TeethProcedureHistoryComponent,
     canActivate: [AuthKeyClockGuard],

@@ -27,11 +27,18 @@ export class AddUpdatePrescriptionComponent implements OnInit {
     this.dateOfProcedure = this.route.snapshot.params['dateofProcedure'];
     this.onGetProfileModel();
     this.form = this.formBuilder.group({
-      brandName: ['', [Validators.required, Validators.minLength(2)]],
+      brandName: ['', [Validators.minLength(2)]],
       genericName: ['', [Validators.required, Validators.minLength(2)]],
       dispense: [''],
       dosage: ['', Validators.required],
-      remarks: ['', [Validators.required, Validators.minLength(2)]],
+      remarks: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
     });
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {

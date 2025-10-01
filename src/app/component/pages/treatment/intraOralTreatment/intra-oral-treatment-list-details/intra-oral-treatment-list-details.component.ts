@@ -123,6 +123,11 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
       this.sortBy = 'procedureDone';
     } else if (event.target.innerText.replace(/\s/g, '') == 'ToothNumber') {
       this.sortBy = 'toothNumber';
+    } else if (event.target.innerText.replace(/\s/g, '') == 'Note') {
+      this.sortBy = 'note';
+    } else if (event.target.innerText.replace(/\s/g, '') == 'ToothSurface') {
+      console.log('toothSurface');
+      this.sortBy = 'toothSurface';
     }
     this.onGetTableData();
   }
@@ -145,6 +150,13 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
     console.log('itemNameSearch');
     console.log(this.itemNameSearch);
     this.sortBy = 'toothNumber';
+    this.onGetTableData();
+  }
+  public onChangeToothSurface(event: any) {
+    this.itemNameSearch = event.target.value;
+    console.log('itemNameSearch');
+    console.log(this.itemNameSearch);
+    this.sortBy = 'toothSurface';
     this.onGetTableData();
   }
   public onChangeNote(event: any) {

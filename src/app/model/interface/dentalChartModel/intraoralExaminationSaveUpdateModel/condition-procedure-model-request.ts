@@ -8,6 +8,7 @@ export interface ConditionProcedureModelRequest {
   dateOfProcedure: string;
   createdByName: string;
   createdById: string;
+  actionType: string;
   conditionProcedureRequests: ConditionProcedureRequest[];
   conditionProcedureRemarksRequests: ConditionProcedureRemarksRequest[];
   surfaceCheckRequests: SurfaceCheckRequest[];

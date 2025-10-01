@@ -97,8 +97,12 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
           console.log(response);
           this.intraOralTreatmentPlanData = response;
         },
-        (error: any) => console.log('the error is log::' + error),
-        () => console.log('Done getting profiles..')
+        (error: any) => {
+          console.log('the error is log::' + error);
+          console.log(error);
+          this.intraOralTreatmentPlanData = [];
+        },
+        () => console.log('Done getting treatment plan pagination..')
       );
 
     this.treatmentPlanService
@@ -110,8 +114,10 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
           console.log(response.length);
           this.paginationTotalItems = response.length;
         },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
+        (error: any) => {
+          this.paginationTotalItems = 0;
+        },
+        () => console.log('Done getting treatment plan pagination length..')
       );
 
     console.log('paginationSize = ' + this.paginationSize);
@@ -137,7 +143,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     if (event.target.innerText.replace(/\s/g, '') == 'Category') {
       this.sortBy = 'category';
     } else if (event.target.innerText.replace(/\s/g, '') == 'ProcedureDone') {
-      this.sortBy = 'procedureDone';
+      this.sortBy = 'procedureTreatmentPlan';
     } else if (event.target.innerText.replace(/\s/g, '') == 'DateOfProcedure') {
       this.sortBy = 'dateOfProcedure';
     } else if (event.target.innerText.replace(/\s/g, '') == 'TotalBalance') {
@@ -170,7 +176,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     this.itemNameSearch = event.target.value;
     console.log('itemNameSearch');
     console.log(this.itemNameSearch);
-    this.sortBy = 'procedureDone';
+    this.sortBy = 'procedure';
     this.onGetTableData();
   }
   public viewIntraOralTreatmentDetail(dateOfProcedure: any) {

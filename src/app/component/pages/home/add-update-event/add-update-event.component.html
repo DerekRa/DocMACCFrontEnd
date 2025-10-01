@@ -121,6 +121,21 @@
                 </div>
               </div>
             </div>
+            <!-- Middle Name -->
+            <div class="col">
+              <label for="mname" class="font-semibold">Middle Name</label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="middleName"
+                formControlName="middleName"
+                id="mname"
+                [readOnly]="category == 'registered' ? true : false"
+                [ngClass]="{
+                  'is-invalid': submitted && f['middleName'].errors
+                }"
+              />
+            </div>
             <!-- Cell Number -->
             <div class="col">
               <label for="celln" class="font-semibold"

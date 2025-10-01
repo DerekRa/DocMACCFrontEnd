@@ -157,42 +157,22 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
                 </div>
               </div>
-              <div class="col-md-5 form-check">
-                <div
-                  *ngFor="
-                    let toothNumberValue of toothDetailsTempRightBottom;
-                    let i = index
-                  "
-                >
-                  <input
-                    [checked]="toothNumberValue?.checked"
-                    value="{{
-                      toothNumberValue?.value + '-' + toothNumberValue?.label
-                    }}"
-                    id="{{ toothNumberValue?.inputId }}"
-                    class="form-check-input"
-                    name="{{ toothNumberValue?.formControlName }}"
-                    type="checkbox"
-                    (change)="onCheckboxChangeToothNumbers($event)"
-                  />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 fw-light">
-            <span class="fw-bold">Deciduous Teeth Mandibular</span>
-            <div class="row">
               <div class="col-md-5 form-check">
                 <div
                   *ngFor="
@@ -210,11 +190,58 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 fw-light">
+            <span class="fw-bold">Deciduous Teeth Mandibular</span>
+            <div class="row">
+              <div class="col-md-5 form-check">
+                <div
+                  *ngFor="
+                    let toothNumberValue of toothDetailsTempRightBottom;
+                    let i = index
+                  "
+                >
+                  <input
+                    [checked]="toothNumberValue?.checked"
+                    value="{{
+                      toothNumberValue?.value + '-' + toothNumberValue?.label
+                    }}"
+                    id="{{ toothNumberValue?.inputId }}"
+                    class="form-check-input"
+                    name="{{ toothNumberValue?.formControlName }}"
+                    type="checkbox"
+                    (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
+                  />
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template>
+                  </label>
                 </div>
               </div>
               <div class="col-md-5 form-check">
@@ -234,10 +261,19 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
                 </div>
               </div>
@@ -263,42 +299,22 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
                 </div>
               </div>
-              <div class="col-md-5 form-check">
-                <div
-                  *ngFor="
-                    let toothNumberValue of toothDetailsPermaRightBottomCenter;
-                    let i = index
-                  "
-                >
-                  <input
-                    [checked]="toothNumberValue?.checked"
-                    value="{{
-                      toothNumberValue?.value + '-' + toothNumberValue?.label
-                    }}"
-                    id="{{ toothNumberValue?.inputId }}"
-                    class="form-check-input"
-                    name="{{ toothNumberValue?.formControlName }}"
-                    type="checkbox"
-                    (change)="onCheckboxChangeToothNumbers($event)"
-                  />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 fw-light">
-            <span class="fw-bold">Permanent Teeth Mandibular</span>
-            <div class="row">
               <div class="col-md-5 form-check">
                 <div
                   *ngFor="
@@ -316,10 +332,57 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 fw-light">
+            <span class="fw-bold">Permanent Teeth Mandibular</span>
+            <div class="row">
+              <div class="col-md-5 form-check">
+                <div
+                  *ngFor="
+                    let toothNumberValue of toothDetailsPermaRightBottomCenter;
+                    let i = index
+                  "
+                >
+                  <input
+                    [checked]="toothNumberValue?.checked"
+                    value="{{
+                      toothNumberValue?.value + '-' + toothNumberValue?.label
+                    }}"
+                    id="{{ toothNumberValue?.inputId }}"
+                    class="form-check-input"
+                    name="{{ toothNumberValue?.formControlName }}"
+                    type="checkbox"
+                    (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
+                  />
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
                 </div>
               </div>
@@ -340,10 +403,19 @@
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
+                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
-                  <label
-                    ><span class="fw-bold"></span> -
-                    {{ toothNumberValue.label }}</label
+                  <label>
+                    -
+                    <span
+                      *ngIf="toothNumberValue?.disableCheckboxes; else noStrike"
+                      class="text-decoration-line-through"
+                    >
+                      {{ toothNumberValue.label }}
+                    </span>
+                    <ng-template #noStrike>
+                      {{ toothNumberValue.label }}
+                    </ng-template></label
                   >
                 </div>
               </div>
@@ -986,6 +1058,64 @@
         </div>
       </div>
     </form>
+    <!-- All Teeth Present Modal -->
+    <div
+      class="modal"
+      id="opModalToggle"
+      tabindex="-1"
+      aria-labelledby="opModalToggleLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title lbltext" id="opModalToggleLabel">
+              Do you want to add All Teeth Present?
+            </p>
+            <button
+              type="button"
+              class="btn-close btn-sm"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-1">Note:</div>
+                <div class="col-md-10 text-center">
+                  This action will <span class="fw-bold">Add</span> all teeth
+                  below: <br />
+                  <span
+                    class="fst-italic text-decoration-underline"
+                    *ngFor="let tooth of displayToothNumers; let last = last"
+                  >
+                    {{ tooth }}<span *ngIf="!last">, </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-danger btn-sm me-3"
+                (click)="opAllTeethPresent()"
+                data-bs-dismiss="modal"
+              >
+                Yes, I'm sure
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal"
+              >
+                No, just add to {{ teethNumbering }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
 <app-footer></app-footer>

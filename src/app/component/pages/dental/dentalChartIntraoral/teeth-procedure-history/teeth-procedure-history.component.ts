@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToothConditionHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-condition-history-pagination-response';
 import { ToothHistoryPaginationRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-request';
-import { ToothHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-response';
+import { ToothProcedureHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-procedure-history-pagination-response';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { AlertService } from 'src/app/service/_alert/alert.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
@@ -16,7 +17,6 @@ export class TeethProcedureHistoryComponent implements OnInit {
   constructor(
     private intraoralExaminationService: IntraoralExaminationService,
     private profileModelService: ProfileModelService,
-    private router: Router,
     private route: ActivatedRoute,
     public alertService: AlertService
   ) {}
@@ -24,17 +24,19 @@ export class TeethProcedureHistoryComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.teethNumbering = this.route.snapshot.params['teethNumbering'];
     this.action = this.route.snapshot.params['action'];
+    this.teethHistory = this.route.snapshot.params['history'];
     console.log('this.action = ' + this.action);
     this.recentHistory =
       this.route.snapshot.params['action'] == 'recent'
         ? 'Recent'
-        : this.recentHistory;
+        : this.capitalizeFirstLetter(this.route.snapshot.params['history']);
     this.onGetTableData();
     this.onGetProfileModel();
   }
   public id: any;
   public teethNumbering: any;
   public action: any;
+  public teethHistory: any;
   public recentHistory: string = '';
   public pageNoDisplay: number = 1;
   public paginationSize: number = 10;
@@ -43,8 +45,16 @@ export class TeethProcedureHistoryComponent implements OnInit {
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
   public paginationTotalItems: number | any;
-  public teethHistoryData: ToothHistoryPaginationResponse[] = [];
+  public teethProcedureHistoryData: ToothProcedureHistoryPaginationResponse[] =
+    [];
+  public teethConditionHistoryData: ToothConditionHistoryPaginationResponse[] =
+    [];
   public profileModel: ProfileModel | undefined;
+  private capitalizeFirstLetter(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -71,29 +81,55 @@ export class TeethProcedureHistoryComponent implements OnInit {
       findItem: itemSearch,
     };
 
-    this.intraoralExaminationService
-      .getToothHistoryPagination(paginationData)
-      .subscribe(
-        (response: ToothHistoryPaginationResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.teethHistoryData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting teethHistoryData..')
-      );
+    if (this.teethHistory == 'condition') {
+      this.intraoralExaminationService
+        .getToothConditionHistoryPagination(paginationData)
+        .subscribe(
+          (response: ToothConditionHistoryPaginationResponse[]) => {
+            console.log('response');
+            console.log(response);
+            this.teethConditionHistoryData = response;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting teethConditionHistoryData..')
+        );
 
-    this.intraoralExaminationService
-      .getToothHistoryPagination(paginationDataTotalLength)
-      .subscribe(
-        (response: ToothHistoryPaginationResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting teethHistoryData..')
-      );
+      this.intraoralExaminationService
+        .getToothConditionHistoryPagination(paginationDataTotalLength)
+        .subscribe(
+          (response: ToothConditionHistoryPaginationResponse[]) => {
+            console.log('response for paginationTotalItems');
+            console.log(response);
+            this.paginationTotalItems = response.length;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting teethConditionHistoryData..')
+        );
+    } else if (this.teethHistory == 'procedure') {
+      this.intraoralExaminationService
+        .getToothProcedureHistoryPagination(paginationData)
+        .subscribe(
+          (response: ToothProcedureHistoryPaginationResponse[]) => {
+            console.log('response');
+            console.log(response);
+            this.teethProcedureHistoryData = response;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting teethProcedureHistoryData..')
+        );
+
+      this.intraoralExaminationService
+        .getToothProcedureHistoryPagination(paginationDataTotalLength)
+        .subscribe(
+          (response: ToothProcedureHistoryPaginationResponse[]) => {
+            console.log('response for paginationTotalItems');
+            console.log(response);
+            this.paginationTotalItems = response.length;
+          },
+          (error: any) => console.log(error),
+          () => console.log('Done getting teethProcedureHistoryData..')
+        );
+    }
   }
   private onGetProfileModel(): void {
     this.profileModelService.getProfileModel(this.id).subscribe(
@@ -144,6 +180,11 @@ export class TeethProcedureHistoryComponent implements OnInit {
   public onChangeSurface(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'surface';
+    this.onGetTableData();
+  }
+  public onChangeCondition(event: any) {
+    this.itemNameSearch = event.target.value;
+    this.sortBy = 'condition';
     this.onGetTableData();
   }
   public onChangeSearchAll(event: any) {

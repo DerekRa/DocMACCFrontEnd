@@ -29,6 +29,7 @@ import { ProfileModelService } from 'src/app/service/clientProfile/profile-model
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
+import { co } from '@fullcalendar/core/internal-common';
 
 @Component({
   selector: 'app-add-update-intraoral-examination',
@@ -196,6 +197,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   };
   public currentDate = new Date();
   public teethNumbering: any;
+  public displayToothNumers: any;
   public removablePartialDentureNote: any;
   public completeDentureNote: any;
   public almostCompleteDentureNote: any;
@@ -347,8 +349,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       inputId: 'procaineMetalInlayId',
       group: 'Restorations',
       label: 'In - Inlay',
-      name: 'procaine fused to metal',
-      value: 'procaine fused to metal',
+      name: 'procelain fused to metal',
+      value: 'procelain fused to metal',
       checked: false,
     },
     {
@@ -403,8 +405,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       inputId: 'procaineMetalOnlayId',
       group: 'Restorations',
       label: 'On - Onlay',
-      name: 'procaine fused to metal',
-      value: 'procaine fused to metal',
+      name: 'procelain fused to metal',
+      value: 'procelain fused to metal',
       checked: false,
     },
     {
@@ -602,8 +604,19 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     },
   ];
   public surfaceCheckList: any[] = [];
+  public listToothNumbersGroupOne: any[] = [
+    65, 64, 55, 54, 18, 17, 16, 15, 14, 28, 27, 26, 25, 24, 48, 47, 46, 45, 44,
+    38, 37, 36, 35, 34, 85, 84, 75, 74,
+  ];
+  public listToothNumbersGroupTwo: any[] = [
+    63, 62, 61, 53, 52, 51, 13, 12, 11, 21, 22, 23, 43, 42, 41, 33, 32, 31, 83,
+    82, 81, 73, 72, 71,
+  ];
   public submitted = false;
   public newDataToInsert = false;
+  public isDisabledToothNumbersGroupOne = false;
+  public isDisabledToothNumbersGroupTwo = false;
+
   // public conditionsChecked = false;
   // public restorationsChecked = false;
   // public surfacesChecked = false;
@@ -660,6 +673,24 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       return [Validators.required];
     } else {
       return [];
+    }
+  }
+  public disableCheckboxes(toothNumberCheckDisable: any) {
+    console.log('disableCheckboxes called = ' + toothNumberCheckDisable);
+    console.log('this.teethNumbering = ' + this.teethNumbering);
+    const toothNumber = Number(this.teethNumbering);
+    console.log('toothNumber = ' + toothNumber);
+
+    const isInGroupOne =
+      this.listToothNumbersGroupOne.includes(toothNumberCheckDisable) &&
+      this.listToothNumbersGroupOne.includes(Number(this.teethNumbering));
+    const isInGroupTwo =
+      this.listToothNumbersGroupTwo.includes(toothNumberCheckDisable) &&
+      this.listToothNumbersGroupTwo.includes(Number(this.teethNumbering));
+    if (isInGroupOne || isInGroupTwo) {
+      return false;
+    } else {
+      return true;
     }
   }
   private onGetData(
@@ -917,8 +948,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            // this.toothDetailsTempRightTop.reverse(); // no need to reverse 51 to 55
           }
           if (teethArea == 'top' && teethPositionStatus == 'StatusLeft') {
             this.toothDetailsTempLeftTop = [];
@@ -934,8 +969,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            this.toothDetailsTempLeftTop.reverse(); // 61 to 65
           }
           if (
             teethArea == 'topCenter' &&
@@ -954,8 +993,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            // this.toothDetailsPermaRightTopCenter.reverse(); // no need to reverse - 11 to 18
           }
           if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
             this.toothDetailsPermaLeftTopCenter = [];
@@ -971,8 +1014,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            this.toothDetailsPermaLeftTopCenter.reverse(); // 21 to 28
           }
           if (
             teethArea == 'bottomCenter' &&
@@ -991,8 +1038,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            //this.toothDetailsPermaRightBottomCenter.reverse(); // no need to reverse - 41 to 48
           }
           if (
             teethArea == 'bottomCenter' &&
@@ -1011,8 +1062,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            this.toothDetailsPermaLeftBottomCenter.reverse(); //31 to 38
           }
           if (teethArea == 'bottom' && teethPositionStatus == 'StatusRight') {
             this.toothDetailsTempRightBottom = [];
@@ -1028,8 +1083,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            // this.toothDetailsTempRightBottom.reverse(); // no need to reverse - 81 to 85
           }
           if (teethArea == 'bottom' && teethPositionStatus == 'StatusLeft') {
             this.toothDetailsTempLeftBottom = [];
@@ -1045,8 +1104,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                   this.teethNumbering == response[i].teethNumbering
                     ? true
                     : false,
+                disableCheckboxes: this.disableCheckboxes(
+                  response[i].teethNumbering
+                ),
               });
             }
+            this.toothDetailsTempLeftBottom.reverse(); //71 to 75
           }
         },
         (error: any) => console.log(error),
@@ -1305,6 +1368,33 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     ] as FormArray;
   }
   onCheckboxChangePeriodontal(event: any, reset: boolean) {
+    console.log('onCheckboxChangePeriodontal reset = ' + reset);
+    console.log('onCheckboxChangePeriodontal event = ' + event);
+    console.log('onCheckboxChangePeriodontal event.target = ' + event?.target);
+    if (event === null || event.target === undefined) {
+      return;
+    }
+    if (event?.target?.value == 'Oral Prophylaxis' && event?.target?.checked) {
+      const isInGroupOne = this.listToothNumbersGroupOne.includes(
+        Number(this.teethNumbering)
+      );
+      const isInGroupTwo = this.listToothNumbersGroupTwo.includes(
+        Number(this.teethNumbering)
+      );
+      console.log('isInGroupOne = ' + isInGroupOne);
+      console.log('isInGroupTwo = ' + isInGroupTwo);
+      if (isInGroupOne) {
+        this.displayToothNumers = this.listToothNumbersGroupOne;
+      } else if (isInGroupTwo) {
+        this.displayToothNumers = this.listToothNumbersGroupTwo;
+      }
+      console.log('this.displayToothNumers = ' + this.displayToothNumers);
+      console.log(this.displayToothNumers);
+      const modal = document.getElementById('opModalToggle');
+      if (modal) {
+        (window as any).bootstrap.Modal.getOrCreateInstance(modal).show();
+      }
+    }
     for (
       let i = 0;
       i < this.conditionProcedureGroupingsForm.value.periodontal.length;
@@ -1479,7 +1569,9 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     this.submitted = true;
     // console.log('form value =-=-= ' + JSON.stringify(this.form.value));
     // console.log(JSON.stringify(this.form.value));
-
+    console.log(this.toothNumbersId);
+    console.log('this.toothNumbersId = ' + this.toothNumbersId);
+    console.log('this.toothNumbersId length = ' + this.toothNumbersId.length);
     if (this.toothNumbersId.length == 0) {
       return;
     }
@@ -1533,6 +1625,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         dateOfProcedure: this.form.value['dateOfProcedure'],
         createdByName: this.userProfile?.firstName || '',
         createdById: this.userProfile?.id || '',
+        actionType: i == 0 ? 'SingleSave' : 'MultipleSave',
         conditionProcedureRequests: conditionProcedureRequests,
         conditionProcedureRemarksRequests:
           this.form.value['conditionProcedureGroupings'][
@@ -1597,5 +1690,39 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     this.onCheckboxChangeSurgery('', true);
     this.onCheckboxChangeSurfaceCheck('', true);
     this.onCheckboxAllChangeSurfaceCheck('', true);
+  }
+  public opAllTeethPresent() {
+    console.log('opAllTeethPresent');
+    this.toothNumbersValue = [];
+    this.toothNumbersValue.push(...this.displayToothNumers);
+    console.log(this.toothNumbersValue);
+    this.updateCheckboxesWithToothNumbersValue();
+  }
+  private updateCheckboxesWithToothNumbersValue() {
+    const updateChecked = (arr: any[]) => {
+      arr.forEach((item) => {
+        item.checked = this.toothNumbersValue.includes(Number(item.label));
+        console.log(item);
+        const idNumber = item.value;
+        const indexId: number = this.toothNumbersId.indexOf(Number(idNumber));
+        console.log('idNumber = ' + idNumber);
+        console.log('indexId = ' + indexId);
+        if (item.checked) {
+          if (indexId === -1) {
+            this.toothNumbersId.push(Number(idNumber));
+          }
+        }
+        console.log('this.toothNumbersId = ' + this.toothNumbersId);
+      });
+    };
+
+    updateChecked(this.toothDetailsTempRightTop);
+    updateChecked(this.toothDetailsTempLeftTop);
+    updateChecked(this.toothDetailsTempRightBottom);
+    updateChecked(this.toothDetailsTempLeftBottom);
+    updateChecked(this.toothDetailsPermaRightTopCenter);
+    updateChecked(this.toothDetailsPermaLeftTopCenter);
+    updateChecked(this.toothDetailsPermaRightBottomCenter);
+    updateChecked(this.toothDetailsPermaLeftBottomCenter);
   }
 }

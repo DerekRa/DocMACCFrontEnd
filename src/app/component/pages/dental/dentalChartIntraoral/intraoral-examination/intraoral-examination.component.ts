@@ -177,10 +177,16 @@ export class IntraoralExaminationComponent implements OnInit {
       `dental-records/dental-chart/intraoral-examination/add-record/${this.id}/update-tooth-condition/${teethNumbering}`,
     ]);
   }
-  public teethHistory(teethNumbering: number) {
+  public teethProcedureHistory(teethNumbering: number) {
     console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/intraoral-examination/view-record/${this.id}/procedure/${teethNumbering}/history`,
+    ]);
+  }
+  public teethConditionHistory(teethNumbering: number) {
+    console.log('teethNumbering = ' + teethNumbering);
+    this.router.navigate([
+      `dental-records/dental-chart/intraoral-examination/view-record/${this.id}/condition/${teethNumbering}/history`,
     ]);
   }
   public teethRecentHistory(teethNumbering: number) {

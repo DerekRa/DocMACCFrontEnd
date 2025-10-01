@@ -133,6 +133,7 @@ export class HomeComponent implements OnInit {
             data: {
               firstName: this.eventData.firstName,
               lastName: this.eventData.lastName,
+              middleName: this.eventData.middleName,
               cellNumber: this.eventData.cellNumber,
               title: this.eventData.title,
               serviceToAvail: this.eventData.serviceToAvail,
@@ -176,9 +177,9 @@ export class HomeComponent implements OnInit {
   loadCalendarOptions() {
     this.calendarOptions = {
       headerToolbar: {
-        left: 'prev,next today',
+        left: 'prev,next',
         center: 'title',
-        right: 'dayGridMonth,listMonth', //timeGridWeek,timeGridDay,
+        right: 'today', //timeGridWeek,timeGridDay,listMonth,dayGridMonth
       },
       eventTimeFormat: {
         hour: 'numeric',
@@ -191,7 +192,7 @@ export class HomeComponent implements OnInit {
       },
       customButtons: {
         addNewEvent: {
-          text: 'add event (for first time patient only)',
+          text: 'add event (NEW PATIENT)',
           click: function (arg, el) {
             console.log(arg.view);
             console.log(arg.view?.location);

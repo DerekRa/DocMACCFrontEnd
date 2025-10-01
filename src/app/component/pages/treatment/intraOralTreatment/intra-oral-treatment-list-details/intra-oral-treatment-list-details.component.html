@@ -81,12 +81,12 @@
                   >
                     Category
                   </div>
-                  <input
+                  <!-- <input
                     type="text"
                     class="form-control"
                     placeholder="Category type here.."
                     (keyup)="onChangeCategory($event)"
-                  />
+                  /> -->
                 </div>
               </th>
               <th scope="col">
@@ -97,12 +97,12 @@
                   >
                     Procedure Done
                   </div>
-                  <input
+                  <!-- <input
                     type="text"
                     class="form-control"
                     placeholder="Procedure Done type here.."
                     (keyup)="onChangeProcedureDone($event)"
-                  />
+                  /> -->
                 </div>
               </th>
 
@@ -114,12 +114,28 @@
                   >
                     Tooth Number
                   </div>
-                  <input
+                  <!-- <input
                     type="text"
                     class="form-control"
                     placeholder="Tooth Number type here.."
                     (keyup)="onChangeToothNumber($event)"
-                  />
+                  /> -->
+                </div>
+              </th>
+              <th scope="col">
+                <div class="input-group">
+                  <div
+                    class="input-group-text theadStyle"
+                    (click)="onSortPage($event)"
+                  >
+                    Tooth Surface
+                  </div>
+                  <!-- <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Tooth Surface type here.."
+                    (keyup)="onChangeToothSurface($event)"
+                  /> -->
                 </div>
               </th>
               <th scope="col">
@@ -130,12 +146,12 @@
                   >
                     Note
                   </div>
-                  <input
+                  <!-- <input
                     type="text"
                     class="form-control"
                     placeholder="Note type here.."
                     (keyup)="onChangeNote($event)"
-                  />
+                  /> -->
                 </div>
               </th>
             </tr>
@@ -153,8 +169,9 @@
           >
             <tr>
               <td>{{ treatmentPlan?.category }}</td>
-              <td>{{ treatmentPlan?.procedureDone }}</td>
+              <td>{{ treatmentPlan?.procedureDoneTreatment }}</td>
               <td>{{ treatmentPlan?.toothNumber }}</td>
+              <td>{{ treatmentPlan?.toothSurface }}</td>
               <td>{{ treatmentPlan?.note }}</td>
             </tr>
           </tbody>

@@ -7,9 +7,10 @@ import { IntraoralExamination } from 'src/app/model/interface/dentalChartModel/i
 import { ConditionProcedureModelRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/condition-procedure-model-request';
 import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/tooth-numbers-dental-chart';
 import { ToothHistoryPaginationRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-request';
-import { ToothHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-response';
+import { ToothProcedureHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-procedure-history-pagination-response';
 import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
 import { environment } from 'src/environments/environment';
+import { ToothConditionHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-condition-history-pagination-response';
 
 // const baseUrl = 'http://localhost:9090/api/v1/intraOral';
 // const baseUrl = 'http://localhost:8085/api/v1/intraOral';
@@ -95,18 +96,38 @@ export class IntraoralExaminationService {
       )
       .pipe(retry(3));
   }
-  public getToothHistoryPagination(
+  public getToothProcedureHistoryPagination(
     paginationData: ToothHistoryPaginationRequest
-  ): Observable<ToothHistoryPaginationResponse[]> {
+  ): Observable<ToothProcedureHistoryPaginationResponse[]> {
     console.log(
       'url = ' +
-        `${this.baseUrl}/history` +
+        `${this.baseUrl}/history/teethProcedure` +
         this.convertToHttpParams(paginationData)
     );
     return this.http
-      .get<ToothHistoryPaginationResponse[]>(`${this.baseUrl}/history`, {
-        params: this.convertToHttpParams(paginationData),
-      })
+      .get<ToothProcedureHistoryPaginationResponse[]>(
+        `${this.baseUrl}/history/teethProcedure`,
+        {
+          params: this.convertToHttpParams(paginationData),
+        }
+      )
+      .pipe(retry(3));
+  }
+  public getToothConditionHistoryPagination(
+    paginationData: ToothHistoryPaginationRequest
+  ): Observable<ToothConditionHistoryPaginationResponse[]> {
+    console.log(
+      'url = ' +
+        `${this.baseUrl}/history/teethCondition` +
+        this.convertToHttpParams(paginationData)
+    );
+    return this.http
+      .get<ToothConditionHistoryPaginationResponse[]>(
+        `${this.baseUrl}/history/teethCondition`,
+        {
+          params: this.convertToHttpParams(paginationData),
+        }
+      )
       .pipe(retry(3));
   }
   public convertToHttpParams(request: any): HttpParams {

@@ -50,36 +50,6 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="grid">
         <div class="col col-lg-10 col-offset-1">
-          <div class="grid">
-            <!-- Brand Name -->
-            <div class="col col-lg-8">
-              <label for="brandNameId"
-                ><span class="astrk">&ast;</span
-                ><span class="font-semibold">Brand Name</span></label
-              >
-              <input
-                type="text"
-                class="form-control form-control-sm"
-                name="brandName"
-                formControlName="brandName"
-                id="brandNameId"
-                [ngClass]="{
-                  'is-invalid': submitted && f['brandName'].errors
-                }"
-              />
-              <div
-                *ngIf="submitted && f['brandName'].errors"
-                class="invalid-feedback"
-              >
-                <div *ngIf="f['brandName'].errors['required']">
-                  Brand Name is required
-                </div>
-                <div *ngIf="f['brandName'].errors['minlength']">
-                  Brand Name must be at least 2 characters
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- Generic Name -->
           <div class="grid">
             <div class="col col-lg-8">
@@ -110,8 +80,37 @@
               </div>
             </div>
           </div>
+          <!-- Brand Name -->
           <div class="grid">
-            <!-- Dispense -->
+            <div class="col col-lg-8">
+              <label for="brandNameId"
+                ><span class="font-semibold">Brand Name</span></label
+              >
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                name="brandName"
+                formControlName="brandName"
+                id="brandNameId"
+                [ngClass]="{
+                  'is-invalid': submitted && f['brandName'].errors
+                }"
+              />
+              <div
+                *ngIf="submitted && f['brandName'].errors"
+                class="invalid-feedback"
+              >
+                <div *ngIf="f['brandName'].errors['required']">
+                  Brand Name is required
+                </div>
+                <div *ngIf="f['brandName'].errors['minlength']">
+                  Brand Name must be at least 2 characters
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Dispense -->
+          <div class="grid">
             <div class="col">
               <label for="dispenseId"
                 ><span class="font-semibold">Dispense</span></label
@@ -189,7 +188,7 @@
                   Remarks must be at least 2 characters
                 </div>
                 <div *ngIf="f['remarks'].errors['maxlength']">
-                  Remarks must be maximum of 255 characters
+                  Remarks must be maximum of 150 characters
                 </div>
               </div>
             </div>

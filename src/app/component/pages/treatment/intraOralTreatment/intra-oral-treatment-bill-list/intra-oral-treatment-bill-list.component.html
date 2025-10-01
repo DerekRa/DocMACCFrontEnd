@@ -148,76 +148,93 @@
           </thead>
           <!-- Table Body -->
           <tbody
-            *ngFor="
-              let treatmentPlan of intraOralTreatmentPlanData
-                | paginate
-                  : {
-                      itemsPerPage: paginationSize,
-                      currentPage: pageNoDisplay,
-                      totalItems: paginationTotalItems
-                    }
-            "
-          >
-            <tr>
-              <td class="fitWidth">
-                <button
-                  (click)="
-                    viewIntraOralTreatmentDetail(treatmentPlan?.dateOfProcedure)
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
+            *ngIf="intraOralTreatmentPlanData?.length == 0; else viewData"
+            class="table-light"
+          ></tbody>
+          <ng-template #viewData>
+            <tbody
+              *ngFor="
+                let treatmentPlan of intraOralTreatmentPlanData
+                  | paginate
+                    : {
+                        itemsPerPage: paginationSize,
+                        currentPage: pageNoDisplay,
+                        totalItems: paginationTotalItems
+                      }
+              "
+            >
+              <tr>
+                <td class="fitWidth">
+                  <button
+                    (click)="
+                      viewIntraOralTreatmentDetail(
+                        treatmentPlan?.dateOfProcedure
+                      )
+                    "
+                    class="btn btn-outline-success btn-sm ml-1"
+                    type="button"
+                    [hidden]="!(pageLocation == 'Treatment')"
+                  >
+                    View
+                  </button>
+                  <button
+                    (click)="
+                      viewIntraOralBillBreakdown(treatmentPlan?.dateOfProcedure)
+                    "
+                    class="btn btn-outline-success btn-sm ml-1"
+                    type="button"
+                    [hidden]="!(pageLocation == 'Bill')"
+                  >
+                    View
+                  </button>
+                  <button
+                    (click)="
+                      viewIntraOralTreatmentCertificate(
+                        treatmentPlan?.dateOfProcedure
+                      )
+                    "
+                    class="btn btn-outline-success btn-sm ml-1"
+                    type="button"
+                    [hidden]="!(pageLocation == 'Treatment')"
+                  >
+                    Certification
+                  </button>
+                  <button
+                    (click)="
+                      viewIntraOralTreatmentPrescription(
+                        treatmentPlan?.dateOfProcedure
+                      )
+                    "
+                    class="btn btn-outline-success btn-sm ml-1"
+                    type="button"
+                    [hidden]="!(pageLocation == 'Treatment')"
+                  >
+                    Prescription
+                  </button>
+                </td>
+                <td>{{ treatmentPlan?.dateOfProcedure | date }}</td>
+                <td>{{ treatmentPlan?.category }}</td>
+                <td
                   [hidden]="!(pageLocation == 'Treatment')"
-                >
-                  View
-                </button>
-                <button
-                  (click)="
-                    viewIntraOralBillBreakdown(treatmentPlan?.dateOfProcedure)
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
+                  [innerHTML]="treatmentPlan?.procedureDoneTreatment"
+                ></td>
+                <td
                   [hidden]="!(pageLocation == 'Bill')"
-                >
-                  View
-                </button>
-                <button
-                  (click)="
-                    viewIntraOralTreatmentCertificate(
-                      treatmentPlan?.dateOfProcedure
-                    )
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
-                  [hidden]="!(pageLocation == 'Treatment')"
-                >
-                  Certification
-                </button>
-                <button
-                  (click)="
-                    viewIntraOralTreatmentPrescription(
-                      treatmentPlan?.dateOfProcedure
-                    )
-                  "
-                  class="btn btn-outline-success btn-sm ml-1"
-                  type="button"
-                  [hidden]="!(pageLocation == 'Treatment')"
-                >
-                  Prescription
-                </button>
-              </td>
-              <td>{{ treatmentPlan?.dateOfProcedure | date }}</td>
-              <td>{{ treatmentPlan?.category }}</td>
-              <td [innerHTML]="treatmentPlan?.procedureDone"></td>
-              <td>
-                <span class="astrk" *ngIf="treatmentPlan?.totalBalance != 0">{{
-                  treatmentPlan?.totalBalance | number
-                }}</span>
-                <span *ngIf="treatmentPlan?.totalBalance == 0">{{
-                  treatmentPlan?.totalBalance | number
-                }}</span>
-              </td>
-            </tr>
-          </tbody>
+                  [innerHTML]="treatmentPlan?.procedureDoneBilling"
+                ></td>
+                <td>
+                  <span
+                    class="astrk"
+                    *ngIf="treatmentPlan?.totalBalance != 0"
+                    >{{ treatmentPlan?.totalBalance | number }}</span
+                  >
+                  <span *ngIf="treatmentPlan?.totalBalance == 0">{{
+                    treatmentPlan?.totalBalance | number
+                  }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
         </table>
       </div>
     </div>

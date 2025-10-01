@@ -33,7 +33,14 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
       genericName: ['', [Validators.required, Validators.minLength(2)]],
       dispense: [''],
       dosage: ['', Validators.required],
-      remarks: ['', [Validators.required, Validators.minLength(2)]],
+      remarks: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(2),
+          Validators.maxLength(150),
+        ],
+      ],
     });
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {

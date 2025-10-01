@@ -129,7 +129,7 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethHistory(
+                                  teethConditionHistory(
                                     imagesTempRightTop.teethNumbering
                                   )
                                 "
@@ -165,7 +165,9 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethHistory(imagesTempLeftTop.teethNumbering)
+                                  teethConditionHistory(
+                                    imagesTempLeftTop.teethNumbering
+                                  )
                                 "
                               />
                             </ng-template>
@@ -207,7 +209,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesTempRightTop.teethNumbering
                                   )
                                 "
@@ -247,7 +249,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesTempLeftTop.teethNumbering
                                   )
                                 "
@@ -312,7 +314,7 @@
                                 ' 12px solid;' +
                                 'border-top-right-radius: 50%;' +
                                 'border-left:' +
-                                imagesTempRightTop?.toothSurfaceValue?.right +
+                                imagesTempRightTop?.toothSurfaceValue?.left +
                                 ' 12px solid;' +
                                 'border-top-left-radius: 50%;' +
                                 'border-bottom:' +
@@ -320,7 +322,7 @@
                                 ' 12px solid;' +
                                 'border-bottom-right-radius: 50%;' +
                                 'border-right:' +
-                                imagesTempRightTop?.toothSurfaceValue?.left +
+                                imagesTempRightTop?.toothSurfaceValue?.right +
                                 ' 12px solid;' +
                                 'border-bottom-left-radius: 50%;' +
                                 'background-color: ' +
@@ -426,7 +428,7 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethHistory(
+                                  teethConditionHistory(
                                     imagesTempRightTopCenter.teethNumbering
                                   )
                                 "
@@ -464,7 +466,7 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethHistory(
+                                  teethConditionHistory(
                                     imagesTempLeftTopCenter.teethNumbering
                                   )
                                 "
@@ -510,7 +512,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesPermaRightTopCenter.teethNumbering
                                   )
                                 "
@@ -553,7 +555,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesPermaLeftTopCenter.teethNumbering
                                   )
                                 "
@@ -623,7 +625,7 @@
                                 'border-top-right-radius: 50%;' +
                                 'border-left:' +
                                 imagesPermaRightTopCenter?.toothSurfaceValue
-                                  ?.right +
+                                  ?.left +
                                 ' 12px solid;' +
                                 'border-top-left-radius: 50%;' +
                                 'border-bottom:' +
@@ -633,7 +635,7 @@
                                 'border-bottom-right-radius: 50%;' +
                                 'border-right:' +
                                 imagesPermaRightTopCenter?.toothSurfaceValue
-                                  ?.left +
+                                  ?.right +
                                 ' 12px solid;' +
                                 'border-bottom-left-radius: 50%;' +
                                 'background-color: ' +
@@ -745,7 +747,7 @@
                               [width]="widthBigImage"
                               [height]="heightBigImage"
                               (click)="
-                                teethHistory(
+                                teethConditionHistory(
                                   imagesTempRightBottomCenter.teethNumbering
                                 )
                               "
@@ -783,7 +785,7 @@
                               [width]="widthBigImage"
                               [height]="heightBigImage"
                               (click)="
-                                teethHistory(
+                                teethConditionHistory(
                                   imagesTempLeftBottomCenter.teethNumbering
                                 )
                               "
@@ -829,7 +831,7 @@
                               [width]="widthImage"
                               [height]="heightImage"
                               (click)="
-                                teethRecentHistory(
+                                teethProcedureHistory(
                                   imagesTempRightBottomCenter.teethNumbering
                                 )
                               "
@@ -872,7 +874,7 @@
                               [width]="widthImage"
                               [height]="heightImage"
                               (click)="
-                                teethRecentHistory(
+                                teethProcedureHistory(
                                   imagesTempLeftBottomCenter.teethNumbering
                                 )
                               "
@@ -942,7 +944,7 @@
                               'border-top-right-radius: 50%;' +
                               'border-left:' +
                               imagesTempRightBottomCenter?.toothSurfaceValue
-                                ?.right +
+                                ?.left +
                               ' 12px solid;' +
                               'border-top-left-radius: 50%;' +
                               'border-bottom:' +
@@ -952,7 +954,7 @@
                               'border-bottom-right-radius: 50%;' +
                               'border-right:' +
                               imagesTempRightBottomCenter?.toothSurfaceValue
-                                ?.left +
+                                ?.right +
                               ' 12px solid;' +
                               'border-bottom-left-radius: 50%;' +
                               'background-color: ' +
@@ -1064,7 +1066,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethHistory(
+                                  teethConditionHistory(
                                     imagesTempRightBottom.teethNumbering
                                   )
                                 "
@@ -1100,7 +1102,7 @@
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
-                                  teethHistory(
+                                  teethConditionHistory(
                                     imagesTempLeftBottom.teethNumbering
                                   )
                                 "
@@ -1144,7 +1146,7 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesTempRightBottom.teethNumbering
                                   )
                                 "
@@ -1185,7 +1187,7 @@
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
-                                  teethRecentHistory(
+                                  teethProcedureHistory(
                                     imagesTempLeftBottom.teethNumbering
                                   )
                                 "
@@ -1253,8 +1255,7 @@
                                 ' 12px solid;' +
                                 'border-top-right-radius: 50%;' +
                                 'border-left:' +
-                                imagesTempRightBottom?.toothSurfaceValue
-                                  ?.right +
+                                imagesTempRightBottom?.toothSurfaceValue?.left +
                                 ' 12px solid;' +
                                 'border-top-left-radius: 50%;' +
                                 'border-bottom:' +
@@ -1263,7 +1264,8 @@
                                 ' 12px solid;' +
                                 'border-bottom-right-radius: 50%;' +
                                 'border-right:' +
-                                imagesTempRightBottom?.toothSurfaceValue?.left +
+                                imagesTempRightBottom?.toothSurfaceValue
+                                  ?.right +
                                 ' 12px solid;' +
                                 'border-bottom-left-radius: 50%;' +
                                 'background-color: ' +
@@ -1381,11 +1383,11 @@
                         <span class="fw-bold">Co</span> - Composite Filling<br />
                         <span class="fw-bold">S</span> - Sealants<br />
                         <span class="fw-bold">In</span> - Inlay (composite,
-                        plastic, metal, procaine fused to metal, emax, zirconia,
-                        other________, note________)<br />
+                        plastic, metal, procelain fused to metal, emax,
+                        zirconia, other________, note________)<br />
                         <span class="fw-bold">On</span> - Onlay (composite,
-                        plastic, metal, procaine fused to metal, emax, zirconia,
-                        other________, note________)<br />
+                        plastic, metal, procelain fused to metal, emax,
+                        zirconia, other________, note________)<br />
                         <span class="fw-bold">FL</span> - Fluoride Application
                         (Gel, Varnish)<br />
                       </div>

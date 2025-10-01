@@ -50,6 +50,7 @@ export class AddUpdateEventComponent implements OnInit {
       this.form = this.formBuilder.group({
         lastName: ['', [Validators.required, Validators.minLength(2)]],
         firstName: ['', [Validators.required, Validators.minLength(2)]],
+        middleName: ['', []],
         cellNumber: ['', [Validators.required, Validators.minLength(2)]],
         eventTitle: ['', [Validators.required, Validators.minLength(2)]],
         serviceToAvail: ['', [Validators.required, Validators.minLength(2)]],
@@ -77,6 +78,7 @@ export class AddUpdateEventComponent implements OnInit {
   public form: FormGroup = new FormGroup({
     lastName: new FormControl(''),
     firstName: new FormControl(''),
+    middleName: new FormControl(''),
     cellNumber: new FormControl(''),
     eventTitle: new FormControl(''),
     serviceToAvail: new FormControl(''),
@@ -94,7 +96,7 @@ export class AddUpdateEventComponent implements OnInit {
       .getSingleAppointment(this.id, this.category)
       .subscribe(
         (response: PatientAppointmentResponse) => {
-          console.log('response');
+          console.log('response==');
           console.log(response);
           // title: string;
           // serviceToAvail: string;
@@ -110,6 +112,7 @@ export class AddUpdateEventComponent implements OnInit {
               this.eventData?.firstName,
               [Validators.required, Validators.minLength(2)],
             ],
+            middleName: [this.eventData?.middleName],
             cellNumber: [
               this.eventData?.cellNumber,
               [Validators.required, Validators.minLength(2)],
@@ -159,6 +162,7 @@ export class AddUpdateEventComponent implements OnInit {
         createdById: this.userProfile?.id || '', // to update soon on user management
         firstName: this.form.value['firstName'],
         lastName: this.form.value['lastName'],
+        middleName: this.form.value['middleName'],
         cellNumber: this.form.value['cellNumber'],
         eventTitle: this.form.value['eventTitle'],
         serviceToAvail: this.form.value['serviceToAvail'],
@@ -205,6 +209,7 @@ export class AddUpdateEventComponent implements OnInit {
         createdByName: this.userProfile?.firstName || '', // to be updated soon on user management
         createdById: this.userProfile?.id || '', // to be updated soon on user management
         firstName: this.form.value['firstName'],
+        middleName: this.form.value['middleName'],
         lastName: this.form.value['lastName'],
         cellNumber: this.form.value['cellNumber'],
         eventTitle: this.form.value['eventTitle'],
