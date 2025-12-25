@@ -81,4 +81,20 @@ main {
     ):not(.invalid-tooltip):not(.invalid-feedback) {
     height: 34px;
   }
+  .restoration-surface-color {
+    color: rgb(63, 78, 237);
+  }
+  .denture-color {
+    color: rgb(104, 237, 63);
+  }
+  .periodontal-color {
+    color: rgb(172, 142, 189);
+  }
+  .surgery-color {
+    color: rgb(244, 33, 33, 0.588);
+  }
+  .lbltext {
+    font-weight: lighter;
+    font-size: medium;
+  }
 }

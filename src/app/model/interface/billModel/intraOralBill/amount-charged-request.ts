@@ -6,7 +6,7 @@ export interface AmountChargedRequest {
   note: string;
   category: string;
   procedureDone: string;
-  toothNumber: number;
+  toothNumbers: string;
   createdById: string;
   createdByName: string;
 }

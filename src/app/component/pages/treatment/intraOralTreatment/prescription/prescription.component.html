@@ -48,6 +48,20 @@
               aria-label="Print icon"
               fontIcon="print"
             ></mat-icon>
+            &nbsp;Print COM
+          </div></button
+        >&nbsp;
+        <button
+          class="btn btn-outline-dark btn-sm mb-2"
+          type="button"
+          (click)="printPDFPrescriptionNoCOM()"
+        >
+          <div class="valign-center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Print icon"
+              fontIcon="print"
+            ></mat-icon>
             &nbsp;Print
           </div></button
         >&nbsp;
@@ -112,6 +126,7 @@
         <table class="table table-sm table-bordered">
           <thead>
             <tr class="table-primary">
+              <th scope="col" class="theadStyle"></th>
               <th scope="col">
                 <div class="input-group">
                   <div class="input-group-text theadStyle">Actions</div>
@@ -210,7 +225,24 @@
                     }
             "
           >
-            <tr>
+            <tr
+              *ngIf="prescription?.display; else noHightlight"
+              class="table-success"
+            >
+              <td>
+                <div
+                  class="form-check d-flex align-items-center justify-content-center"
+                >
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    (change)="updateDisplay(prescription.id)"
+                    aria-label="..."
+                    [checked]="prescription?.display"
+                  />
+                </div>
+              </td>
               <td class="fitWidth">
                 <button
                   (click)="updateRemovePrescription(prescription)"
@@ -228,6 +260,40 @@
               <td [width]="150">{{ prescription?.dosage }}</td>
               <td>{{ prescription?.remarks }}</td>
             </tr>
+            <ng-template #noHightlight>
+              <tr>
+                <td>
+                  <div
+                    class="form-check d-flex align-items-center justify-content-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      value=""
+                      (change)="updateDisplay(prescription.id)"
+                      aria-label="..."
+                      [checked]="prescription?.display"
+                    />
+                  </div>
+                </td>
+                <td class="fitWidth">
+                  <button
+                    (click)="updateRemovePrescription(prescription)"
+                    class="btn btn-outline-danger btn-sm ml-1"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#deleteModalToggle"
+                  >
+                    Delete
+                  </button>
+                </td>
+                <td [width]="300">{{ prescription?.genericName }}</td>
+                <td [width]="260">{{ prescription?.brandName }}</td>
+                <td [width]="120">{{ prescription?.dispense }}</td>
+                <td [width]="150">{{ prescription?.dosage }}</td>
+                <td>{{ prescription?.remarks }}</td>
+              </tr>
+            </ng-template>
           </tbody>
         </table>
       </div>

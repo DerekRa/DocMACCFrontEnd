@@ -132,4 +132,17 @@ main {
   .material-symbols-outlined {
     font-size: small;
   }
+  .conditionProcedure {
+    font-size: 0.725rem;
+    font-style: italic;
+    font-weight: 500;
+    color: gray;
+    font-family: "Typewriter", monospace;
+  }
+  .input-group
+    > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(
+      .valid-feedback
+    ):not(.invalid-tooltip):not(.invalid-feedback) {
+    height: 30px;
+  }
 }

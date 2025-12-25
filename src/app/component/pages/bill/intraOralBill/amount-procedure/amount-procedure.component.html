@@ -83,7 +83,7 @@
                       </tr>
                       <tr>
                         <td class="tblLabel">Tooth Number</td>
-                        <td class="tblValue">{{ breakdown?.toothNumber }}</td>
+                        <td class="tblValue">{{ breakdown?.toothNumbers }}</td>
                       </tr>
                       <tr>
                         <td class="tblLabel">
@@ -177,7 +177,9 @@
                       [ngClass]="{
                         'is-invalid': submitted && f['note'].errors
                       }"
-                    ></textarea>
+                    >
+testt</textarea
+                    >
                     <div
                       *ngIf="submitted && f['note'].errors"
                       class="invalid-feedback"

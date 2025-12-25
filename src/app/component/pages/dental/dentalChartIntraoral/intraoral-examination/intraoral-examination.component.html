@@ -1,7 +1,7 @@
 <app-header></app-header>
 <main>
   <div class="container">
-    <!-- Label -->
+    <!-- Breadcrumb Label -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -18,7 +18,12 @@
         </li>
         <li
           class="breadcrumb-item active"
-          [style.display]="recordAction == 'add-record' ? 'block' : 'none'"
+          [style.display]="
+            recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record'
+              ? 'block'
+              : 'none'
+          "
         >
           <a
             routerLink="/dental-records/dental-chart/intraoral-examination/view-record/{{
@@ -31,16 +36,41 @@
         </li>
         <li
           class="breadcrumb-item active"
+          [style.display]="
+            recordAction == 'add-treatmentplan-record' ? 'block' : 'none'
+          "
+        >
+          <a
+            routerLink="/dental-records/dental-chart/intraoral-examination/add-record/{{
+              id
+            }}"
+            (click)="updateRecordActionToView()"
+          >
+            Update
+          </a>
+        </li>
+        <li
+          class="breadcrumb-item active"
           [style.display]="recordAction == 'add-record' ? 'block' : 'none'"
           aria-current="page"
         >
           Update
         </li>
+        <li
+          class="breadcrumb-item active"
+          [style.display]="
+            recordAction == 'add-treatmentplan-record' ? 'block' : 'none'
+          "
+          aria-current="page"
+        >
+          Add Treatment Plan
+        </li>
       </ol>
     </nav>
-    <!-- Name and Update Button -->
+    <!-- Name, Title, Date of Procedure and Update Button -->
     <div class="grid">
-      <div class="col-11 text-xl">
+      <!-- Name -->
+      <div class="col-6 text-xl" *ngIf="recordAction == 'view-record'">
         {{
           profileModel?.name?.lastName +
             " " +
@@ -49,31 +79,133 @@
             profileModel?.name?.firstName
         }}
       </div>
-      <div class="col-1 text-xl">
+      <div class="col-4 text-xl" *ngIf="recordAction == 'add-record'">
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+      <div
+        class="col-5 text-xl"
+        *ngIf="recordAction == 'add-treatmentplan-record'"
+      >
+        {{
+          profileModel?.name?.lastName +
+            " " +
+            profileModel?.name?.middleName +
+            ", " +
+            profileModel?.name?.firstName
+        }}
+      </div>
+      <!-- Title -->
+      <div class="col-4 col-md-auto text-sm">
+        <span
+          *ngIf="recordAction == 'add-treatmentplan-record'; else addViewRecord"
+          ><b>Treatment Plan</b></span
+        >
+        <ng-template #addViewRecord>
+          <span *ngIf="recordAction == 'add-record'"
+            ><strong>Dental Chart</strong></span
+          >
+        </ng-template>
+      </div>
+      <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">|</div>
+      <!-- Date of Procedure -->
+      <div class="col-4 col-md-auto text-sm">Date of Procedure</div>
+      <!-- Calendar Input -->
+      <div class="col-4 col-md-auto -mt-2">
+        <div class="input-group input-group-sm mb-2">
+          <input
+            type="text"
+            class="form-control inputGroupDOP"
+            aria-label="Date Of Procedure"
+            aria-describedby="dateprocd"
+            placeholder="YYYY-MM-DD"
+            formControlName="dateOfProcedure"
+            value=""
+            [matDatepicker]="picker"
+            (dateChange)="onChangeDateOfProcedure($event)"
+            min="1990-01-01"
+            max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+            readonly
+          />
+          <button
+            class="btn btn-outline-secondary"
+            id="dateprocd"
+            (click)="picker.open()"
+            type="button"
+          >
+            <!-- <span class="material-symbols-outlined">
+                            event
+                            </span> -->
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Event icon"
+              fontIcon="event"
+            ></mat-icon>
+          </button>
+        </div>
+        <mat-datepicker #picker></mat-datepicker>
+      </div>
+      <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">|</div>
+      <!-- Update Button -->
+      <div class="col-10 col-sm-12 col-md-auto text-xl">
         <a
           routerLink="/dental-records/dental-chart/intraoral-examination/add-record/{{
             id
           }}"
           (click)="updateRecordActionToUpdate()"
           *ngIf="recordAction == 'view-record'; else updateRecord"
-          class="btn btn-outline-primary btn-sm"
+          class="btn btn-outline-primary btn-sm -mt-2"
           tabindex="-1"
           role="button"
           aria-disabled="true"
           >Update</a
         >
+      </div>
+      <!-- Update Button Template -->
+      <div class="col-8 col-sm-12 col-md-auto text-xl">
         <ng-template #updateRecord>
           <a
             routerLink="/dental-records/dental-chart/intraoral-examination/view-record/{{
               id
             }}"
             (click)="updateRecordActionToView()"
-            class="btn btn-outline-primary btn-sm"
+            *ngIf="recordAction == 'add-record'; else updateTreatmentplanRecord"
+            class="btn btn-outline-primary btn-sm -mt-2"
             tabindex="-1"
             role="button"
             aria-disabled="true"
             >Back</a
-          >
+          >&nbsp;
+          <ng-template #updateTreatmentplanRecord>
+            <a
+              routerLink="/dental-records/dental-chart/intraoral-examination/add-record/{{
+                id
+              }}"
+              (click)="updateRecordActionToUpdate()"
+              class="btn btn-outline-primary btn-sm -mt-2"
+              tabindex="-1"
+              role="button"
+              aria-disabled="true"
+              >Back Draft</a
+            >&nbsp;
+          </ng-template>
+          <a
+            routerLink="/dental-records/dental-chart/intraoral-examination/add-treatmentplan-record/{{
+              id
+            }}"
+            (click)="updateRecordTreatmentPlan()"
+            *ngIf="recordAction == 'add-record'"
+            class="btn btn-outline-primary btn-sm -mt-2"
+            tabindex="-1"
+            role="button"
+            aria-disabled="true"
+            >Proceed to TreatmentPlan
+          </a>
         </ng-template>
       </div>
     </div>
@@ -94,6 +226,10 @@
                 <td colspan="3">
                   <div class="row justify-content-md-center">
                     <div class="col-2 txtTopAlignRight lblfnt">
+                      <span class="conditionProcedure">Condition History</span
+                      ><br /><br /><br />
+                      <span class="conditionProcedure">Procedure History</span
+                      ><br /><br /><br />
                       STATUS RIGHT
                     </div>
                     <div class="col-8 align-middle">
@@ -108,7 +244,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -144,7 +281,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -188,7 +326,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -228,7 +367,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -379,7 +519,13 @@
                         </tr>
                       </table>
                     </div>
-                    <div class="col-2 txtTopAlignLeft lblfnt">STATUS LEFT</div>
+                    <div class="col-2 txtTopAlignLeft lblfnt">
+                      <span class="conditionProcedure">Condition History</span
+                      ><br /><br /><br />
+                      <span class="conditionProcedure">Procedure History</span
+                      ><br /><br /><br />
+                      STATUS LEFT
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -405,7 +551,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -443,7 +590,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -489,7 +637,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -532,7 +681,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -671,7 +821,7 @@
                                 'border-top-right-radius: 50%;' +
                                 'border-left:' +
                                 imagesPermaLeftTopCenter?.toothSurfaceValue
-                                  ?.right +
+                                  ?.left +
                                 ' 12px solid;' +
                                 'border-top-left-radius: 50%;' +
                                 'border-bottom:' +
@@ -681,7 +831,7 @@
                                 'border-bottom-right-radius: 50%;' +
                                 'border-right:' +
                                 imagesPermaLeftTopCenter?.toothSurfaceValue
-                                  ?.left +
+                                  ?.right +
                                 ' 12px solid;' +
                                 'border-bottom-left-radius: 50%;' +
                                 'background-color: ' +
@@ -724,7 +874,8 @@
                         >
                           <img
                             *ngIf="
-                              recordAction == 'add-record';
+                              recordAction == 'add-record' ||
+                                recordAction == 'add-treatmentplan-record';
                               else viewAction
                             "
                             src="{{ addTeethLink }}"
@@ -762,7 +913,8 @@
                         >
                           <img
                             *ngIf="
-                              recordAction == 'add-record';
+                              recordAction == 'add-record' ||
+                                recordAction == 'add-treatmentplan-record';
                               else viewAction
                             "
                             src="{{ addTeethLink }}"
@@ -808,7 +960,8 @@
                         >
                           <img
                             *ngIf="
-                              recordAction == 'add-record';
+                              recordAction == 'add-record' ||
+                                recordAction == 'add-treatmentplan-record';
                               else viewAction
                             "
                             src="{{ addTeethLink }}"
@@ -851,7 +1004,8 @@
                         >
                           <img
                             *ngIf="
-                              recordAction == 'add-record';
+                              recordAction == 'add-record' ||
+                                recordAction == 'add-treatmentplan-record';
                               else viewAction
                             "
                             src="{{ addTeethLink }}"
@@ -990,7 +1144,7 @@
                               'border-top-right-radius: 50%;' +
                               'border-left:' +
                               imagesTempLeftBottomCenter?.toothSurfaceValue
-                                ?.right +
+                                ?.left +
                               ' 12px solid;' +
                               'border-top-left-radius: 50%;' +
                               'border-bottom:' +
@@ -1000,7 +1154,7 @@
                               'border-bottom-right-radius: 50%;' +
                               'border-right:' +
                               imagesTempLeftBottomCenter?.toothSurfaceValue
-                                ?.left +
+                                ?.right +
                               ' 12px solid;' +
                               'border-bottom-left-radius: 50%;' +
                               'background-color: ' +
@@ -1031,6 +1185,17 @@
                 <td colspan="3">
                   <div class="row justify-content-md-center">
                     <div class="col-2 txtBottomAlignRight lblfnt">
+                      <br /><br />
+                      <i
+                        ><span class="conditionProcedure"
+                          >Condition History</span
+                        > </i
+                      ><br /><br /><br />
+                      <i
+                        ><span class="conditionProcedure"
+                          >Procedure History</span
+                        ></i
+                      ><br /><br /><br />
                       STATUS RIGHT
                     </div>
                     <div class="col-8 align-middle">
@@ -1045,7 +1210,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -1081,7 +1247,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -1125,7 +1292,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -1166,7 +1334,8 @@
                           >
                             <img
                               *ngIf="
-                                recordAction == 'add-record';
+                                recordAction == 'add-record' ||
+                                  recordAction == 'add-treatmentplan-record';
                                 else viewAction
                               "
                               src="{{ addTeethLink }}"
@@ -1299,7 +1468,7 @@
                                 ' 12px solid;' +
                                 'border-top-right-radius: 50%;' +
                                 'border-left:' +
-                                imagesTempLeftBottom?.toothSurfaceValue?.right +
+                                imagesTempLeftBottom?.toothSurfaceValue?.left +
                                 ' 12px solid;' +
                                 'border-top-left-radius: 50%;' +
                                 'border-bottom:' +
@@ -1308,7 +1477,7 @@
                                 ' 12px solid;' +
                                 'border-bottom-right-radius: 50%;' +
                                 'border-right:' +
-                                imagesTempLeftBottom?.toothSurfaceValue?.left +
+                                imagesTempLeftBottom?.toothSurfaceValue?.right +
                                 ' 12px solid;' +
                                 'border-bottom-left-radius: 50%;' +
                                 'background-color: ' +
@@ -1327,6 +1496,11 @@
                       </table>
                     </div>
                     <div class="col-2 txtBottomAlignLeft lblfnt">
+                      <br /><br />
+                      <span class="conditionProcedure">Condition History</span
+                      ><br /><br /><br />
+                      <span class="conditionProcedure">Procedure History</span
+                      ><br /><br /><br />
                       STATUS LEFT
                     </div>
                   </div>
@@ -1376,20 +1550,22 @@
                         <span class="fw-bold">Sp</span> - Supernumerary Tooth<br />
                         <span class="fw-bold">Rf</span> - Root Fragment<br />
                         <span class="fw-bold">Un</span> - Unerupted<br />
+                        <span class="fw-bold">Ex</span> - Extracted<br />
                       </div>
                       <div class="col-md-4 mb-1">
                         <span class="fw-bold">Restorations</span><br />
                         <span class="fw-bold">Am</span> - Amalgam Filling<br />
                         <span class="fw-bold">Co</span> - Composite Filling<br />
                         <span class="fw-bold">S</span> - Sealants<br />
+                        <span class="fw-bold">RTC</span> - Root Canal
+                        Treatment<br />
+                        <span class="fw-light">Note</span> __________<br />
                         <span class="fw-bold">In</span> - Inlay (composite,
                         plastic, metal, procelain fused to metal, emax,
                         zirconia, other________, note________)<br />
                         <span class="fw-bold">On</span> - Onlay (composite,
                         plastic, metal, procelain fused to metal, emax,
                         zirconia, other________, note________)<br />
-                        <span class="fw-bold">FL</span> - Fluoride Application
-                        (Gel, Varnish)<br />
                       </div>
                       <div class="col-md-2">
                         <span class="fw-bold">Prosthetics</span><br />
@@ -1419,7 +1595,9 @@
                         <span class="fw-bold">NSRP</span> - Non Surgical Root
                         Planing<br />
                         <span class="fw-bold">SRP</span> - Surgical Root
-                        Planing<br /><br />
+                        Planing<br />
+                        <span class="fw-bold">FL</span> - Fluoride Application
+                        (Gel, Varnish)<br /><br />
                         <span class="fw-bold">Surgery</span><br />
                         <span class="fw-bold">X</span> - Extraction<br />
                         <span class="fw-bold">XO</span> - Extraction due to

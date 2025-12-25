@@ -144,12 +144,12 @@
           >
             <li class="bulletsans" *ngIf="allergy.checked">
               {{ allergy.name }}
+              <span *ngIf="allergy.name == 'Other'">{{
+                " : " + medicalModel?.questions?.otherAllergies
+              }}</span>
             </li>
           </div>
         </div>
-        <li class="bulletsans" *ngIf="medicalModel?.questions?.otherAllergies">
-          {{ medicalModel?.questions?.otherAllergies }}
-        </li>
       </div>
     </div>
     <div class="grid">

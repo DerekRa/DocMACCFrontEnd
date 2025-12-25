@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
+import { AmountChargedHistoryResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-history-response';
 import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
 import { BillBreakdown } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown';
 import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown-response';
@@ -41,7 +41,7 @@ export class AmountChargedHistoryComponent implements OnInit {
   public profileModel: ProfileModel | undefined;
   public billBreakdown: BillBreakdownResponse | any = {};
   public breakdown: BillBreakdown | any = {};
-  public amountChargedHistory: AmountChargedResponse[] = [];
+  public amountChargedHistory: AmountChargedHistoryResponse[] = [];
   public dateOfProcedure: string = '';
   public procedureNumber: string = '';
   public isLoggedIn = false;
@@ -109,7 +109,7 @@ export class AmountChargedHistoryComponent implements OnInit {
       dateOfProcedure: this.dateOfProcedure,
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       pageNo: pageNo,
       pageSize: this.paginationSize,
       sortBy: this.sortBy,
@@ -121,7 +121,7 @@ export class AmountChargedHistoryComponent implements OnInit {
       dateOfProcedure: this.dateOfProcedure,
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       pageNo: 0,
       pageSize: 10000,
       sortBy: this.sortBy,
@@ -131,7 +131,7 @@ export class AmountChargedHistoryComponent implements OnInit {
     this.intraoralBillService
       .getAmountChargedHistory(amountDataPaginationRequest)
       .subscribe(
-        (response: AmountChargedResponse[]) => {
+        (response: AmountChargedHistoryResponse[]) => {
           console.log('response');
           console.log(response);
           this.amountChargedHistory = response;
@@ -149,7 +149,7 @@ export class AmountChargedHistoryComponent implements OnInit {
     this.intraoralBillService
       .getAmountChargedHistory(amountDataPaginationLengthRequest)
       .subscribe(
-        (response: AmountChargedResponse[]) => {
+        (response: AmountChargedHistoryResponse[]) => {
           console.log('response for paginationTotalItems');
           console.log(response);
           console.log(response.length);

@@ -9,6 +9,8 @@ export interface ConditionProcedureModelRequest {
   createdByName: string;
   createdById: string;
   actionType: string;
+  recordTracking: string;
+  historyTracking: boolean;
   conditionProcedureRequests: ConditionProcedureRequest[];
   conditionProcedureRemarksRequests: ConditionProcedureRemarksRequest[];
   surfaceCheckRequests: SurfaceCheckRequest[];

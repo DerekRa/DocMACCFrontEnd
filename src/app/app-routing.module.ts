@@ -220,7 +220,7 @@ const routes: Routes = [
     data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   {
-    path: 'dental-records/dental-chart/intraoral-examination/add-record/:id/update-tooth-condition/:teethNumbering',
+    path: 'dental-records/dental-chart/intraoral-examination/:record-action/:id/update-tooth-condition/:teethNumbering',
     title: 'Update Tooth Condition',
     component: AddUpdateIntraoralExaminationComponent,
     canActivate: [AuthKeyClockGuard],

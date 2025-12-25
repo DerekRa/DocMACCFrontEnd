@@ -5,6 +5,7 @@ import { PrescriptionChoices } from 'src/app/model/interface/prescriptionModel/p
 import { PrescriptionPaginationRequest } from 'src/app/model/interface/prescriptionModel/prescription-pagination-request';
 import { PrescriptionResponse } from 'src/app/model/interface/prescriptionModel/prescription-response';
 import { PrescriptionSaveRequest } from 'src/app/model/interface/prescriptionModel/prescription-save-request';
+import { PrescriptionUpdateRequest } from 'src/app/model/interface/prescriptionModel/prescription-update-request';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
 
@@ -45,6 +46,16 @@ export class PrescriptionService {
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, prescriptionSaveRequest)
+      .pipe(retry(3));
+  }
+  public updateDisplayPrescription(
+    prescriptionUpdateRequest: PrescriptionUpdateRequest
+  ): Observable<CustomHttpResponse> {
+    return this.http
+      .put<CustomHttpResponse>(
+        `${this.baseUrl}/display`,
+        prescriptionUpdateRequest
+      )
       .pipe(retry(3));
   }
   public deletePrescription(

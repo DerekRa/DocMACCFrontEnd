@@ -33,10 +33,11 @@ export class ExportPdfService {
   }
   public getExportPDFPrescription(
     profileId: number,
-    dateOfProcedure: string
+    dateOfProcedure: string,
+    careOfMouth: string
   ): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/exportPDFPrescription/${profileId}/${dateOfProcedure}`,
+      `${this.baseUrl}/exportPDFPrescription/${profileId}/${dateOfProcedure}/${careOfMouth}`,
       {
         responseType: 'blob',
       }
@@ -47,10 +48,10 @@ export class ExportPdfService {
     dateOfProcedure: string,
     category: string,
     procedureDone: string,
-    toothNumber: number
+    toothNumbers: string
   ): Observable<any> {
     return this.http.get(
-      `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}/${category}/${procedureDone}/${toothNumber}`,
+      `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}/${category}/${procedureDone}/${toothNumbers}`,
       {
         responseType: 'blob',
       }

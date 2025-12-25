@@ -10,6 +10,9 @@ import { ActivatedRoute } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
+import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
+import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
+import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-request';
 import { BillBreakdown } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown';
 import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown-response';
 import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdwon-request';
@@ -105,21 +108,47 @@ export class AmountProcedureComponent implements OnInit {
               console.log(this.breakdown);
             }
           }
-          this.form = this.formBuilder.group({
-            amountCharged: [
-              this.breakdown.amountCharged,
-              [Validators.required],
-            ],
-            discount: [this.breakdown.discount, [Validators.required]],
-            note: [
-              '',
-              [
-                Validators.required,
-                Validators.minLength(2),
-                Validators.maxLength(255),
-              ],
-            ],
-          });
+
+          const getAmountCharged: AmountDataRequest = {
+            profileId: this.id,
+            dateOfProcedure: this.dateOfProcedure,
+            category: this.breakdown.category,
+            procedureDone: this.breakdown.procedureDone,
+            toothNumbers: this.breakdown.toothNumbers,
+          };
+          console.log('getAmountCharged = ');
+          console.log(getAmountCharged);
+          this.intraoralBillService
+            .getAmountCharged(getAmountCharged)
+            .subscribe(
+              (response: AmountChargedResponse) => {
+                console.log('AmountChargedResponse response');
+                console.log(response);
+                this.breakdown.note = response.note;
+                console.log(
+                  'this.billBreakdown after note filled = ' + this.billBreakdown
+                );
+                console.log(this.billBreakdown);
+
+                this.form = this.formBuilder.group({
+                  amountCharged: [
+                    this.breakdown.amountCharged,
+                    [Validators.required],
+                  ],
+                  discount: [this.breakdown.discount, [Validators.required]],
+                  note: [
+                    this.breakdown.note,
+                    [
+                      Validators.required,
+                      Validators.minLength(2),
+                      Validators.maxLength(255),
+                    ],
+                  ],
+                });
+              },
+              (error: any) => console.log(error),
+              () => console.log('Done getting amount procedure data..')
+            );
         },
         (error: any) => console.log(error),
         () => console.log('Done getting intraoral bill breakdown..')
@@ -134,6 +163,7 @@ export class AmountProcedureComponent implements OnInit {
     // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
     // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
     // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
+    console.log('this.breakdown === ' + JSON.stringify(this.breakdown));
     if (this.form.invalid) {
       return;
     }
@@ -148,7 +178,7 @@ export class AmountProcedureComponent implements OnInit {
       note: this.form.value['note'],
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       createdByName: this.userProfile?.firstName || '',
       createdById: this.userProfile?.id || '',
       dateOfProcedure: this.dateOfProcedure,

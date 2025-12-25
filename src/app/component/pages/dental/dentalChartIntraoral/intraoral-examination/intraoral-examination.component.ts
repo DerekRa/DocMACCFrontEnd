@@ -1,7 +1,10 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { co } from '@fullcalendar/core/internal-common';
 import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
 import { IntraoralExamination } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/intraoral-examination';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
@@ -18,6 +21,8 @@ export class IntraoralExaminationComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
     this.recordAction = this.route.snapshot.params['record-action'];
+    this.datePick = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    console.log('this.datePick = ' + this.datePick);
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusRight', 'desc');
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusLeft', 'asc');
     this.onGetTableData('PermanentTeeth', 'topCenter', 'StatusRight', 'desc');
@@ -47,7 +52,8 @@ export class IntraoralExaminationComponent implements OnInit {
     private route: ActivatedRoute,
     // public alertService: AlertService,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public datepipe: DatePipe
   ) {
     document.documentElement.style.setProperty(
       '--testbgcolor',
@@ -61,8 +67,9 @@ export class IntraoralExaminationComponent implements OnInit {
   public imgLink: any;
   public hashName: any;
   public imgNameOriginal: any;
+  public datePick: any;
   public profileModel: ProfileModel | any;
-
+  public currentDate = new Date();
   public imageDetailsTempRightTop: DentalChartDesignResponse[] | any;
   public imageDetailsTempLeftTop: DentalChartDesignResponse[] | any;
   public imageDetailsPermaRightTopCenter: DentalChartDesignResponse[] | any;
@@ -83,6 +90,7 @@ export class IntraoralExaminationComponent implements OnInit {
   public teethNumber: string = '';
   public examType: string = 'Intraoral Examination';
   public examUrl: string = 'intraoral-examination';
+  public isTrackHistory = false;
 
   public updateRecordActionToView() {
     this.recordAction = 'view-record';
@@ -91,6 +99,11 @@ export class IntraoralExaminationComponent implements OnInit {
 
   public updateRecordActionToUpdate() {
     this.recordAction = 'add-record';
+    console.log(this.recordAction);
+  }
+
+  public updateRecordTreatmentPlan() {
+    this.recordAction = 'add-treatmentplan-record';
     console.log(this.recordAction);
   }
 
@@ -109,7 +122,9 @@ export class IntraoralExaminationComponent implements OnInit {
         kindsOfTeeth,
         teethArea,
         teethPositionStatus,
-        sorting
+        sorting,
+        this.isTrackHistory,
+        this.datePick
       )
       .subscribe(
         (response: DentalChartDesignResponse[]) => {
@@ -174,7 +189,7 @@ export class IntraoralExaminationComponent implements OnInit {
   public addUpdateIntralOralExam(teethNumbering: number) {
     console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
-      `dental-records/dental-chart/intraoral-examination/add-record/${this.id}/update-tooth-condition/${teethNumbering}`,
+      `dental-records/dental-chart/intraoral-examination/${this.recordAction}/${this.id}/update-tooth-condition/${teethNumbering}`,
     ]);
   }
   public teethProcedureHistory(teethNumbering: number) {
@@ -237,5 +252,32 @@ export class IntraoralExaminationComponent implements OnInit {
         },
         () => console.log('Done getting Intraoral Examination response..')
       );
+  }
+  onChangeDateOfProcedure(event: MatDatepickerInputEvent<Date>) {
+    console.log(event.value?.toLocaleDateString('en-US', { month: '2-digit' }));
+    console.log(event.value?.toLocaleDateString('en-US', { day: '2-digit' }));
+    const dateOfProcedure =
+      event.value?.toLocaleDateString('en-US', { year: 'numeric' }) +
+      '-' +
+      event.value?.toLocaleDateString('en-US', { month: '2-digit' }) +
+      '-' +
+      event.value?.toLocaleDateString('en-US', { day: '2-digit' });
+    console.log('dateOfProcedure = ' + dateOfProcedure);
+    this.datePick = dateOfProcedure;
+    this.isTrackHistory = true;
+    console.log('this.datePick = ' + this.datePick + ' this.isTrackHistory');
+    this.onGetTableData('TemporaryTeeth', 'top', 'StatusRight', 'desc');
+    this.onGetTableData('TemporaryTeeth', 'top', 'StatusLeft', 'asc');
+    this.onGetTableData('PermanentTeeth', 'topCenter', 'StatusRight', 'desc');
+    this.onGetTableData('PermanentTeeth', 'topCenter', 'StatusLeft', 'asc');
+    this.onGetTableData(
+      'PermanentTeeth',
+      'bottomCenter',
+      'StatusRight',
+      'desc'
+    );
+    this.onGetTableData('PermanentTeeth', 'bottomCenter', 'StatusLeft', 'asc');
+    this.onGetTableData('TemporaryTeeth', 'bottom', 'StatusRight', 'desc');
+    this.onGetTableData('TemporaryTeeth', 'bottom', 'StatusLeft', 'asc');
   }
 }

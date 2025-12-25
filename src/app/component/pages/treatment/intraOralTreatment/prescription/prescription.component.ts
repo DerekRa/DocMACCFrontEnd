@@ -8,6 +8,10 @@ import { AlertService } from 'src/app/service/_alert/alert.service';
 import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { PrescriptionService } from 'src/app/service/treatmentPlan/prescription.service';
+import { PrescriptionUpdateRequest } from 'src/app/model/interface/prescriptionModel/prescription-update-request';
+import { KeycloakProfile } from 'keycloak-js';
+import { KeycloakService } from 'keycloak-angular';
+import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 
 @Component({
   selector: 'app-prescription',
@@ -15,14 +19,19 @@ import { PrescriptionService } from 'src/app/service/treatmentPlan/prescription.
   styleUrls: ['./prescription.component.scss'],
 })
 export class PrescriptionComponent implements OnInit {
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.dateOfProcedure = this.route.snapshot.params['dateofProcedure'];
     this.onGetProfileModel();
     this.onGetTableData();
+    this.isLoggedIn = await this.keycloak.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.userProfile = await this.keycloak.loadUserProfile();
+    }
   }
 
   constructor(
+    private readonly keycloak: KeycloakService,
     private profileModelService: ProfileModelService,
     private prescriptionService: PrescriptionService,
     private exportPdfService: ExportPdfService,
@@ -33,6 +42,8 @@ export class PrescriptionComponent implements OnInit {
 
   public id: any;
   public profileModel: ProfileModel | undefined;
+  public isLoggedIn = false;
+  public userProfile: KeycloakProfile | null = null;
   public prescriptionData: PrescriptionResponse[] = [];
   public prescriptionDataToRemove: PrescriptionResponse | undefined;
   public dateOfProcedure: string = '';
@@ -115,6 +126,37 @@ export class PrescriptionComponent implements OnInit {
     console.log('pageNoDisplay = ' + this.pageNoDisplay);
     console.log('paginationTotalItems = ' + this.paginationTotalItems);
   }
+  public updateDisplay(prescriptionId: any) {
+    const prescriptionUpdateRequest: PrescriptionUpdateRequest = {
+      prescribedId: prescriptionId,
+      profileId: this.id,
+      dateOfProcedure: this.dateOfProcedure,
+      createdByName: this.userProfile?.firstName || '',
+      createdById: this.userProfile?.id || '',
+      dosage: '-',
+      remarks: '-',
+      brandName: '-',
+      genericName: '-',
+      dispense: '-',
+    };
+    this.prescriptionService
+      .updateDisplayPrescription(prescriptionUpdateRequest)
+      .subscribe(
+        (response: CustomHttpResponse) => {
+          console.log('response on update display');
+          console.log(response);
+          if (response.httpStatus == 'OK') {
+            this.onGetTableData();
+            const messageSplit = response.message.split(':');
+            this.alertService.success(messageSplit[0], this.options);
+          }
+        },
+        (error: any) => {
+          console.log(error);
+        },
+        () => console.log('Done updating display prescription..')
+      );
+  }
   public updateRemovePrescription(prescriptionToRemove: PrescriptionResponse) {
     this.prescriptionDataToRemove = prescriptionToRemove;
   }
@@ -137,8 +179,14 @@ export class PrescriptionComponent implements OnInit {
       );
   }
   public printPDFPrescription() {
+    this.printPDFPrescriptionWithCareOfMouth('true');
+  }
+  public printPDFPrescriptionNoCOM() {
+    this.printPDFPrescriptionWithCareOfMouth();
+  }
+  private printPDFPrescriptionWithCareOfMouth(careOfMouth: string = 'false') {
     this.exportPdfService
-      .getExportPDFPrescription(this.id, this.dateOfProcedure)
+      .getExportPDFPrescription(this.id, this.dateOfProcedure, careOfMouth)
       .subscribe(
         (response: any) => {
           if (response.type === HttpEventType.DownloadProgress) {
@@ -231,7 +279,6 @@ export class PrescriptionComponent implements OnInit {
     this.sortBy = 'Remarks';
     this.onGetTableData();
   }
-
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

@@ -188,7 +188,7 @@ export class IntraoralBillBreakdownComponent implements OnInit {
         this.dateOfProcedure,
         breakdown.category,
         breakdown.procedureDone,
-        breakdown.toothNumber
+        breakdown.toothNumbers
       )
       .subscribe(
         (response: any) => {

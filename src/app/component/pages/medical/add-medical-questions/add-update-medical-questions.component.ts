@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { bo, s } from '@fullcalendar/core/internal-common';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
@@ -30,6 +31,13 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
   public id: any;
   public urlLocation: string = 'Add';
   public allergyList: any[] = [
+    {
+      fcname: 'noneAllergy',
+      inputId: 'noneAllergyId',
+      name: 'None',
+      value: 'None Allergy',
+      checked: false,
+    },
     {
       fcname: 'localAnes',
       inputId: 'localAnesId',
@@ -63,6 +71,13 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       inputId: 'aspirinDataId',
       name: 'Aspirin',
       value: 'Aspirin',
+      checked: false,
+    },
+    {
+      fcname: 'otherAllergy',
+      inputId: 'otherAllergyId',
+      name: 'Other',
+      value: 'Other Allergy',
       checked: false,
     },
   ];
@@ -213,14 +228,14 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         specificPrescriptionMedication: ['', this.validatorData('one')],
         tobacco: ['', this.validatorData('four')],
         alcoholCocaineOtherDrugs: ['', this.validatorData('four')],
-        allergies: this.fb.array(this.allergyList),
+        allergies: this.fb.array(this.allergyList, this.validatorData('six')),
         otherAllergies: [''],
         bleedingTime: [''],
         womanOnlyPregnant: [''],
         womanOnlyNursing: [''],
         womanOnlyBirthControlPills: [''],
-        bloodType: ['', this.validatorData('five')],
-        bloodPressure: ['', this.validatorData('one')],
+        bloodType: [''],
+        bloodPressure: [''],
         haveYouHadAnyOfTheFollowing: this.fb.array(this.medicalConditionList),
         otherHaveYouHadAnyOfTheFollowing: [''],
         bloodPressureDate: [''],
@@ -243,6 +258,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       (response: MedicalModel) => {
         this.medicalModel = response;
         this.allergyList = this.medicalModel?.questions?.allergies;
+
+        console.log('this.allergyList = ' + JSON.stringify(this.allergyList));
 
         this.form = this.fb.group({
           id: [this.medicalModel?.questions?.id],
@@ -282,11 +299,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
             this.medicalModel?.questions?.alcoholCocaineOtherDrugs,
             this.validatorData('four'),
           ],
-          allergies: this.fb.array(
-            this.medicalModel?.questions?.allergies
-              ? this.medicalModel?.questions?.allergies
-              : this.allergyList
-          ),
+          allergies: this.fb.array(this.medicalModel?.questions?.allergies),
           otherAllergies: [this.medicalModel?.questions?.otherAllergies],
           bleedingTime: [this.medicalModel?.questions?.bleedingTime],
           womanOnlyPregnant: [this.medicalModel?.questions?.womanOnlyPregnant],
@@ -294,14 +307,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           womanOnlyBirthControlPills: [
             this.medicalModel?.questions?.womanOnlyBirthControlPills,
           ],
-          bloodType: [
-            this.medicalModel?.questions?.bloodType,
-            this.validatorData('five'),
-          ],
-          bloodPressure: [
-            this.medicalModel?.questions?.bloodPressure,
-            this.validatorData('one'),
-          ],
+          bloodType: [this.medicalModel?.questions?.bloodType],
+          bloodPressure: [this.medicalModel?.questions?.bloodPressure],
           haveYouHadAnyOfTheFollowing: this.fb.array(
             this.medicalModel?.questions?.haveYouHadAnyOfTheFollowing
               ? this.medicalModel?.questions?.haveYouHadAnyOfTheFollowing
@@ -354,13 +361,59 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     this.form.controls[controlName].updateValueAndValidity();
   }
   onCheckboxChangeAllergies(event: any) {
+    console.log('onCheckboxChangeAllergies called...');
+    console.log(
+      'this.form.value.allergies.length = ' + this.form.value.allergies.length
+    );
+    let otherAllergiesChecked = false;
     for (let i = 0; i < this.form.value.allergies.length; i++) {
       if (event.target.value == this.form.value.allergies[i].value) {
         if (this.form.value.allergies[i].checked) {
           this.form.value.allergies[i].checked = false;
+          this.f['allergies'].setErrors({ required: true });
+          console.log('unchecked called...' + i);
+          console.log('unchecked = ' + this.form.value.allergies[i].value);
+          console.log(
+            'checked status = ' + this.form.value.allergies[i].checked
+          );
+          if (!otherAllergiesChecked) {
+            this.f['allergies'].setErrors({ required: true });
+          } else {
+            this.f['allergies'].setErrors(null);
+          }
+          if (this.form.value.allergies[i].value == 'None Allergy') {
+            // When unchecking "None", do nothing special
+          }
         } else {
+          console.log('checked called...' + i);
+          console.log('checked = ' + this.form.value.allergies[i].value);
+          console.log(
+            'checked status = ' + this.form.value.allergies[i].checked
+          );
+          this.f['allergies'].setErrors(null);
           this.form.value.allergies[i].checked = true;
+
+          // If "None" is checked, uncheck all others
+          if (this.form.value.allergies[i].value === 'None Allergy') {
+            for (let j = 0; j < this.form.value.allergies.length; j++) {
+              if (j !== i) {
+                this.form.value.allergies[j].checked = false;
+              }
+            }
+          } else {
+            // If any other is checked, uncheck "None"
+            const noneIndex = this.form.value.allergies.findIndex(
+              (a: any) => a.value === 'None Allergy'
+            );
+            if (noneIndex !== -1) {
+              this.form.value.allergies[noneIndex].checked = false;
+            }
+          }
         }
+      } else if (this.form.value.allergies[i].checked) {
+        console.log('checked called...' + i);
+        otherAllergiesChecked = true;
+        this.f['allergies'].setErrors(null);
       }
     }
   }
@@ -397,6 +450,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       return [Validators.required];
     } else if (event == 'five') {
       return [Validators.required, Validators.maxLength(83)];
+    } else if (event == 'six') {
+      return [Validators.requiredTrue];
     } else {
       return [];
     }
@@ -514,5 +569,14 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           () => console.log('Done updating medical records..')
         );
     }
+  }
+
+  /** Returns true if 'None' allergy is checked */
+  isNoneAllergyChecked(): boolean {
+    const allergies = this.form?.value?.allergies || [];
+    const noneAllergy = allergies.find(
+      (a: any) => a.fcname === 'noneAllergy' || a.value === 'None Allergy'
+    );
+    return !!(noneAllergy && noneAllergy.checked);
   }
 }

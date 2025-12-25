@@ -90,7 +90,8 @@ export class PaymentProcedureComponent implements OnInit {
           console.log('response');
           console.log(response);
           this.billBreakdown = response;
-          console.log('this.billBreakdown = ' + this.billBreakdown);
+          console.log('this.billBreakdown === ');
+          console.log(this.billBreakdown);
           console.log(
             'this.billBreakdown = ' + this.billBreakdown.billBreakdowns
           );
@@ -105,7 +106,7 @@ export class PaymentProcedureComponent implements OnInit {
             }
           }
           this.form = this.formBuilder.group({
-            payment: ['', [Validators.required]],
+            payment: [this.breakdown.balance, [Validators.required]],
             note: [
               '',
               [
@@ -140,7 +141,7 @@ export class PaymentProcedureComponent implements OnInit {
       note: this.form.value['note'],
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       createdByName: this.userProfile?.firstName || '',
       createdById: this.userProfile?.id || '',
       dateOfProcedure: this.dateOfProcedure,

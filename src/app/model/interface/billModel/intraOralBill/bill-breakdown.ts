@@ -1,7 +1,7 @@
 export interface BillBreakdown {
   category: string;
   procedureDone: string;
-  toothNumber: number;
+  toothNumbers: string;
   amountCharged: string;
   discount: string;
   amountPaid: string;

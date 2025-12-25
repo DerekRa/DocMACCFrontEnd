@@ -2,7 +2,13 @@
   <div class="grid">
     <div class="col-3 col-md-2 mb-3">
       <h3>Periodontal Screening</h3>
-      <div *ngIf="recordAction == 'add-record'; else viewAction">
+      <div
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewAction
+        "
+      >
         <div
           *ngFor="
             let psTMD of getPeriodontalScreeningTMDRequestList.controls;
@@ -100,7 +106,11 @@
         name="classMolar"
         formControlName="classMolar"
         id="classMolarId"
-        *ngIf="recordAction == 'add-record'; else viewActionClassMolar"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionClassMolar
+        "
       />
       <ng-template #viewActionClassMolar>
         <br />
@@ -116,7 +126,11 @@
         name="overjet"
         formControlName="overjet"
         id="overjetId"
-        *ngIf="recordAction == 'add-record'; else viewActionOverjet"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionOverjet
+        "
       />
       <ng-template #viewActionOverjet>
         <br />
@@ -132,7 +146,11 @@
         name="overbite"
         formControlName="overbite"
         id="overbiteId"
-        *ngIf="recordAction == 'add-record'; else viewActionOverbite"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionOverbite
+        "
       />
       <ng-template #viewActionOverbite>
         <br />
@@ -150,7 +168,11 @@
         name="midlineDeviation"
         formControlName="midlineDeviation"
         id="midlineDeviationId"
-        *ngIf="recordAction == 'add-record'; else viewActionMidlineDeviation"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionMidlineDeviation
+        "
       />
       <ng-template #viewActionMidlineDeviation>
         <br />
@@ -166,7 +188,11 @@
         name="crossbite"
         formControlName="crossbite"
         id="crossbiteId"
-        *ngIf="recordAction == 'add-record'; else viewActionCrossbite"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionCrossbite
+        "
       />
       <ng-template #viewActionCrossbite>
         <br />
@@ -185,7 +211,11 @@
         name="orthodontic"
         formControlName="orthodontic"
         id="orthodonticId"
-        *ngIf="recordAction == 'add-record'; else viewActionOrthodontic"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionOrthodontic
+        "
       />
       <ng-template #viewActionOrthodontic>
         <br />
@@ -201,7 +231,11 @@
         name="stayplate"
         formControlName="stayplate"
         id="stayplateId"
-        *ngIf="recordAction == 'add-record'; else viewActionStayplate"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionStayplate
+        "
       />
       <ng-template #viewActionStayplate>
         <br />
@@ -217,7 +251,11 @@
         name="others"
         formControlName="others"
         id="othersId"
-        *ngIf="recordAction == 'add-record'; else viewActionOthers"
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionOthers
+        "
       />
       <ng-template #viewActionOthers>
         <br />
@@ -228,7 +266,13 @@
     </div>
     <div class="col-3">
       <h3>TMD</h3>
-      <div *ngIf="recordAction == 'add-record'; else viewActionTMD">
+      <div
+        *ngIf="
+          recordAction == 'add-record' ||
+            recordAction == 'add-treatmentplan-record';
+          else viewActionTMD
+        "
+      >
         <div
           *ngFor="
             let psTMD of getPeriodontalScreeningTMDRequestList.controls;
@@ -320,7 +364,9 @@
   </div>
   <div
     class="grid justify-content-center mb-6"
-    *ngIf="recordAction == 'add-record'"
+    *ngIf="
+      recordAction == 'add-record' || recordAction == 'add-treatmentplan-record'
+    "
   >
     <!-- <div class="col-2 text-lg"></div> -->
     <div class="col-2">

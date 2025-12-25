@@ -13,4 +13,5 @@ export interface PrescriptionResponse {
   dispense: string;
   profileId: number;
   dateOfProcedure: string;
+  display: boolean;
 }

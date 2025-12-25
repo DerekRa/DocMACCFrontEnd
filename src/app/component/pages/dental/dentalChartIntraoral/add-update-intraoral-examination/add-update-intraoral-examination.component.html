@@ -20,9 +20,18 @@
             >Intraoral Examination</a
           >
         </li>
-        <li class="breadcrumb-item active" aria-current="page">
+        <li
+          class="breadcrumb-item active"
+          aria-current="page"
+          *ngIf="recordAction == 'add-record'; else addTreatmentPlanRecord"
+        >
           Add Tooth Condition
         </li>
+        <ng-template #addTreatmentPlanRecord>
+          <li class="breadcrumb-item active" aria-current="page">
+            Add Tooth Condition for Treatment Plan
+          </li>
+        </ng-template>
       </ol>
     </nav>
     <!-- Complete name -->
@@ -37,10 +46,11 @@
         }}
       </div>
     </div>
-    <!-- Kinds of Teeth, Teeth Position Status, Date Of Procedure -->
+    <!-- Kinds of Teeth, Teeth Position Status, Date Of Procedure, Date Prev and Next -->
     <div class="grid">
-      <div class="col-12">
+      <div class="col-12 -mb-3">
         <div class="row lbltext">
+          <!-- Kinds of Teeth -->
           <div class="col-4 col-md-auto">
             {{
               intraoralExaminationResponse?.dentalChartDesignResponse
@@ -48,6 +58,7 @@
             }}
           </div>
           <div class="col-1 col-md-auto">&#8226;</div>
+          <!-- Teeth Position Status -->
           <div class="col-4 col-md-auto">
             {{
               intraoralExaminationResponse?.dentalChartDesignResponse
@@ -55,6 +66,7 @@
             }}
           </div>
           <div class="col-1 col-md-auto">&#8226;</div>
+          <!-- Tooth Numbers Edit Collapse -->
           <div class="col-2 col-md-auto">
             <a
               class="link-dark"
@@ -66,9 +78,11 @@
           <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">
             |
           </div>
+          <!-- Date Of Procedure -->
           <div class="col-5 col-md-auto lbltext">
             <span class="astrk">&ast;</span>Date of Procedure
           </div>
+          <!-- Calendar of Date Of Procedure -->
           <div class="col-4 col-md-auto -mt-2">
             <div class="input-group input-group-sm mb-3">
               <input
@@ -130,12 +144,45 @@
               </div>
             </div>
           </div>
+          <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">
+            |
+          </div>
+          <!-- Date Prev and Next -->
+          <div class="col-5 col-md-auto lbltext">
+            <a
+              class="link-dark"
+              href="/dental-records/dental-chart/intraoral-examination/add-record/{{
+                id
+              }}/update-tooth-condition/{{ previousToothNumber }}"
+            >
+              {{
+                previousToothNumber
+                  ? "< Previous Tooth - " + previousToothNumber
+                  : ""
+              }}
+            </a>
+            <span style="color: rgb(224, 216, 216)"
+              >&nbsp;{{
+                previousToothNumber && nextToothNumber ? " | " : ""
+              }}&nbsp;</span
+            >
+            <a
+              class="link-dark"
+              href="/dental-records/dental-chart/intraoral-examination/add-record/{{
+                id
+              }}/update-tooth-condition/{{ nextToothNumber }}"
+            >
+              {{
+                nextToothNumber ? "Next Tooth - " + nextToothNumber + " > " : ""
+              }}
+            </a>
+          </div>
         </div>
       </div>
     </div>
     <!-- Collapse Tooth Numbers -->
     <div class="grid collapse hide" id="collapseToothNumber">
-      <div class="col-11 -mb-4 col-offset-1">
+      <div class="col-11 col-offset-1">
         <div class="row">
           <div class="col-md-3 fw-light">
             <span class="fw-bold">Deciduous Teeth Maxillary</span>
@@ -148,17 +195,38 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
                     }}"
                     id="{{ toothNumberValue?.inputId }}"
-                    class="form-check-input"
+                    class="form-check-input change-bg-color"
                     name="{{ toothNumberValue?.formControlName }}"
                     type="checkbox"
                     (change)="onCheckboxChangeToothNumbers($event)"
-                    [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -181,6 +249,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -192,6 +264,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -219,6 +309,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -230,6 +324,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -252,6 +364,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -263,6 +379,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -290,6 +424,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -301,6 +439,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -323,6 +479,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -334,6 +494,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -361,6 +539,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -372,6 +554,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -394,6 +594,10 @@
                   "
                 >
                   <input
+                    *ngIf="
+                      !toothNumberValue?.disableCheckboxes;
+                      else disabledBox
+                    "
                     [checked]="toothNumberValue?.checked"
                     value="{{
                       toothNumberValue?.value + '-' + toothNumberValue?.label
@@ -405,6 +609,24 @@
                     (change)="onCheckboxChangeToothNumbers($event)"
                     [disabled]="toothNumberValue?.disableCheckboxes"
                   />
+                  <ng-template #disabledBox>
+                    <input
+                      [checked]="toothNumberValue?.checked"
+                      value="{{
+                        toothNumberValue?.value + '-' + toothNumberValue?.label
+                      }}"
+                      id="{{ toothNumberValue?.inputId }}"
+                      class="form-check-input"
+                      name="{{ toothNumberValue?.formControlName }}"
+                      type="checkbox"
+                      style="
+                        border-color: rgb(104, 105, 104);
+                        background-color: rgba(155, 156, 154, 0.712);
+                      "
+                      (change)="onCheckboxChangeToothNumbers($event)"
+                      [disabled]="toothNumberValue?.disableCheckboxes"
+                    />
+                  </ng-template>
                   <label>
                     -
                     <span
@@ -425,12 +647,14 @@
       </div>
     </div>
     <div class="grid">
-      <div class="col-12 mt-4 -mb-2"><hr /></div>
+      <div class="col-12"><hr /></div>
     </div>
+    <!-- Form Start -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="grid">
         <div class="col-12">
           <div class="row">
+            <!-- Conditions -->
             <div class="col-md-3 fw-light">
               <span class="fw-bold">Condition</span>
               <div formGroupName="conditionProcedureGroupings">
@@ -478,8 +702,11 @@
                 </div>
               </div>
             </div>
+            <!-- Restorations -->
             <div class="col-md-4 fw-light">
-              <span class="fw-bold">Restorations</span>
+              <span class="fw-bold restoration-surface-color"
+                >Restorations</span
+              >
               <div formGroupName="conditionProcedureGroupings">
                 <div
                   class="form-check"
@@ -515,7 +742,31 @@
                   </div>
                 </div>
               </div>
-
+              <!-- Root Canal Treatment Note-->
+              <div class="row ms-2">
+                <label
+                  for="conditionProcedureGroupings.conditionProcedureSurfaceRemarksResponse.rootCanalTreatmentNote"
+                  class="col-sm-2 col-form-label col-form-label-sm"
+                  >Note</label
+                >
+                <div class="col-sm-8">
+                  <div formGroupName="conditionProcedureGroupings">
+                    <div
+                      class="form-group"
+                      formGroupName="conditionProcedureSurfaceRemarksResponse"
+                    >
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        formControlName="rootCanalTreatmentNote"
+                        name="rootCanalTreatmentNote"
+                        placeholder="Add note for RCT here..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Inlay  -->
               <div class="form-check">
                 <label class="form-check-label" for="flexCheckinlay">
                   <span class="fw-bold">In</span> - Inlay
@@ -558,7 +809,7 @@
                     </div>
                   </div>
                 </div>
-
+                <!-- Inlay Other -->
                 <div class="row mb-2">
                   <label
                     for="colFormLabelSm"
@@ -576,12 +827,13 @@
                           class="form-control form-control-sm"
                           formControlName="restorationInlayOther"
                           name="restorationInlayOther"
-                          placeholder=""
+                          placeholder="Add other Inlay here..."
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- Inlay Note -->
                 <div class="row mb-2">
                   <label
                     for="colFormLabelSm"
@@ -599,13 +851,14 @@
                           class="form-control form-control-sm"
                           formControlName="restorationInlayNote"
                           name="restorationInlayNote"
-                          placeholder=""
+                          placeholder="Add note for Inlay here..."
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- Onlay -->
               <div class="form-check">
                 <label class="form-check-label">
                   <span class="fw-bold">On</span> - Onlay
@@ -648,6 +901,7 @@
                     </div>
                   </div>
                 </div>
+                <!-- Onlay Other -->
                 <div class="row mb-2">
                   <label
                     for="colFormLabelSm"
@@ -665,12 +919,13 @@
                           class="form-control form-control-sm"
                           formControlName="restorationOnlayOther"
                           name="restorationOnlayOther"
-                          placeholder=""
+                          placeholder="Add other Onlay here..."
                         />
                       </div>
                     </div>
                   </div>
                 </div>
+                <!-- Onlay Note -->
                 <div class="row mb-2">
                   <label
                     for="colFormLabelSm"
@@ -688,57 +943,15 @@
                           class="form-control form-control-sm"
                           formControlName="restorationOnlayNote"
                           name="restorationOnlayNote"
-                          placeholder=""
+                          placeholder="Add note for Onlay here..."
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="form-check">
-                <label class="form-check-label" for="flexCheckijmplt">
-                  <span class="fw-bold">FL</span> - Fluoride Application
-                </label>
-                <br />
-                <div formGroupName="conditionProcedureGroupings">
-                  <div
-                    class="form-check form-check-inline"
-                    *ngFor="
-                      let conditions of getFormRestorationsFluoride.controls;
-                      let i = index
-                    "
-                    formArrayName="restorationsFluoride"
-                  >
-                    <div formGroupName="{{ i }}">
-                      <input
-                        [checked]="
-                          getFormRestorationsFluoride.controls[i].value.checked
-                        "
-                        value="{{
-                          getFormRestorationsFluoride.controls[i].value.value
-                        }}"
-                        id="{{
-                          getFormRestorationsFluoride.controls[i].value.inputId
-                        }}"
-                        class="form-check-input"
-                        name="{{
-                          getFormRestorationsFluoride.controls[i].value.fcname
-                        }}"
-                        type="checkbox"
-                        (change)="
-                          onCheckboxChangeRestorationsFluoride($event, false)
-                        "
-                      />
-                      <label>
-                        {{
-                          getFormRestorationsFluoride.controls[i].value.name
-                        }}</label
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
+            <!-- Prosthetics -->
             <div class="col-md-2 fw-light">
               <span class="fw-bold">Prosthetics</span>
               <div formGroupName="conditionProcedureGroupings">
@@ -777,6 +990,7 @@
                   </div>
                 </div>
               </div>
+              <!-- Prosthetics Note -->
               <div class="row mb-2">
                 <label
                   for="colFormLabelSm"
@@ -794,15 +1008,17 @@
                         class="form-control form-control-sm"
                         formControlName="prostheticsNote"
                         name="prostheticsNote"
-                        placeholder=""
+                        placeholder="Add note Pros. here..."
                       />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <!-- Denture, Periodontal, Surgery -->
             <div class="col-md-3 fw-light">
-              <span class="fw-bold">Denture</span>
+              <!-- Denture -->
+              <span class="fw-bold denture-color">Denture</span>
               <!-- <div formGroupName="conditionProcedureSurfaceRemarksResponse"> -->
               <div formGroupName="conditionProcedureGroupings">
                 <div
@@ -833,6 +1049,7 @@
                         }}</label
                       >
                     </div>
+                    <!-- Denture Note -->
                     <div class="row mb-2">
                       <label
                         for="colFormLabelSm{{ i }}"
@@ -847,16 +1064,16 @@
                           name="dentureNote{{ i }}"
                           (input)="onDentureNoteInput($event, i)"
                           [value]="getFormDenture.controls[i].value.noteValue"
-                          placeholder=""
+                          placeholder="Add note here..."
                         />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-
               <div class="w-100 d-none d-md-block"></div>
-              <span class="fw-bold">Periodontal</span>
+              <!-- Periodontal -->
+              <span class="fw-bold periodontal-color">Periodontal</span>
               <div formGroupName="conditionProcedureGroupings">
                 <div
                   class="form-check"
@@ -893,8 +1110,53 @@
                   </div>
                 </div>
               </div>
+              <!-- Fluoride Application -->
+              <div class="form-check">
+                <label class="form-check-label" for="flexCheckijmplt">
+                  <span class="fw-bold">FL</span> - Fluoride Application
+                </label>
+                <br />
+                <div formGroupName="conditionProcedureGroupings">
+                  <div
+                    class="form-check form-check-inline"
+                    *ngFor="
+                      let conditions of getFormPeriodontalFluoride.controls;
+                      let i = index
+                    "
+                    formArrayName="periodontalFluoride"
+                  >
+                    <div formGroupName="{{ i }}">
+                      <input
+                        [checked]="
+                          getFormPeriodontalFluoride.controls[i].value.checked
+                        "
+                        value="{{
+                          getFormPeriodontalFluoride.controls[i].value.value
+                        }}"
+                        id="{{
+                          getFormPeriodontalFluoride.controls[i].value.inputId
+                        }}"
+                        class="form-check-input"
+                        name="{{
+                          getFormPeriodontalFluoride.controls[i].value.fcname
+                        }}"
+                        type="checkbox"
+                        (change)="
+                          onCheckboxChangePeriodontalFluoride($event, false)
+                        "
+                      />
+                      <label>
+                        {{
+                          getFormPeriodontalFluoride.controls[i].value.name
+                        }}</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="w-100 d-none d-md-block"></div>
-              <span class="fw-bold">Surgery</span>
+              <!-- Surgery -->
+              <span class="fw-bold surgery-color">Surgery</span>
               <div formGroupName="conditionProcedureGroupings">
                 <div
                   class="form-check"
@@ -926,7 +1188,7 @@
                   </div>
                 </div>
               </div>
-
+              <!-- Surgery Reason -->
               <div class="row mb-2">
                 <label
                   for="colFormLabelSm"
@@ -944,7 +1206,7 @@
                         class="form-control form-control-sm"
                         formControlName="surgeryReason"
                         name="surgeryReason"
-                        placeholder=""
+                        placeholder="Add reason for surgery here..."
                       />
                     </div>
                   </div>
@@ -963,7 +1225,9 @@
         <div class="col-12">
           <div class="row">
             <div class="col-12 col-md-auto">
-              <span class="fw-bold">Tooth Surface</span>
+              <span class="fw-bold restoration-surface-color"
+                >Tooth Surface</span
+              >
             </div>
           </div>
           <div class="row">
@@ -1033,6 +1297,25 @@
       </div>
       <div class="grid">
         <div class="col"><hr /></div>
+      </div>
+      <div class="grid justify-content-center">
+        <div class="col-3">
+          <div class="form-check form-check-inline">
+            <input
+              value="yes"
+              id="historyTrackingProcedureId"
+              class="form-check-input"
+              type="checkbox"
+              (change)="onCheckboxTrackHistory($event)"
+            />
+            <label>Update history for dental chart tracking?</label>
+          </div>
+        </div>
+      </div>
+      <div class="grid justify-content-center">
+        <div class="col-3">
+          <hr />
+        </div>
       </div>
       <div class="grid justify-content-center mb-6">
         <!-- <div class="col-2 text-lg"></div> -->

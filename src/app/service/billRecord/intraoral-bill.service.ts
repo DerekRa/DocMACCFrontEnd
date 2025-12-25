@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { catchError, EMPTY, Observable, retry, throwError } from 'rxjs';
 import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
-import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
+import { AmountChargedHistoryResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-history-response';
 import { AmountData } from 'src/app/model/interface/billModel/intraOralBill/amount-data';
 import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
 import { AmountPaymentRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-payment-request';
@@ -16,6 +16,8 @@ import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOr
 import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdwon-request';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
+import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
+import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-request';
 
 @Injectable({
   providedIn: 'root',
@@ -50,13 +52,25 @@ export class IntraoralBillService {
         retry(3)
       );
   }
+  public getAmountCharged(
+    amountDataRequest: AmountDataRequest
+  ): Observable<AmountChargedResponse> {
+    return this.http
+      .get<AmountChargedResponse>(`${this.baseUrl}/amountCharged`, {
+        params: this.convertToHttpParams(amountDataRequest),
+      })
+      .pipe(retry(3));
+  }
   public getAmountChargedHistory(
     amountDataPaginationRequest: AmountDataPaginationRequest
-  ): Observable<AmountChargedResponse[]> {
+  ): Observable<AmountChargedHistoryResponse[]> {
     return this.http
-      .get<AmountChargedResponse[]>(`${this.baseUrl}/amountCharged`, {
-        params: this.convertToHttpParams(amountDataPaginationRequest),
-      })
+      .get<AmountChargedHistoryResponse[]>(
+        `${this.baseUrl}/amountCharged/history`,
+        {
+          params: this.convertToHttpParams(amountDataPaginationRequest),
+        }
+      )
       .pipe(retry(3));
   }
   public getAmountPaymentHistory(

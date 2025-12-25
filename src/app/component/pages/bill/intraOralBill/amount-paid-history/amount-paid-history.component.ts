@@ -109,7 +109,7 @@ export class AmountPaidHistoryComponent implements OnInit {
       dateOfProcedure: this.dateOfProcedure,
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       pageNo: pageNo,
       pageSize: this.paginationSize,
       sortBy: this.sortBy,
@@ -121,7 +121,7 @@ export class AmountPaidHistoryComponent implements OnInit {
       dateOfProcedure: this.dateOfProcedure,
       category: this.breakdown.category,
       procedureDone: this.breakdown.procedureDone,
-      toothNumber: this.breakdown.toothNumber,
+      toothNumbers: this.breakdown.toothNumbers,
       pageNo: 0,
       pageSize: 10000,
       sortBy: this.sortBy,
@@ -132,7 +132,7 @@ export class AmountPaidHistoryComponent implements OnInit {
       .getAmountPaymentHistory(amountDataPaginationRequest)
       .subscribe(
         (response: AmountPaymentResponse[]) => {
-          console.log('response');
+          console.log('response-=-==-');
           console.log(response);
           this.amountPaymentHistory = response;
         },

@@ -3,7 +3,7 @@ export interface AmountDataPaginationRequest {
   dateOfProcedure: string;
   category: string;
   procedureDone: string;
-  toothNumber: number;
+  toothNumbers: string;
   pageNo: number;
   pageSize: number;
   sortBy: string;

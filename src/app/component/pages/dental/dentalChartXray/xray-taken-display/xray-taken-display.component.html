@@ -9,7 +9,10 @@
   <div class="col-3">
     <span class="text-lg">Periapical</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewPeriapicalHistory(profileModel?.id)"
@@ -61,7 +64,10 @@
   <div class="col-3">
     <span class="text-lg">Panoramic</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewPanoramicHistory(profileModel?.id)"
@@ -113,7 +119,10 @@
   <div class="col-3">
     <span class="text-lg">Cephalo-metric</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewCephaloMetricHistory(profileModel?.id)"
@@ -165,7 +174,10 @@
   <div class="col-3">
     <span class="text-lg">Occlusal (Upper)</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewOcclusalUpperHistory(profileModel?.id)"
@@ -217,7 +229,10 @@
   <div class="col-3">
     <span class="text-lg">Occlusal (Lower)</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewOcclusalLowerHistory(profileModel?.id)"
@@ -269,7 +284,10 @@
   <div class="col-3">
     <span class="text-lg">Others</span> &nbsp;
     <button
-      *ngIf="recordAction == 'add-record'"
+      *ngIf="
+        recordAction == 'add-record' ||
+        recordAction == 'add-treatmentplan-record'
+      "
       type="button"
       class="btn btn-outline-primary btn-sm -mt-1"
       (click)="onViewOthersHistory(profileModel?.id)"

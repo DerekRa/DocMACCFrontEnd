@@ -33,11 +33,13 @@ export class IntraoralExaminationService {
     kindsOfTeeth: string,
     teethArea: string,
     teethPositionStatus: string,
-    sorting: string
+    sorting: string,
+    historyTracking: boolean = false,
+    datePick: string
   ): Observable<DentalChartDesignResponse[]> {
     return this.http
       .get<DentalChartDesignResponse[]>(
-        `${this.baseUrl}/images/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${sorting}`
+        `${this.baseUrl}/images/${profileId}/${kindsOfTeeth}/${teethArea}/${teethPositionStatus}/${datePick}/${historyTracking}/${sorting}`
       )
       .pipe(retry(3));
   }

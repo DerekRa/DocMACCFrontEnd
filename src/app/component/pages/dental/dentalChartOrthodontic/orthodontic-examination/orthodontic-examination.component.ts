@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +27,8 @@ export class OrthodonticExaminationComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
+    this.datePick = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    console.log('this.datePick = ' + this.datePick);
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel();
     this.getImageTeeth('addTeeth.png');
@@ -72,13 +75,15 @@ export class OrthodonticExaminationComponent implements OnInit {
     private router: Router,
     public alertService: AlertService,
     private fb: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
+    public datepipe: DatePipe
   ) {}
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
   public id: any;
   public recordAction: any;
   public bracesAction: any;
+  public datePick: any;
   public profileModel: ProfileModel | undefined;
   public widthImage: string = '34';
   public heightImage: string = '49';
@@ -94,6 +99,7 @@ export class OrthodonticExaminationComponent implements OnInit {
   public submittedBracketPrescription: boolean | undefined;
   public submittedMaxillary: boolean | undefined;
   public submittedMandibular: boolean | undefined;
+  public isTrackHistory = false;
   public options = {
     autoClose: false,
     keepAfterRouteChange: true,
@@ -141,7 +147,9 @@ export class OrthodonticExaminationComponent implements OnInit {
         kindsOfTeeth,
         teethArea,
         teethPositionStatus,
-        sorting
+        sorting,
+        this.isTrackHistory,
+        this.datePick
       )
       .subscribe(
         (response: DentalChartDesignResponse[]) => {
