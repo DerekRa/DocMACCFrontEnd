@@ -43,10 +43,14 @@ main {
     border-right: 3px solid black;
     padding: 5px 5px;
     height: 37px;
-    // background-color: #dc3545;
+    background-color: #ffffff00;
   }
   td.bdrend .addImage {
-    opacity: 0.5;
+    opacity: 0.6;
+    background-color: #ffffff00;
+  }
+  td.bdrend .toothImage {
+    background-color: #ffffff00;
   }
   td.bdrall {
     border: 1px solid rgb(248, 242, 242);
@@ -55,7 +59,11 @@ main {
     // background-color: #dc3545;
   }
   td.bdrall .addImage {
-    opacity: 0.5;
+    opacity: 0.6;
+    background-color: #ffffff00;
+  }
+  td.bdrall .toothImage {
+    background-color: #ffffff00;
   }
   td.bdrupdwn {
     border-top: 1px solid rgb(248, 242, 242);
@@ -112,7 +120,8 @@ main {
   }
 
   .pizza {
-    box-shadow: 0 4px 6px 0 rgba(68, 68, 69, 0.2),
+    box-shadow:
+      0 4px 6px 0 rgba(68, 68, 69, 0.2),
       0 4px 17px 0 rgba(69, 68, 68, 0.2);
     border-top: rgba(244, 33, 33, 0.588) 12px solid; //rgb(231, 226, 226)
     border-top-right-radius: 50%;

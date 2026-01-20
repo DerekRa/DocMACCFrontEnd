@@ -129,7 +129,7 @@
             [matDatepicker]="picker"
             (dateChange)="onChangeDateOfProcedure($event)"
             min="1990-01-01"
-            max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+            max="{{ currentDate | date: 'yyyy-MM-dd' }}"
             readonly
           />
           <button
@@ -345,6 +345,7 @@
                               <img
                                 src="{{ imagesTempRightTop.teethImageLink }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
@@ -386,6 +387,7 @@
                               <img
                                 src="{{ imagesTempLeftTop.teethImageLink }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
@@ -658,6 +660,7 @@
                                   imagesPermaRightTopCenter.teethImageLink
                                 }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
@@ -702,6 +705,7 @@
                                   imagesPermaLeftTopCenter.teethImageLink
                                 }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthBigImage"
                                 [height]="heightBigImage"
                                 (click)="
@@ -981,6 +985,7 @@
                                 imagesTempRightBottomCenter.teethImageLink
                               }}"
                               alt=""
+                              class="toothImage"
                               [width]="widthImage"
                               [height]="heightImage"
                               (click)="
@@ -1025,6 +1030,7 @@
                                 imagesTempLeftBottomCenter.teethImageLink
                               }}"
                               alt=""
+                              class="toothImage"
                               [width]="widthImage"
                               [height]="heightImage"
                               (click)="
@@ -1311,6 +1317,7 @@
                               <img
                                 src="{{ imagesTempRightBottom.teethImageLink }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
@@ -1353,6 +1360,7 @@
                               <img
                                 src="{{ imagesTempLeftBottom.teethImageLink }}"
                                 alt=""
+                                class="toothImage"
                                 [width]="widthImage"
                                 [height]="heightImage"
                                 (click)="
