@@ -91,6 +91,7 @@ import { AdditionalChargeHistoryComponent } from './component/pages/bill/orthodo
 import { BillHistoryComponent } from './component/pages/bill/orthodonticBill/bill-history/bill-history.component';
 import { PageNotFoundComponent } from './component/page-not-found/page-not-found.component';
 import { BillChangesHistoryComponent } from './component/pages/bill/orthodonticBill/bill-changes-history/bill-changes-history.component';
+import { CameraDeviceComponent } from './component/pages/patients/camera-device/camera-device.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -168,6 +169,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     AdditionalChargeHistoryComponent,
     BillHistoryComponent,
     BillChangesHistoryComponent,
+    CameraDeviceComponent,
   ],
   imports: [
     BrowserModule,

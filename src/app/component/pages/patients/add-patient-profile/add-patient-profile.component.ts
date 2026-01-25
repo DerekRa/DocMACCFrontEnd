@@ -64,7 +64,7 @@ export class AddPatientProfileComponent implements OnInit {
     public alertService: AlertService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
@@ -148,10 +148,16 @@ export class AddPatientProfileComponent implements OnInit {
       reader.onload = () => {
         const formData = new FormData();
 
+        this.id = 1; //temporary id
         formData.append('id', this.id);
         formData.append('file', file);
         formData.append('imgLink', this.profileModelService.getImageURL());
-
+        console.log('file name=' + file.name);
+        console.log('file type=' + file.type);
+        console.log('file size=' + file.size);
+        console.log('imgLink=' + this.profileModelService.getImageURL());
+        console.log('id=' + this.id);
+        console.log('form data=' + formData.toString());
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {
             if (response.httpStatus == 'OK') {
@@ -165,7 +171,7 @@ export class AddPatientProfileComponent implements OnInit {
               this.options.autoClose = true;
               this.alertService.success(
                 'Profile picture is ready to be added',
-                this.options
+                this.options,
               );
             }
           },
@@ -176,7 +182,7 @@ export class AddPatientProfileComponent implements OnInit {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done uploading profile picture..')
+          () => console.log('Done uploading profile picture..'),
         );
       };
     }
@@ -211,11 +217,11 @@ export class AddPatientProfileComponent implements OnInit {
     console.log('parentsGuardian' + this.form.value['parentsGuardian']);
     console.log(
       'parentsGuardianOccupation:' +
-        this.form.value['parentsGuardianOccupation']
+        this.form.value['parentsGuardianOccupation'],
     );
     console.log('referralName:' + this.form.value['referralName']);
     console.log(
-      'reasonDentalConsultation:' + this.form.value['reasonDentalConsultation']
+      'reasonDentalConsultation:' + this.form.value['reasonDentalConsultation'],
     );
     const addProfileModel: ProfileModel = {
       imgLink: this.form.value['imgLink'],
@@ -272,7 +278,7 @@ export class AddPatientProfileComponent implements OnInit {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done creating single profile..')
+      () => console.log('Done creating single profile..'),
     );
   }
 
@@ -411,7 +417,7 @@ export class AddPatientProfileComponent implements OnInit {
       (error: CustomHttpResponse) => {
         console.log(error);
       },
-      () => console.log('Done getting single profile..')
+      () => console.log('Done getting single profile..'),
     );
   }
 }

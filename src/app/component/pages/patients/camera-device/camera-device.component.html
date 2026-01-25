@@ -1,0 +1,24 @@
+<div class="col-5">
+  <button
+    type="button"
+    class="btn btn-primary"
+    (click)="startCamera()"
+    *ngIf="startCaptureHidden"
+  >
+    Take a Photo
+  </button>
+  <video #videoElement autoplay *ngIf="startCapture"></video>
+  <button
+    type=""
+    class="btn btn-primary"
+    (click)="capture()"
+    *ngIf="startCapture"
+  >
+    Save Photo
+  </button>
+  <canvas #canvasElement style="display: none"></canvas>
+  <img [src]="capturedImage" *ngIf="capturedImage" />
+  <a [href]="capturedImage" download="webcam-image.png" *ngIf="capturedImage">
+    Download Image
+  </a>
+</div>
