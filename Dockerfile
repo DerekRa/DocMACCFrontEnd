@@ -1,15 +1,16 @@
+# FROM node:22-alpine
 FROM node:22-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY . /app
 
 RUN npm install -g @angular/cli
 
 RUN npm install
 
-CMD ["ng", "serve", "--host", "127.0.0.1"]
-# CMD ["ng", "serve", "--host", "0.0.0.0"]
+# CMD ["ng", "serve", "--host", "127.0.0.1"]
+CMD ["ng", "serve", "--host", "0.0.0.0"]
 
 EXPOSE 4200
 
