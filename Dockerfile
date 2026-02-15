@@ -1,16 +1,19 @@
-FROM node:alpine
+FROM node:22-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . /usr/src/app
+COPY . .
 
 RUN npm install -g @angular/cli
 
 RUN npm install
 
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+CMD ["ng", "serve", "--host", "127.0.0.1"]
+# CMD ["ng", "serve", "--host", "0.0.0.0"]
 
 EXPOSE 4200
+
+# ENV REACT_APP_KEYCLOAK_URL=localhost
 # ==================================
 # FROM nginx:alpine
 # COPY /dist/docmeyanneccorpuz /usr/share/docmeyanneccorpuz/html
