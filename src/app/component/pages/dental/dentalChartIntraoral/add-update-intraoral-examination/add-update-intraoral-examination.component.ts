@@ -54,7 +54,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
 
     let currentDateTime = this.datepipe.transform(
       new Date(),
-      'MM/dd/yyyy h:mm:ss'
+      'MM/dd/yyyy h:mm:ss',
     );
     console.log(currentDateTime);
     let currentDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
@@ -63,7 +63,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     this.onGetData(this.id, this.teethNumbering, currentDate + '');
     this.onGetProfileModel();
     console.log(
-      'this.intraoralExaminationResponse = ' + this.intraoralExaminationResponse
+      'this.intraoralExaminationResponse = ' +
+        this.intraoralExaminationResponse,
     );
     this.onGetToothNumbers('TemporaryTeeth', 'top', 'StatusRight', 'desc');
     this.onGetToothNumbers('TemporaryTeeth', 'top', 'StatusLeft', 'asc');
@@ -71,20 +72,20 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       'PermanentTeeth',
       'topCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers('PermanentTeeth', 'topCenter', 'StatusLeft', 'asc');
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusLeft',
-      'asc'
+      'asc',
     );
     this.onGetToothNumbers('TemporaryTeeth', 'bottom', 'StatusRight', 'desc');
     this.onGetToothNumbers('TemporaryTeeth', 'bottom', 'StatusLeft', 'asc');
@@ -105,7 +106,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     public matRippleModule: MatRippleModule,
     public matDatepickerModule: MatDatepickerModule,
     private fb: FormBuilder, // public datepipe: DatePipe
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
   ) {
     this.dentalChartDesignResponseForm = this.fb.group({
       kindsOfTeeth: ['', this.validatorData('required')],
@@ -199,7 +200,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     this.toothNumbersDentalChart.push(...this.listToothNumbersGroupOne);
     this.toothNumbersDentalChart.push(...this.listToothNumbersGroupTwo);
     this.toothNumbersDentalChart.sort((a, b) => a - b);
-    this.toothNumbersSorted = this.toothNumbersDentalChart;
+    // this.toothNumbersSorted = this.toothNumbersDentalChart;
   }
   public id: any;
   public isLoggedIn = false;
@@ -645,6 +646,14 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     63, 62, 61, 53, 52, 51, 13, 12, 11, 21, 22, 23, 43, 42, 41, 33, 32, 31, 83,
     82, 81, 73, 72, 71,
   ];
+  public pagingToothNumbersGroupOne: any[] = [
+    75, 74, 73, 72, 71, 81, 82, 83, 84, 85, 55, 54, 53, 52, 51, 61, 62, 63, 64,
+    65,
+  ];
+  public pagingToothNumbersGroupTwo: any[] = [
+    38, 37, 36, 35, 34, 33, 32, 31, 41, 42, 43, 44, 45, 46, 47, 48, 18, 17, 16,
+    15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28,
+  ];
   public toothNumbersDentalChart: any[] = [];
   public toothNumbersSorted: any[] = [];
   public previousToothNumber: any;
@@ -653,7 +662,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   public newDataToInsert = false;
   public isDisabledToothNumbersGroupOne = false;
   public isDisabledToothNumbersGroupTwo = false;
-  public isTrackHistory = false;
+  public isTrackHistory = true;
 
   // public conditionsChecked = false;
   // public restorationsChecked = false;
@@ -735,7 +744,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   private onGetData(
     id: number,
     teethNumbering: number,
-    dateOfProcedure: string
+    dateOfProcedure: string,
   ) {
     const urlPathName = window.location.pathname;
     // console.log('urlPathName = ' + urlPathName);
@@ -753,7 +762,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
             this.newDataToInsert = false;
           }
           console.log(
-            'createdBy name=' + this.intraoralExaminationResponse?.createdByName
+            'createdBy name=' +
+              this.intraoralExaminationResponse?.createdByName,
           );
           console.log('this.newDataToInsert=' + this.newDataToInsert);
           let dentureDBList: any[] = [];
@@ -785,16 +795,16 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                       ?.conditionProcedureSurfaceRemarksResponse
                       ?.removablePartialDentureNote
                   : i == 1
-                  ? this.intraoralExaminationResponse
-                      ?.conditionProcedureGroupings
-                      ?.conditionProcedureSurfaceRemarksResponse
-                      ?.completeDentureNote
-                  : i == 2
-                  ? this.intraoralExaminationResponse
-                      ?.conditionProcedureGroupings
-                      ?.conditionProcedureSurfaceRemarksResponse
-                      ?.almostCompleteDentureNote
-                  : '',
+                    ? this.intraoralExaminationResponse
+                        ?.conditionProcedureGroupings
+                        ?.conditionProcedureSurfaceRemarksResponse
+                        ?.completeDentureNote
+                    : i == 2
+                      ? this.intraoralExaminationResponse
+                          ?.conditionProcedureGroupings
+                          ?.conditionProcedureSurfaceRemarksResponse
+                          ?.almostCompleteDentureNote
+                      : '',
               checked:
                 this.intraoralExaminationResponse?.conditionProcedureGroupings
                   ?.denture[i].checked,
@@ -862,7 +872,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
           console.log('Fill conditions on get action');
           console.log(
             this.intraoralExaminationResponse?.conditionProcedureGroupings
-              ?.conditions.length
+              ?.conditions.length,
           );
           console.log('this.conditionList value');
           console.log(this.conditionList);
@@ -872,28 +882,28 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                 ?.conditions.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.conditions
-                : this.conditionList
+                : this.conditionList,
             ),
             restorations: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.restorations.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.restorations
-                : this.restorationList
+                : this.restorationList,
             ),
             restorationsInlay: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.restorationsInlay.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.restorationsInlay
-                : this.restorationInlayList
+                : this.restorationInlayList,
             ),
             restorationsOnlay: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.restorationsOnlay.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.restorationsOnlay
-                : this.restorationOnlayList
+                : this.restorationOnlayList,
             ),
 
             prosthetics: this.fb.array(
@@ -901,34 +911,34 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                 ?.prosthetics.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.prosthetics
-                : this.prostheticsList
+                : this.prostheticsList,
             ),
             denture: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.denture.length != 0
                 ? dentureDBList
-                : this.dentureList
+                : this.dentureList,
             ),
             periodontal: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.periodontal.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.periodontal
-                : this.periodontalList
+                : this.periodontalList,
             ),
             periodontalFluoride: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.periodontalFluoride.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.periodontalFluoride
-                : this.periodontalFluorideList
+                : this.periodontalFluorideList,
             ),
             surgery: this.fb.array(
               this.intraoralExaminationResponse?.conditionProcedureGroupings
                 ?.surgery.length != 0
                 ? this.intraoralExaminationResponse?.conditionProcedureGroupings
                     ?.surgery
-                : this.surgeryList
+                : this.surgeryList,
             ),
             conditionProcedureSurfaceRemarksResponse:
               this.conditionProcedureSurfaceRemarksForm,
@@ -936,7 +946,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
           this.toothNumbersId = [];
           this.toothNumbersValue = [];
           this.toothNumbersId.push(
-            this.intraoralExaminationResponse?.dentalChartDesignId
+            this.intraoralExaminationResponse?.dentalChartDesignId,
           );
           this.toothNumbersValue.push(Number(teethNumbering));
           this.form = this.fb.group({
@@ -952,7 +962,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
               this.intraoralExaminationResponse?.dentalChartDesignResponse,
             conditionProcedureGroupings: this.conditionProcedureGroupingsForm,
             surfaceCheckResponses: this.fb.array(
-              this.intraoralExaminationResponse?.surfaceCheckResponses
+              this.intraoralExaminationResponse?.surfaceCheckResponses,
             ),
           });
           console.log(this.form.value);
@@ -960,14 +970,14 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         (error: any) => {
           console.log('error ==' + JSON.stringify(error));
         },
-        () => console.log('Done getting Intraoral Examination response..')
+        () => console.log('Done getting Intraoral Examination response..'),
       );
   }
   private onGetToothNumbers(
     kindsOfTeeth: string,
     teethArea: string,
     teethPositionStatus: string,
-    sorting: string
+    sorting: string,
   ) {
     this.intraoralExaminationService
       .getToothNumbersDisplay(
@@ -975,7 +985,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         kindsOfTeeth,
         teethArea,
         teethPositionStatus,
-        sorting
+        sorting,
       )
       .subscribe(
         (response: ToothNumbersDentalChart[]) => {
@@ -994,7 +1004,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1015,7 +1025,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1039,7 +1049,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1060,7 +1070,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1084,7 +1094,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1108,7 +1118,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1129,7 +1139,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1150,7 +1160,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
                     ? true
                     : false,
                 disableCheckboxes: this.disableCheckboxes(
-                  response[i].teethNumbering
+                  response[i].teethNumbering,
                 ),
               });
             }
@@ -1158,7 +1168,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
           }
         },
         (error: any) => console.log(error),
-        () => console.log('Done getting default numbers design..')
+        () => console.log('Done getting default numbers design..'),
       );
   }
   public onGetProfileModel(): void {
@@ -1169,7 +1179,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       (error: any) => {
         console.log(error);
       },
-      () => console.log('Done getting single profile..')
+      () => console.log('Done getting single profile..'),
     );
   }
   get getFormConditions() {
@@ -1318,7 +1328,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     console.log('onCheckboxChangePeriodontalFluoride event = ' + event);
     console.log(
       'onCheckboxChangePeriodontalFluoride event.target = ' +
-        event?.target?.value
+        event?.target?.value,
     );
     if (event === null || event.target === undefined) {
       return;
@@ -1330,10 +1340,10 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       //check if present teeth and decayed is checked
       if (this.isPresentTeethAndDecayedAndOthersChecked()) {
         const isInGroupOne = this.listToothNumbersGroupOne.includes(
-          Number(this.teethNumbering)
+          Number(this.teethNumbering),
         );
         const isInGroupTwo = this.listToothNumbersGroupTwo.includes(
-          Number(this.teethNumbering)
+          Number(this.teethNumbering),
         );
         console.log('isInGroupOne = ' + isInGroupOne);
         console.log('isInGroupTwo = ' + isInGroupTwo);
@@ -1458,10 +1468,10 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       //check if present teeth and decayed is checked
       if (this.isPresentTeethAndDecayedAndOthersChecked()) {
         const isInGroupOne = this.listToothNumbersGroupOne.includes(
-          Number(this.teethNumbering)
+          Number(this.teethNumbering),
         );
         const isInGroupTwo = this.listToothNumbersGroupTwo.includes(
-          Number(this.teethNumbering)
+          Number(this.teethNumbering),
         );
         console.log('isInGroupOne = ' + isInGroupOne);
         console.log('isInGroupTwo = ' + isInGroupTwo);
@@ -1527,7 +1537,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         (c: any) =>
           (keys.formControlName &&
             c.formControlName === keys.formControlName) ||
-          (keys.value && (c.value === keys.value || c.name === keys.value))
+          (keys.value && (c.value === keys.value || c.name === keys.value)),
       );
 
     const present = findCondition({
@@ -1558,15 +1568,22 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       formControlName: 'extracted',
       value: 'Extracted',
     });
+    const supernumerary = findCondition({
+      formControlName: 'supernumerary',
+      value: 'Supernumerary Tooth',
+    });
 
     return !!(
-      (present && present.checked) ||
-      (decayed && decayed.checked) ||
-      (missingCaries && missingCaries.checked) ||
-      (missingCauses && missingCauses.checked) ||
-      (impactedTooth && impactedTooth.checked) ||
-      (unerupted && unerupted.checked) ||
-      (extracted && extracted.checked)
+      (
+        (present && present.checked) ||
+        (decayed && decayed.checked) ||
+        (supernumerary && supernumerary.checked)
+      )
+      // (missingCaries && missingCaries.checked) ||
+      // (missingCauses && missingCauses.checked) ||
+      // (impactedTooth && impactedTooth.checked) ||
+      // (unerupted && unerupted.checked) ||
+      // (extracted && extracted.checked)
     );
   }
   private isPresentTeethAndDecayedChecked_alt(): boolean {
@@ -1668,7 +1685,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     } else {
       const indexId: number = this.toothNumbersId.indexOf(Number(idNumber[0]));
       const indexNumber: number = this.toothNumbersValue.indexOf(
-        Number(idNumber[1])
+        Number(idNumber[1]),
       );
       if (indexId !== -1) {
         this.toothNumbersId.splice(indexId, 1);
@@ -1701,20 +1718,20 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       'PermanentTeeth',
       'topCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers('PermanentTeeth', 'topCenter', 'StatusLeft', 'asc');
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusLeft',
-      'asc'
+      'asc',
     );
     this.onGetToothNumbers('TemporaryTeeth', 'bottom', 'StatusRight', 'desc');
     this.onGetToothNumbers('TemporaryTeeth', 'bottom', 'StatusLeft', 'asc');
@@ -1782,8 +1799,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         JSON.stringify(
           this.form.value['conditionProcedureGroupings'][
             'conditionProcedureSurfaceRemarksResponse'
-          ]
-        )
+          ],
+        ),
       );
       const combineGroupings = conditions
         .concat(denture)
@@ -1813,6 +1830,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
         surfaceCheckRequests: this.form.value['surfaceCheckResponses'],
         recordTracking: this.recordAction,
       };
+      console.log('historyTracking = ' + this.isTrackHistory);
+      console.log('recordTracking = ' + this.recordAction);
       console.log('conditionProcedureRequest 00');
       console.log(JSON.stringify(conditionProcedureRequest));
       console.log('conditionProcedureRequest 01');
@@ -1831,13 +1850,13 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 messageSplit[0] + strLink,
-                this.options
+                this.options,
               );
               //Go to current date
               // let currentDateTime = this.datepipe.transform(new Date(), 'MM/dd/yyyy h:mm:ss');
               let currentDate = this.datepipe.transform(
                 new Date(),
-                'yyyy-MM-dd'
+                'yyyy-MM-dd',
               );
               this.resetAllCheckboxes();
               this.onGetData(this.id, this.teethNumbering, currentDate + '');
@@ -1850,7 +1869,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating single profile..')
+          () => console.log('Done updating single profile..'),
         );
     }
     this.toothNumbersId = [];
@@ -1908,6 +1927,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
 
   private getNextByValue(): number | undefined {
     let toothNumer = Number(this.teethNumbering);
+    this.toothNumbersSorted =
+      this.pagingToothNumbersGroupOne.indexOf(toothNumer) !== -1
+        ? this.pagingToothNumbersGroupOne
+        : this.pagingToothNumbersGroupTwo.indexOf(toothNumer) !== -1
+          ? this.pagingToothNumbersGroupTwo
+          : [];
     const index = this.toothNumbersSorted.indexOf(toothNumer);
     if (index !== -1 && index < this.toothNumbersSorted.length - 1) {
       return this.toothNumbersSorted[index + 1];
@@ -1916,6 +1941,12 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   }
   private getPreviousByValue(): number | undefined {
     let toothNumer = Number(this.teethNumbering);
+    this.toothNumbersSorted =
+      this.pagingToothNumbersGroupOne.indexOf(toothNumer) !== -1
+        ? this.pagingToothNumbersGroupOne
+        : this.pagingToothNumbersGroupTwo.indexOf(toothNumer) !== -1
+          ? this.pagingToothNumbersGroupTwo
+          : [];
     const index = this.toothNumbersSorted.indexOf(toothNumer);
     if (index !== -1 && index <= this.toothNumbersSorted.length - 1) {
       return this.toothNumbersSorted[index - 1];

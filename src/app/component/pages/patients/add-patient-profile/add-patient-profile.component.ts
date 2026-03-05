@@ -83,14 +83,7 @@ export class AddPatientProfileComponent implements OnInit {
             Validators.maxLength(100),
           ],
         ],
-        middleName: [
-          '',
-          [
-            Validators.required,
-            Validators.minLength(2),
-            Validators.maxLength(100),
-          ],
-        ],
+        middleName: ['', [Validators.minLength(2), Validators.maxLength(100)]],
         firstName: [
           '',
           [
@@ -330,11 +323,7 @@ export class AddPatientProfileComponent implements OnInit {
           ],
           middleName: [
             this.profileModel?.name?.middleName,
-            [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(100),
-            ],
+            [Validators.minLength(2), Validators.maxLength(100)],
           ],
           firstName: [
             this.profileModel?.name?.firstName,

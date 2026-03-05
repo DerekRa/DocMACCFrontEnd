@@ -9,7 +9,7 @@
           <a routerLink="/patients-profile">List of Patients</a>
         </li>
         <li class="breadcrumb-item">
-          <a routerLink="/patient-profile/{{ id }}">View Profile</a>
+          <a [routerLink]="['/patient-profile', id]">View Profile</a>
         </li>
         <li class="breadcrumb-item active" aria-current="page">Update</li>
       </ol>
@@ -25,8 +25,11 @@
           />
         </div>
         <div class="col-5 printUpdateGrid">
-          <!-- Hide muna, to integrate later after camera testing
-          <app-camera-device> </app-camera-device> -->
+          <!-- Hide muna, to integrate later after camera testing -->
+          <app-camera-device
+            [id]="id"
+            (pictureCaptured)="onPictureCaptured($event)"
+          ></app-camera-device>
           <label for="imgLink" class="form-label">
             Upload Image <span class="fw-lighter fst-italic">(.jpg, .png)</span>
           </label>
@@ -103,33 +106,14 @@
               </div>
             </div>
             <div class="col">
-              <label for="middleName" class="font-semibold"
-                ><span class="astrk">&ast;</span>Middle Name</label
-              >
+              <label for="middleName" class="font-semibold">Middle Name</label>
               <input
                 type="text"
                 formControlName="middleName"
                 class="form-control form-control-sm"
                 name="middleName"
                 id="mname"
-                [ngClass]="{
-                  'is-invalid': submitted && f['middleName'].errors,
-                }"
               />
-              <div
-                *ngIf="submitted && f['middleName'].errors"
-                class="invalid-feedback"
-              >
-                <div *ngIf="f['middleName'].errors['required']">
-                  Middle Name is required
-                </div>
-                <div *ngIf="f['middleName'].errors['minlength']">
-                  Middle Name must be at least 2 characters
-                </div>
-                <div *ngIf="f['middleName'].errors['maxlength']">
-                  Middle Name must not exceed 100 characters
-                </div>
-              </div>
             </div>
             <div class="col">
               <label for="nickName" class="font-semibold">Nick Name</label>

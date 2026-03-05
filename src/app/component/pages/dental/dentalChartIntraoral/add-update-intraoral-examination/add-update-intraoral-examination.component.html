@@ -93,14 +93,14 @@
                 placeholder="YYYY-MM-DD"
                 value="{{
                   intraoralExaminationResponse?.dateOfProcedure
-                    | date : 'yyyy-MM-dd'
+                    | date: 'yyyy-MM-dd'
                 }}"
                 [matDatepicker]="picker"
                 (dateChange)="onChangeDateOfProcedure($event)"
                 min="1990-01-01"
-                max="{{ currentDate | date : 'yyyy-MM-dd' }}"
+                max="{{ currentDate | date: 'yyyy-MM-dd' }}"
                 [ngClass]="{
-                  'is-invalid': submitted && f['dateOfProcedure'].errors
+                  'is-invalid': submitted && f['dateOfProcedure'].errors,
                 }"
                 readonly
               />
@@ -154,6 +154,7 @@
               href="/dental-records/dental-chart/intraoral-examination/add-record/{{
                 id
               }}/update-tooth-condition/{{ previousToothNumber }}"
+              *ngIf="recordAction == 'add-record'; else prevTreatmentPlanRecord"
             >
               {{
                 previousToothNumber
@@ -161,6 +162,20 @@
                   : ""
               }}
             </a>
+            <ng-template #prevTreatmentPlanRecord>
+              <a
+                class="link-dark"
+                href="/dental-records/dental-chart/intraoral-examination/add-treatmentplan-record/{{
+                  id
+                }}/update-tooth-condition/{{ previousToothNumber }}"
+              >
+                {{
+                  previousToothNumber
+                    ? "< Previous Tooth - " + previousToothNumber
+                    : ""
+                }}
+              </a>
+            </ng-template>
             <span style="color: rgb(224, 216, 216)"
               >&nbsp;{{
                 previousToothNumber && nextToothNumber ? " | " : ""
@@ -171,11 +186,26 @@
               href="/dental-records/dental-chart/intraoral-examination/add-record/{{
                 id
               }}/update-tooth-condition/{{ nextToothNumber }}"
+              *ngIf="recordAction == 'add-record'; else nextTreatmentPlanRecord"
             >
               {{
                 nextToothNumber ? "Next Tooth - " + nextToothNumber + " > " : ""
               }}
             </a>
+            <ng-template #nextTreatmentPlanRecord>
+              <a
+                class="link-dark"
+                href="/dental-records/dental-chart/intraoral-examination/add-treatmentplan-record/{{
+                  id
+                }}/update-tooth-condition/{{ nextToothNumber }}"
+              >
+                {{
+                  nextToothNumber
+                    ? "Next Tooth - " + nextToothNumber + " > "
+                    : ""
+                }}
+              </a>
+            </ng-template>
           </div>
         </div>
       </div>
@@ -953,7 +983,7 @@
             </div>
             <!-- Prosthetics -->
             <div class="col-md-2 fw-light">
-              <span class="fw-bold">Prosthetics</span>
+              <span class="fw-bold prosthetics-color">Prosthetics</span>
               <div formGroupName="conditionProcedureGroupings">
                 <div
                   class="form-check"
@@ -1307,6 +1337,7 @@
               class="form-check-input"
               type="checkbox"
               (change)="onCheckboxTrackHistory($event)"
+              [checked]="isTrackHistory"
             />
             <label>Update history for dental chart tracking?</label>
           </div>

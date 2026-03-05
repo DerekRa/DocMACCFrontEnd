@@ -1,4 +1,4 @@
-<div class="col-5">
+<div class="col-8 printUpdateGrid">
   <button
     type="button"
     class="btn btn-primary"
@@ -8,17 +8,27 @@
     Take a Photo
   </button>
   <video #videoElement autoplay *ngIf="startCapture"></video>
-  <button
-    type=""
-    class="btn btn-primary"
-    (click)="capture()"
-    *ngIf="startCapture"
-  >
-    Save Photo
-  </button>
+  <div class="d-flex">
+    <button
+      type="button"
+      class="btn btn-primary btn-sm me-2"
+      (click)="capture()"
+      *ngIf="startCapture"
+    >
+      Save Photo
+    </button>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm ms-auto"
+      (click)="stopCamera()"
+      *ngIf="startCapture"
+    >
+      Close Camera
+    </button>
+  </div>
   <canvas #canvasElement style="display: none"></canvas>
-  <img [src]="capturedImage" *ngIf="capturedImage" />
+  <!--<img [src]="capturedImage" *ngIf="capturedImage" />
   <a [href]="capturedImage" download="webcam-image.png" *ngIf="capturedImage">
     Download Image
-  </a>
+  </a> -->
 </div>

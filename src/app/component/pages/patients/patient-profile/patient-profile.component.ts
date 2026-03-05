@@ -9,6 +9,7 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
 import { AlertService } from 'src/app/service/_alert/alert.service';
 import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
+import { PictureSharingService } from 'src/app/service/clientProfile/picture-sharing.service';
 import { MedicalHistoryService } from 'src/app/service/medicalHistory/medical-history.service';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
@@ -31,12 +32,13 @@ export class PatientProfileComponent implements OnInit {
   public userProfile: KeycloakProfile | null = null;
   constructor(
     private profileModelService: ProfileModelService,
+    private pictureService: PictureSharingService,
     private medicalHistoryService: MedicalHistoryService,
     private exportPdfService: ExportPdfService,
     public alertService: AlertService,
     private router: Router,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
@@ -44,8 +46,18 @@ export class PatientProfileComponent implements OnInit {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
     this.id = this.route.snapshot.params['id'];
+
+    // subscribe early so we can immediately apply any picture already shared
+    this.pictureService.getPicture().subscribe((picture) => {
+      if (picture && this.profileModel) {
+        this.profileModel.imgLink = picture;
+      }
+    });
+
     this.onGetProfileModel(this.id);
     this.onGetMedicalModel(this.id);
+
+    console.log('Patient ID from route: ' + this.id);
   }
 
   public deletePatientProfile(id: any) {
@@ -70,7 +82,7 @@ export class PatientProfileComponent implements OnInit {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done deleting single profile..')
+      () => console.log('Done deleting single profile..'),
     );
   }
 
@@ -83,13 +95,19 @@ export class PatientProfileComponent implements OnInit {
       (response) => {
         console.log('res=' + JSON.stringify(response));
         this.profileModel = response;
+        // if a picture has been shared by the updater, keep that instead of the
+        // value returned by the server (avoids flicker/old image on navigation)
+        const shared = this.pictureService.getCurrentValue();
+        if (shared) {
+          this.profileModel.imgLink = shared;
+        }
         this.profileModel.age =
           this.computeAgeEvent(this.profileModel.birthday) + ' years old';
       },
       (error: any) => {
         console.log(error);
       },
-      () => console.log('Done getting single profile..')
+      () => console.log('Done getting single profile..'),
     );
   }
 
@@ -105,7 +123,7 @@ export class PatientProfileComponent implements OnInit {
       () => {
         console.log('medical data = ' + this.medicalModel);
         console.log('Done getting single profile..');
-      }
+      },
     );
   }
 
@@ -114,7 +132,7 @@ export class PatientProfileComponent implements OnInit {
       (response: any) => {
         if (response.type === HttpEventType.DownloadProgress) {
           this.percentDone = Math.round(
-            (100 * response.loaded) / response.total
+            (100 * response.loaded) / response.total,
           );
           console.log(`Downloaded ${this.percentDone}%`);
         }
@@ -137,7 +155,7 @@ export class PatientProfileComponent implements OnInit {
       (error: any) => {
         console.log(error);
       },
-      () => console.log('Done getting pdf profile..')
+      () => console.log('Done getting pdf profile..'),
     );
   }
 

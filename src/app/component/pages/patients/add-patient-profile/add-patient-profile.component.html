@@ -100,33 +100,14 @@
               </div>
             </div>
             <div class="col">
-              <label for="mname" class="font-semibold"
-                ><span class="astrk">&ast;</span>Middle Name</label
-              >
+              <label for="mname" class="font-semibold">Middle Name</label>
               <input
                 type="text"
                 formControlName="middleName"
                 class="form-control form-control-sm"
                 name="middleName"
                 id="mname"
-                [ngClass]="{
-                  'is-invalid': submitted && f['middleName'].errors
-                }"
               />
-              <div
-                *ngIf="submitted && f['middleName'].errors"
-                class="invalid-feedback"
-              >
-                <div *ngIf="f['middleName'].errors['required']">
-                  Middle Name is required
-                </div>
-                <div *ngIf="f['middleName'].errors['minlength']">
-                  Middle Name must be at least 2 characters
-                </div>
-                <div *ngIf="f['middleName'].errors['maxlength']">
-                  Middle Name must not exceed 100 characters
-                </div>
-              </div>
             </div>
             <div class="col">
               <label for="nname" class="font-semibold">Nick Name</label>
@@ -162,7 +143,7 @@
                 class="form-control form-control-sm"
                 name="birthday"
                 id="birthdayId"
-                max="{{ date | date : 'yyyy-MM-dd' }}"
+                max="{{ date | date: 'yyyy-MM-dd' }}"
                 (change)="computeAgeEvent($event)"
                 [ngClass]="{ 'is-invalid': submitted && f['birthday'].errors }"
               />
@@ -250,7 +231,7 @@
                 name="nationality"
                 id="nationalityId"
                 [ngClass]="{
-                  'is-invalid': submitted && f['nationality'].errors
+                  'is-invalid': submitted && f['nationality'].errors,
                 }"
               />
               <div
@@ -271,7 +252,7 @@
                 name="occupation"
                 id="occupationId"
                 [ngClass]="{
-                  'is-invalid': submitted && f['occupation'].errors
+                  'is-invalid': submitted && f['occupation'].errors,
                 }"
               />
               <div
@@ -297,7 +278,7 @@
                 cols="20"
                 rows="3"
                 [ngClass]="{
-                  'is-invalid': submitted && f['homeAddress'].errors
+                  'is-invalid': submitted && f['homeAddress'].errors,
                 }"
               ></textarea>
               <div
@@ -326,7 +307,7 @@
                 name="homeNumber"
                 id="hnumber"
                 [ngClass]="{
-                  'is-invalid': submitted && f['homeNumber'].errors
+                  'is-invalid': submitted && f['homeNumber'].errors,
                 }"
               />
               <div
@@ -347,7 +328,7 @@
                 name="officeNumber"
                 id="onumber"
                 [ngClass]="{
-                  'is-invalid': submitted && f['officeNumber'].errors
+                  'is-invalid': submitted && f['officeNumber'].errors,
                 }"
               />
               <div
@@ -370,7 +351,7 @@
                 name="cellNumber"
                 id="cnumber"
                 [ngClass]="{
-                  'is-invalid': submitted && f['cellNumber'].errors
+                  'is-invalid': submitted && f['cellNumber'].errors,
                 }"
               />
               <div
@@ -415,7 +396,7 @@
                 name="emailAddress"
                 id="eaddress"
                 [ngClass]="{
-                  'is-invalid': submitted && f['emailAddress'].errors
+                  'is-invalid': submitted && f['emailAddress'].errors,
                 }"
               />
               <div
@@ -438,7 +419,7 @@
                 name="dentalInsurance"
                 id="dinsurance"
                 [ngClass]="{
-                  'is-invalid': submitted && f['dentalInsurance'].errors
+                  'is-invalid': submitted && f['dentalInsurance'].errors,
                 }"
               />
               <div
@@ -461,9 +442,9 @@
                 name="firstDentalVisit"
                 id="fdvisit"
                 min="1990-01-01"
-                max="{{ date | date : 'yyyy-MM-dd' }}"
+                max="{{ date | date: 'yyyy-MM-dd' }}"
                 [ngClass]="{
-                  'is-invalid': submitted && f['firstDentalVisit'].errors
+                  'is-invalid': submitted && f['firstDentalVisit'].errors,
                 }"
               />
               <div
@@ -509,7 +490,7 @@
                 name="parentsGuardian"
                 id="pgname"
                 [ngClass]="{
-                  'is-invalid': submitted && f['parentsGuardian'].errors
+                  'is-invalid': submitted && f['parentsGuardian'].errors,
                 }"
               />
               <div
@@ -536,7 +517,7 @@
                 id="pgoccupationId"
                 [ngClass]="{
                   'is-invalid':
-                    submitted && f['parentsGuardianOccupation'].errors
+                    submitted && f['parentsGuardianOccupation'].errors,
                 }"
               />
               <div
@@ -563,7 +544,7 @@
                 name="referralName"
                 id="refname"
                 [ngClass]="{
-                  'is-invalid': submitted && f['referralName'].errors
+                  'is-invalid': submitted && f['referralName'].errors,
                 }"
               />
               <div
@@ -593,7 +574,7 @@
                 rows="2"
                 [ngClass]="{
                   'is-invalid':
-                    submitted && f['reasonDentalConsultation'].errors
+                    submitted && f['reasonDentalConsultation'].errors,
                 }"
                 >{{ profileModel?.minor?.reasonDentalConsultation }}</textarea
               >

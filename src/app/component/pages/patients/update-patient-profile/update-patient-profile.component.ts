@@ -7,12 +7,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { co } from '@fullcalendar/core/internal-common';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { AlertService } from 'src/app/service/_alert/alert.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
+import { PictureSharingService } from 'src/app/service/clientProfile/picture-sharing.service';
 
 @Component({
   selector: 'app-update-patient-profile',
@@ -59,14 +61,27 @@ export class UpdatePatientProfileComponent implements OnInit {
     public alertService: AlertService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
+    private pictureService: PictureSharingService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
     this.id = this.route.snapshot.params['id'];
+
+    // listen for any shared picture updates so the edit page shows the latest image
+    this.pictureService.getPicture().subscribe((pic) => {
+      if (pic) {
+        this.picture = pic;
+        if (this.form) {
+          this.form.patchValue({ imgLink: pic });
+        }
+      }
+    });
+
     this.onGetProfileModel(this.id);
   }
 
@@ -134,7 +149,7 @@ export class UpdatePatientProfileComponent implements OnInit {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done updating single profile..')
+      () => console.log('Done updating single profile..'),
     );
   }
 
@@ -143,16 +158,17 @@ export class UpdatePatientProfileComponent implements OnInit {
 
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
-
+      console.log('01');
       reader.readAsDataURL(file);
       reader.onload = () => {
         const formData = new FormData();
-
+        console.log('02');
         formData.append('id', this.id);
         formData.append('file', file);
+        console.log(file);
         formData.append('imgLink', this.profileModelService.getImageURL());
         console.log(this.profileModelService.getImageURL());
-
+        console.log('03');
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {
             if (response.httpStatus == 'OK') {
@@ -162,7 +178,9 @@ export class UpdatePatientProfileComponent implements OnInit {
                 imgLink:
                   this.profileModelService.getImageURL() + messageSplit[1],
               });
+              this.picture = 'assets/images/img2x2.png';
               this.picture = reader.result as string;
+              this.pictureService.setPicture(this.picture);
               this.alertService.success(messageSplit[0], this.options);
             }
           },
@@ -173,17 +191,76 @@ export class UpdatePatientProfileComponent implements OnInit {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done uploading profile picture..')
+          () => console.log('Done uploading profile picture..'),
         );
       };
     }
+  }
+
+  /**
+   * Handler for image returned from camera
+   */
+  public onPictureCaptured(payload: { dataUrl: string; file: File }) {
+    // update preview and form value
+    this.picture = payload.dataUrl;
+    this.form.patchValue({ imgLink: payload.dataUrl });
+    console.log('Received picture from camera: ', payload);
+    // upload same as file input does
+    const reader = new FileReader();
+    reader.readAsDataURL(payload.file);
+    reader.onload = () => {
+      const formData = new FormData();
+      formData.append('id', this.id);
+
+      formData.append('file', payload.file);
+      formData.append('imgLink', this.profileModelService.getImageURL());
+      console.log('id: ', this.id);
+      console.log('Uploading picture captured from camera: ', payload.file);
+      console.log(
+        'Image URL from service: ',
+        this.profileModelService.getImageURL(),
+      );
+      console.log('FormData to be sent: ', formData);
+      console.log('Reader result (data URL): ', reader.result);
+
+      this.profileModelService.uploadPicture(formData).subscribe(
+        (response: CustomHttpResponse) => {
+          if (response.httpStatus == 'OK') {
+            const messageSplit = response.message.split(':');
+            this.form.patchValue({
+              imgLink: this.profileModelService.getImageURL() + messageSplit[1],
+            });
+            this.picture = 'assets/images/img2x2.png';
+            this.picture = reader.result as string;
+            this.pictureService.setPicture(this.picture);
+            this.alertService.success(messageSplit[0], this.options);
+          }
+        },
+        (error: any) => {
+          const errorResponse: CustomHttpResponse = error['error'];
+          if (errorResponse.httpStatus == 'BAD_REQUEST') {
+            this.alertService.error(errorResponse.message, this.options);
+          }
+        },
+        () => console.log('Done uploading profile picture via camera..'),
+      );
+    };
   }
 
   public onGetProfileModel(id: number): void {
     this.profileModelService.getProfileModel(id).subscribe(
       (response) => {
         this.profileModel = response;
-        this.picture = this.profileModel?.imgLink;
+        // prefer any previously shared picture over server value
+        const shared =
+          this.pictureService.getCurrentValue &&
+          this.pictureService.getCurrentValue();
+        if (shared) {
+          this.picture = shared;
+          this.form.patchValue({ imgLink: shared });
+        } else {
+          this.picture = this.profileModel?.imgLink;
+        }
         this.form = this.formBuilder.group({
           id: [this.profileModel?.id],
           imgLink: [this.profileModel?.imgLink],
@@ -197,11 +274,7 @@ export class UpdatePatientProfileComponent implements OnInit {
           ],
           middleName: [
             this.profileModel?.name?.middleName,
-            [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(100),
-            ],
+            [Validators.minLength(2), Validators.maxLength(100)],
           ],
           firstName: [
             this.profileModel?.name?.firstName,
@@ -284,7 +357,7 @@ export class UpdatePatientProfileComponent implements OnInit {
       (error: CustomHttpResponse) => {
         console.log(error);
       },
-      () => console.log('Done getting single profile..')
+      () => console.log('Done getting single profile..'),
     );
   }
 }
