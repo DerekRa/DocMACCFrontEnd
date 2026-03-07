@@ -15,6 +15,7 @@ import {
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { User } from 'src/app/model/class/authenticate/user.model';
+import { environment } from 'src/environments/environment';
 // import { LoginUser } from 'src/app/model/class/authenticate/login-user';
 // import { IconDirective } from '@coreui/icons-angular';
 // import { KeycloakService } from 'src/app/service/keycloak.service';
@@ -83,7 +84,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public logout() {
-    let redirectURI: string = 'http://localhost:4200/home';
+    let redirectURI: string = `http://${environment.localhost}:4200/home`;
     this.keycloak.logout(redirectURI);
   }
 

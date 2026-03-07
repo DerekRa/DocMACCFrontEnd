@@ -43,7 +43,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
+                  "maximumWarning": "3kb",
                   "maximumError": "4kb"
                 }
               ],
@@ -76,10 +76,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "docmeyanneccorpuz:build:production"
+              "browserTarget": "docmeyanneccorpuz:build:production",
+              "host": "0.0.0.0"
             },
             "development": {
-              "browserTarget": "docmeyanneccorpuz:build:development"
+              "browserTarget": "docmeyanneccorpuz:build:development",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"
