@@ -282,7 +282,13 @@
     </div>
   </ng-template>
   <div class="col-3">
-    <span class="text-lg">Others</span> &nbsp;
+    <span class="text-lg"
+      >Others
+      <span *ngIf="examinationType == 'intraoral-examination'"
+        >(Intra-Oral Camera)</span
+      ></span
+    >
+    &nbsp;
     <button
       *ngIf="
         recordAction == 'add-record' ||

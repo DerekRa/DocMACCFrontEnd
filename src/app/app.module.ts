@@ -90,12 +90,14 @@ function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         url: 'http://localhost:7080/',
+        // url: 'http://192.168.1.2:7080/',
         realm: 'maccDentalclinicRealm',
         clientId: 'maccDentalclinicClient',
       },
       initOptions: {
         pkceMethod: 'S256',
         redirectUri: 'http://localhost:4200/home',
+        // redirectUri: 'http://192.168.1.2:4200/home',
         checkLoginIframe: false,
       },
       loadUserProfileAtStartUp: false,
