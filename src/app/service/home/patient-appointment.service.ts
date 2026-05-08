@@ -1,33 +1,26 @@
-import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpParams,
-  HttpResponse,
-} from '@angular/common/http';
-import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
-import { PatientAppointmentResponse } from 'src/app/model/interface/appointmentModel/patient-appointment-response';
-import { RegularAppointmentResponse } from 'src/app/model/interface/appointmentModel/regular-appointment-response';
-import { PatientPaginationRequest } from 'src/app/model/interface/appointmentModel/patient-pagination-request';
-import { WalkInPatientRequest } from 'src/app/model/interface/appointmentModel/walk-in-patient-request';
-import { RegularPatientRequest } from 'src/app/model/interface/appointmentModel/regular-patient-request';
 import { EventTitleResponse } from 'src/app/model/interface/appointmentModel/event-title-response';
-import { WalkInPatientUpdateRequest } from 'src/app/model/interface/appointmentModel/walk-in-patient-update-request';
-import { KeycloakService } from 'keycloak-angular';
-import { RegularAppointmentRequest } from 'src/app/model/interface/appointmentModel/regular-appointment-request';
+import { PatientAppointmentResponse } from 'src/app/model/interface/appointmentModel/patient-appointment-response';
+import { PatientPaginationRequest } from 'src/app/model/interface/appointmentModel/patient-pagination-request';
 import { RegularAppointmentLatestResponse } from 'src/app/model/interface/appointmentModel/regular-appointment-latest-response';
+import { RegularAppointmentRequest } from 'src/app/model/interface/appointmentModel/regular-appointment-request';
+import { RegularPatientRequest } from 'src/app/model/interface/appointmentModel/regular-patient-request';
+import { WalkInPatientRequest } from 'src/app/model/interface/appointmentModel/walk-in-patient-request';
+import { WalkInPatientUpdateRequest } from 'src/app/model/interface/appointmentModel/walk-in-patient-update-request';
+import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
-// const baseUrl = 'http://localhost:9090/api/v1/appointment';
-// const baseUrl = 'http://localhost:8004/api/v1/appointment'; #old / direct endpoint
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
 @Injectable({
   providedIn: 'root',
 })
 export class PatientAppointmentService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/appointment`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.APPOINTMENT_API_URL}`;
   }
 
   public getAllPatientAppointment(): Observable<

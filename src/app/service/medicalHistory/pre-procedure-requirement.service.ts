@@ -1,13 +1,12 @@
 import { Observable, retry } from 'rxjs';
-
-import { HttpClient, HttpEvent } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { ImageDetails } from 'src/app/model/interface/preProcedureModel/image-details';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
 
-// const baseUrl = 'http://localhost:9090/api/v1/preprocedure/images';
-// const baseUrl = 'http://localhost:8006/api/v1/preprocedure/images';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +14,7 @@ import { environment } from 'src/environments/environment';
 export class PreProcedureRequirementService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/preprocedure/images`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.PRE_PROCEDURE_API_URL}`;
   }
 
   // Backend (getAllImagesDataList)

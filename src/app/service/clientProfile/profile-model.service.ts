@@ -1,20 +1,13 @@
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpEvent,
-  HttpHeaders,
-  HttpResponse,
-} from '@angular/common/http';
 import { Observable, catchError, of, retry } from 'rxjs';
-import { ProfileModelList } from 'src/app/model/interface/profileModel/profile-model-list';
-import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/delete-profile';
 import { Name } from 'src/app/model/interface/profileModel/name';
+import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
+import { ProfileModelList } from 'src/app/model/interface/profileModel/profile-model-list';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
-
-// const baseUrl = 'http://localhost:9090/api/v1/profile';
-// const baseUrl = 'http://localhost:8009/api/v1/profile';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -22,13 +15,13 @@ import { environment } from 'src/environments/environment';
 export class ProfileModelService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/profile`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.PROFILE_API_URL}`;
   }
 
   public getProfileModelList(): Observable<ProfileModelList> {
     return this.http.get<ProfileModelList>(`${this.baseUrl}`);
   }
-  // Not using right now
+  // ** This method is not being used right now **
   public getProfileModelListPerPage(
     pageNo: number,
     pageSize: number,
@@ -43,7 +36,6 @@ export class ProfileModelService {
       },
     );
   }
-
   public getFullNameListPerPage(
     pageNo: number,
     pageSize: number,
@@ -61,7 +53,6 @@ export class ProfileModelService {
       )
       .pipe(retry(2));
   }
-
   public getProfileModel(number: number): Observable<ProfileModel> {
     return this.http.get<ProfileModel>(`${this.baseUrl}/${number}`).pipe(
       retry(3),
@@ -70,11 +61,9 @@ export class ProfileModelService {
       }),
     );
   }
-
   public getImageURL(): string {
     return this.baseUrl + '/picture/';
   }
-
   public createProfileModel(
     profileModel: ProfileModel,
   ): Observable<CustomHttpResponse> {
@@ -82,13 +71,11 @@ export class ProfileModelService {
       .post<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
       .pipe(retry(3));
   }
-
   public uploadPicture(formData: FormData): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}/picture`, formData)
       .pipe(retry(3));
   }
-
   public updateProfileModel(
     profileModel: ProfileModel,
   ): Observable<CustomHttpResponse> {
@@ -96,7 +83,6 @@ export class ProfileModelService {
       .put<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
       .pipe(retry(3));
   }
-
   public deleteProfileModel(
     deleteProfile: DeleteProfileOrMedical,
   ): Observable<CustomHttpResponse> {

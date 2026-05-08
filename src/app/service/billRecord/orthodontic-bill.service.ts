@@ -8,7 +8,6 @@ import { BillDataRequest } from 'src/app/model/interface/billModel/orthodonticBi
 import { BillPaginationRequest } from 'src/app/model/interface/billModel/orthodonticBill/bill-pagination-request';
 import { BreakdownOrBillChangesPaginationRequest } from 'src/app/model/interface/billModel/orthodonticBill/breakdown-or-bill-changes-pagination-request';
 import { BreakdownResponse } from 'src/app/model/interface/billModel/orthodonticBill/breakdown-response';
-import { DataPaginationRequest } from 'src/app/model/interface/billModel/orthodonticBill/data-pagination-request';
 import { OrthodonticBillChangesDataResponse } from 'src/app/model/interface/billModel/orthodonticBill/orthodontic-bill-changes-data-response';
 import { OrthodonticBillDataResponse } from 'src/app/model/interface/billModel/orthodonticBill/orthodontic-bill-data-response';
 import { PaymentDataRequest } from 'src/app/model/interface/billModel/orthodonticBill/payment-data-request';
@@ -18,8 +17,7 @@ import { PaymentUpdateDataRequest } from 'src/app/model/interface/billModel/orth
 import { UpdateBillDataRequest } from 'src/app/model/interface/billModel/orthodonticBill/update-bill-data-request';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
-
-// const baseUrl = 'http://localhost:9090/api/v1/orthodonticBill';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +25,8 @@ import { environment } from 'src/environments/environment';
 export class OrthodonticBillService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/orthodonticBill`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.ORTHODONTIC_BILL_API_URL}`;
   }
-  // Get Data Here..
   public getPatientsWithRecords(): Observable<number[]> {
     return this.http.get<number[]>(`${this.baseUrl}/patientsWithRecords`);
   }
@@ -110,7 +107,6 @@ export class OrthodonticBillService {
       )
       .pipe(retry(3));
   }
-  // Add Data Here..
   public createBill(
     billDataRequest: BillDataRequest,
   ): Observable<CustomHttpResponse> {

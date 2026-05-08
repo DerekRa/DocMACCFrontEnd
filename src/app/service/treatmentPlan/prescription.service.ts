@@ -1,5 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
 import { PrescriptionChoices } from 'src/app/model/interface/prescriptionModel/prescription-choices';
 import { PrescriptionPaginationRequest } from 'src/app/model/interface/prescriptionModel/prescription-pagination-request';
@@ -9,15 +7,18 @@ import { PrescriptionUpdateRequest } from 'src/app/model/interface/prescriptionM
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
 
-// const baseUrl = 'http://localhost:8083/api/v1/prescription';
-// const baseUrl = 'http://localhost:9090/api/v1/prescription';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { AppServicesConstants } from '../constants/app-services.constants';
+
 @Injectable({
   providedIn: 'root',
 })
 export class PrescriptionService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/prescription`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.PRESCRIPTION_API_URL}`;
   }
   public getPrescriptionChoices(): Observable<PrescriptionChoices[]> {
     return this.http

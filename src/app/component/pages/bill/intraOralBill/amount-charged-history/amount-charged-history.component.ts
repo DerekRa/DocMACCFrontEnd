@@ -28,14 +28,12 @@ export class AmountChargedHistoryComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
   constructor(
     private profileModelService: ProfileModelService,
     private intraoralBillService: IntraoralBillService,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
   public id: any;
   public profileModel: ProfileModel | undefined;
@@ -55,19 +53,11 @@ export class AmountChargedHistoryComponent implements OnInit {
   public orderByAscDesc: boolean = false;
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () =>
-        console.log(
-          'Done getting single profile using amount charged history component..'
-        )
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetBreakdownData() {
     const billBreakdwonRequest: BillBreakdwonRequest = {
       profileId: this.id,
@@ -83,7 +73,7 @@ export class AmountChargedHistoryComponent implements OnInit {
           this.billBreakdown = response;
           console.log('this.billBreakdown = ' + this.billBreakdown);
           console.log(
-            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns
+            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns,
           );
           console.log(this.billBreakdown.billBreakdowns);
           const getProcedure = Number(this.procedureNumber) - 1;
@@ -98,7 +88,7 @@ export class AmountChargedHistoryComponent implements OnInit {
           this.onGetTableData();
         },
         (error: any) => console.log(error),
-        () => console.log('Done getting intraoral bill breakdown..')
+        () => console.log('Done getting intraoral bill breakdown..'),
       );
   }
   private onGetTableData() {
@@ -143,7 +133,7 @@ export class AmountChargedHistoryComponent implements OnInit {
           console.log(this.amountChargedHistory);
         },
         () =>
-          console.log('Done getting intraoral bill amount charged history..')
+          console.log('Done getting intraoral bill amount charged history..'),
       );
 
     this.intraoralBillService
@@ -162,7 +152,7 @@ export class AmountChargedHistoryComponent implements OnInit {
           console.log(this.amountChargedHistory);
         },
         () =>
-          console.log('Done getting intraoral bill amount charged history..')
+          console.log('Done getting intraoral bill amount charged history..'),
       );
   }
   public onSortPage(event: any) {

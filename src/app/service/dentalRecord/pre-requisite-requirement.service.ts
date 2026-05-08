@@ -12,9 +12,7 @@ import { XrayTakenPermanentDataRequest } from 'src/app/model/interface/xrayTaken
 import { XrayTakenTempImageRequest } from 'src/app/model/interface/xrayTakenModel/xray-taken-temp-image-request';
 import { XrayTakenTempImageResponse } from 'src/app/model/interface/xrayTakenModel/xray-taken-temp-image-response';
 import { environment } from 'src/environments/environment';
-
-// const baseUrl = 'http://localhost:9090/api/v1/preRequisite';
-// const baseUrl = 'http://localhost:8086/api/v1/preRequisite';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +20,7 @@ import { environment } from 'src/environments/environment';
 export class PreRequisiteRequirementService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/preRequisite`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.PRE_REQUISITE_API_URL}`;
   }
 
   public getXrayTakenPagination(

@@ -1,5 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
 import { IntraOralTreatmentDetailPaginationRequest } from 'src/app/model/interface/treatmentPlanModel/intra-oral-treatment-detail-pagination-request';
 import { IntraOralTreatmentPaginationRequest } from 'src/app/model/interface/treatmentPlanModel/intra-oral-treatment-pagination-request';
@@ -9,15 +7,18 @@ import { OrthodonticTreatmentPaginationRequest } from 'src/app/model/interface/t
 import { OrthodonticTreatmentResponse } from 'src/app/model/interface/treatmentPlanModel/orthodontic-treatment-response';
 import { environment } from 'src/environments/environment';
 
-// const baseUrl = 'http://localhost:9090/api/v1/treatmentPlan';
-// const baseUrl = 'http://localhost:8088/api/v1/treatmentPlan';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { AppServicesConstants } from '../constants/app-services.constants';
+
 @Injectable({
   providedIn: 'root',
 })
 export class TreatmentPlanService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/treatmentPlan`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.TREATMENT_PLAN_API_URL}`;
   }
 
   public getIntraOralTreatmentListPagination(

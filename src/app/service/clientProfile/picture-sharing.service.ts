@@ -7,15 +7,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class PictureSharingService {
   private pictureSubject = new BehaviorSubject<string>('');
   public picture$ = this.pictureSubject.asObservable();
-
   setPicture(picture: string): void {
     this.pictureSubject.next(picture);
   }
-
   getPicture(): Observable<string> {
     return this.picture$;
   }
-
   /**
    * Retrieve the current picture value without subscribing.
    */

@@ -1,0 +1,16 @@
+export const AppServicesConstants = {
+  INTRAORAL_BILL_API_URL: '/api/v1/intraOralBill',
+  ORTHODONTIC_BILL_API_URL: '/api/v1/orthodonticBill',
+  PROFILE_API_URL: '/api/v1/profile',
+  INTRAORAL_EXAMINATION_API_URL: '/api/v1/intraoral',
+  ORTHODONTIC_EXAMINATION_API_URL: '/api/v1/orthodontic',
+  PHYSICIAN_HISTORY_API_URL: '/api/v1/physicians',
+  PRE_REQUISITE_API_URL: '/api/v1/preRequisite',
+  APPOINTMENT_API_URL: '/api/v1/appointment',
+  MEDICAL_HISTORY_API_URL: '/api/v1/medical',
+  PRE_PROCEDURE_API_URL: '/api/v1/preprocedure/images',
+  EXPORT_PDF_API_URL: '/api/v1/exportFile',
+  CERTIFICATION_API_URL: '/api/v1/certification',
+  PRESCRIPTION_API_URL: '/api/v1/prescription',
+  TREATMENT_PLAN_API_URL: '/api/v1/treatmentPlan',
+};
