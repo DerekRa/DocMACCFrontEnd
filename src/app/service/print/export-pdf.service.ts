@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 export class ExportPdfService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/exportFile`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/exportFile`;
   }
   public getExportPDFProfile(number: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/exportPDFPatientProfile/${number}`, {
@@ -22,25 +22,25 @@ export class ExportPdfService {
     profileId: number,
     dateOfProcedure: string,
     createdByName: string,
-    createdById: string
+    createdById: string,
   ): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/exportPDFCertificate/${profileId}/${dateOfProcedure}/${createdByName}/${createdById}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
   public getExportPDFPrescription(
     profileId: number,
     dateOfProcedure: string,
-    careOfMouth: string
+    careOfMouth: string,
   ): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/exportPDFPrescription/${profileId}/${dateOfProcedure}/${careOfMouth}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
   public getExportPDFIntraOralBillIndividual(
@@ -48,24 +48,24 @@ export class ExportPdfService {
     dateOfProcedure: string,
     category: string,
     procedureDone: string,
-    toothNumbers: string
+    toothNumbers: string,
   ): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}/${category}/${procedureDone}/${toothNumbers}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
   public getExportPDFIntraOralBillGroup(
     profileId: number,
-    dateOfProcedure: string
+    dateOfProcedure: string,
   ): Observable<any> {
     return this.http.get(
       `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}`,
       {
         responseType: 'blob',
-      }
+      },
     );
   }
 }

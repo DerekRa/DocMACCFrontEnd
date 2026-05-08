@@ -84,7 +84,9 @@ export class HeaderComponent implements OnInit {
   }
 
   public logout() {
-    let redirectURI: string = `http://${environment.localhost}:4200/home`;
+    let redirectURI: string = `${environment.localhost}:4200/home`;
+    console.log('logout was click!....');
+    console.log('redirectURI :::' + redirectURI);
     this.keycloak.logout(redirectURI);
   }
 

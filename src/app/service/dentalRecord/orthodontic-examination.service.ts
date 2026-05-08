@@ -21,22 +21,22 @@ import { environment } from 'src/environments/environment';
 export class OrthodonticExaminationService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/orthodontic`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/orthodontic`;
   }
   public getActivePatients(): Observable<ActiveProfiles[]> {
     return this.http.get<ActiveProfiles[]>(
-      `${this.baseUrl}/patientsWithRecords`
+      `${this.baseUrl}/patientsWithRecords`,
     );
   }
   public createBracketPrescriptionWireTypes(
-    bracketRequest: BracketRequest
+    bracketRequest: BracketRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}/bracket`, bracketRequest)
       .pipe(retry(3));
   }
   public getBracketPrescriptionWireTypesLatest(
-    bracketLatestRequest: BracketLatestRequest
+    bracketLatestRequest: BracketLatestRequest,
   ): Observable<BracketResponse> {
     return this.http
       .get<BracketResponse>(`${this.baseUrl}/bracket/latest`, {
@@ -45,7 +45,7 @@ export class OrthodonticExaminationService {
       .pipe(retry(3));
   }
   public getBracketPrescriptionWireTypesPagination(
-    bracketPaginationRequest: BracketPaginationRequest
+    bracketPaginationRequest: BracketPaginationRequest,
   ): Observable<BracketResponse[]> {
     return this.http
       .get<BracketResponse[]>(`${this.baseUrl}/bracket`, {
@@ -54,29 +54,29 @@ export class OrthodonticExaminationService {
       .pipe(retry(3));
   }
   public createOrthodonticExamination(
-    orthodonticExamination: OrthodonticExamination
+    orthodonticExamination: OrthodonticExamination,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/braces`,
-        orthodonticExamination
+        orthodonticExamination,
       )
       .pipe(retry(3));
   }
   public getOrthodonticExaminationLatest(
-    orthodonticExaminationLatest: OrthodonticExaminationLatest
+    orthodonticExaminationLatest: OrthodonticExaminationLatest,
   ): Observable<OrthodonticExaminationResponse> {
     return this.http
       .get<OrthodonticExaminationResponse>(
         `${this.baseUrl}/braces/latest-date`,
         {
           params: this.convertToHttpParams(orthodonticExaminationLatest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public getOrthodonticExaminationPagination(
-    orthodonticExaminationPagination: OrthodonticExaminationPagination
+    orthodonticExaminationPagination: OrthodonticExaminationPagination,
   ): Observable<OrthodonticExaminationResponse[]> {
     return this.http
       .get<OrthodonticExaminationResponse[]>(`${this.baseUrl}/braces`, {
@@ -85,14 +85,14 @@ export class OrthodonticExaminationService {
       .pipe(retry(3));
   }
   public getOrthodonticExaminationPaginationLatest(
-    orthodonticExaminationPagination: OrthodonticExaminationPagination
+    orthodonticExaminationPagination: OrthodonticExaminationPagination,
   ): Observable<OrthodonticExaminationResponse[]> {
     return this.http
       .get<OrthodonticExaminationResponse[]>(
         `${this.baseUrl}/braces/latest-process`,
         {
           params: this.convertToHttpParams(orthodonticExaminationPagination),
-        }
+        },
       )
       .pipe(retry(3));
   }

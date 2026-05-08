@@ -25,11 +25,11 @@ import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBi
 export class IntraoralBillService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/intraOralBill`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/intraOralBill`;
   }
 
   public getBillTotalBreakdown(
-    billBreakdwonRequest: BillBreakdwonRequest
+    billBreakdwonRequest: BillBreakdwonRequest,
   ): Observable<BillBreakdownResponse> {
     return this.http
       .get<BillBreakdownResponse>(`${this.baseUrl}/totalBreakdown`, {
@@ -37,11 +37,11 @@ export class IntraoralBillService {
       })
       .pipe(
         catchError((error) => EMPTY),
-        retry(3)
+        retry(3),
       );
   }
   public getdBillBreakdown(
-    amountDataRequest: AmountData
+    amountDataRequest: AmountData,
   ): Observable<BillBreakdown> {
     return this.http
       .get<BillBreakdown>(`${this.baseUrl}/breakdown`, {
@@ -49,11 +49,11 @@ export class IntraoralBillService {
       })
       .pipe(
         catchError((error) => EMPTY),
-        retry(3)
+        retry(3),
       );
   }
   public getAmountCharged(
-    amountDataRequest: AmountDataRequest
+    amountDataRequest: AmountDataRequest,
   ): Observable<AmountChargedResponse> {
     return this.http
       .get<AmountChargedResponse>(`${this.baseUrl}/amountCharged`, {
@@ -62,19 +62,19 @@ export class IntraoralBillService {
       .pipe(retry(3));
   }
   public getAmountChargedHistory(
-    amountDataPaginationRequest: AmountDataPaginationRequest
+    amountDataPaginationRequest: AmountDataPaginationRequest,
   ): Observable<AmountChargedHistoryResponse[]> {
     return this.http
       .get<AmountChargedHistoryResponse[]>(
         `${this.baseUrl}/amountCharged/history`,
         {
           params: this.convertToHttpParams(amountDataPaginationRequest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public getAmountPaymentHistory(
-    amountDataPaginationRequest: AmountDataPaginationRequest
+    amountDataPaginationRequest: AmountDataPaginationRequest,
   ): Observable<AmountPaymentResponse[]> {
     return this.http
       .get<AmountPaymentResponse[]>(`${this.baseUrl}/amountPayment`, {
@@ -83,22 +83,22 @@ export class IntraoralBillService {
       .pipe(retry(3));
   }
   public createAmountCharged(
-    amountChargedRequest: AmountChargedRequest
+    amountChargedRequest: AmountChargedRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/amountCharged`,
-        amountChargedRequest
+        amountChargedRequest,
       )
       .pipe(retry(3));
   }
   public createAmountPayment(
-    amountPaymentRequest: AmountPaymentRequest
+    amountPaymentRequest: AmountPaymentRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/amountPayment`,
-        amountPaymentRequest
+        amountPaymentRequest,
       )
       .pipe(retry(3));
   }

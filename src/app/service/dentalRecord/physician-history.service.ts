@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class PhysicianHistoryService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/physicians`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/physicians`;
   }
   public getPhysiciansPerPage(
     profileId: number,
@@ -21,16 +21,16 @@ export class PhysicianHistoryService {
     pageSize: number,
     sortBy: string,
     orderBy: string,
-    findItem: string
+    findItem: string,
   ): Observable<Physician[]> {
     console.log(
       'url = ' +
-        `${this.baseUrl}/pagingAndSorting/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`
+        `${this.baseUrl}/pagingAndSorting/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`,
     );
     return this.http
-      .get<Physician[]>(
-        `${this.baseUrl}/pagingAndSorting/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`
-      )
+      .get<
+        Physician[]
+      >(`${this.baseUrl}/pagingAndSorting/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`)
       .pipe(retry(3));
   }
   public getPhysician(id: number, physicianId: number): Observable<Physician> {
@@ -40,18 +40,18 @@ export class PhysicianHistoryService {
         retry(3),
         catchError((error: any) => {
           return of();
-        })
+        }),
       );
   }
   public createPhysicianHistory(
-    physician: Physician
+    physician: Physician,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, physician)
       .pipe(retry(3));
   }
   public updatePhysicianHistory(
-    physician: Physician
+    physician: Physician,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}`, physician)

@@ -27,14 +27,14 @@ import { environment } from 'src/environments/environment';
 export class OrthodonticBillService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/orthodonticBill`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/orthodonticBill`;
   }
   // Get Data Here..
   public getPatientsWithRecords(): Observable<number[]> {
     return this.http.get<number[]>(`${this.baseUrl}/patientsWithRecords`);
   }
   public getBillHistory(
-    dataPaginationRequest: BillPaginationRequest
+    dataPaginationRequest: BillPaginationRequest,
   ): Observable<OrthodonticBillDataResponse[]> {
     return this.http
       .get<OrthodonticBillDataResponse[]>(`${this.baseUrl}`, {
@@ -43,7 +43,7 @@ export class OrthodonticBillService {
       .pipe(retry(3));
   }
   public getBillBreakdown(
-    dataPaginationRequest: BreakdownOrBillChangesPaginationRequest
+    dataPaginationRequest: BreakdownOrBillChangesPaginationRequest,
   ): Observable<BreakdownResponse[]> {
     return this.http
       .get<BreakdownResponse[]>(`${this.baseUrl}/breakdown`, {
@@ -53,32 +53,32 @@ export class OrthodonticBillService {
   }
   public getBill(
     profileId: number,
-    billId: number
+    billId: number,
   ): Observable<OrthodonticBillDataResponse> {
     return this.http
       .get<OrthodonticBillDataResponse>(
-        `${this.baseUrl}/${profileId}/${billId}`
+        `${this.baseUrl}/${profileId}/${billId}`,
       )
       .pipe(retry(3));
   }
   public getPayment(transactionId: number): Observable<PaymentHistoryResponse> {
     return this.http
       .get<PaymentHistoryResponse>(
-        `${this.baseUrl}/breakdown/payment/history/${transactionId}`
+        `${this.baseUrl}/breakdown/payment/history/${transactionId}`,
       )
       .pipe(retry(3));
   }
   public getAdditionalCharge(
-    transactionId: number
+    transactionId: number,
   ): Observable<AdditionalChargeHistoryResponse> {
     return this.http
       .get<AdditionalChargeHistoryResponse>(
-        `${this.baseUrl}/breakdown/additionalCharge/history/${transactionId}`
+        `${this.baseUrl}/breakdown/additionalCharge/history/${transactionId}`,
       )
       .pipe(retry(3));
   }
   public getBillChangesHistory(
-    dataPaginationRequest: BreakdownOrBillChangesPaginationRequest
+    dataPaginationRequest: BreakdownOrBillChangesPaginationRequest,
   ): Observable<OrthodonticBillChangesDataResponse[]> {
     return this.http
       .get<OrthodonticBillChangesDataResponse[]>(`${this.baseUrl}/history`, {
@@ -87,81 +87,81 @@ export class OrthodonticBillService {
       .pipe(retry(3));
   }
   public getPaymentHistory(
-    dataPaginationRequest: PaymentOrChargePaginationRequest
+    dataPaginationRequest: PaymentOrChargePaginationRequest,
   ): Observable<PaymentHistoryResponse[]> {
     return this.http
       .get<PaymentHistoryResponse[]>(
         `${this.baseUrl}/breakdown/payment/history`,
         {
           params: this.convertToHttpParams(dataPaginationRequest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public getAdditionalChargeHistory(
-    dataPaginationRequest: PaymentOrChargePaginationRequest
+    dataPaginationRequest: PaymentOrChargePaginationRequest,
   ): Observable<AdditionalChargeHistoryResponse[]> {
     return this.http
       .get<AdditionalChargeHistoryResponse[]>(
         `${this.baseUrl}/breakdown/additionalCharge/history`,
         {
           params: this.convertToHttpParams(dataPaginationRequest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   // Add Data Here..
   public createBill(
-    billDataRequest: BillDataRequest
+    billDataRequest: BillDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, billDataRequest)
       .pipe(retry(3));
   }
   public createNewBill(
-    billDataRequest: UpdateBillDataRequest
+    billDataRequest: UpdateBillDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}/update`, billDataRequest)
       .pipe(retry(3));
   }
   public createAdditionalCharge(
-    billDataRequest: AdditionalChargeDataRequest
+    billDataRequest: AdditionalChargeDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/breakdown/additionalCharge`,
-        billDataRequest
+        billDataRequest,
       )
       .pipe(retry(3));
   }
   public createNewAdditionalCharge(
-    billDataRequest: AdditionalChargeUpdateDataRequest
+    billDataRequest: AdditionalChargeUpdateDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/breakdown/additionalCharge/update`,
-        billDataRequest
+        billDataRequest,
       )
       .pipe(retry(3));
   }
   public createPayment(
-    billDataRequest: PaymentDataRequest
+    billDataRequest: PaymentDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/breakdown/payment`,
-        billDataRequest
+        billDataRequest,
       )
       .pipe(retry(3));
   }
   public createNewPayment(
-    billDataRequest: PaymentUpdateDataRequest
+    billDataRequest: PaymentUpdateDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/breakdown/payment/update`,
-        billDataRequest
+        billDataRequest,
       )
       .pipe(retry(3));
   }

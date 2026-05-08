@@ -17,7 +17,7 @@ import { environment } from 'src/environments/environment';
 export class PrescriptionService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/prescription`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/prescription`;
   }
   public getPrescriptionChoices(): Observable<PrescriptionChoices[]> {
     return this.http
@@ -26,14 +26,14 @@ export class PrescriptionService {
   }
   public getPrescription(
     profileId: string,
-    prescribedId: string
+    prescribedId: string,
   ): Observable<PrescriptionResponse> {
     return this.http
       .get<PrescriptionResponse>(`${this.baseUrl}/${profileId}/${prescribedId}`)
       .pipe(retry(3));
   }
   public getPrescriptionWithPagination(
-    prescriptionPaginationRequest: PrescriptionPaginationRequest
+    prescriptionPaginationRequest: PrescriptionPaginationRequest,
   ): Observable<PrescriptionResponse[]> {
     return this.http
       .get<PrescriptionResponse[]>(`${this.baseUrl}`, {
@@ -42,29 +42,29 @@ export class PrescriptionService {
       .pipe(retry(3));
   }
   public createPrescription(
-    prescriptionSaveRequest: PrescriptionSaveRequest
+    prescriptionSaveRequest: PrescriptionSaveRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, prescriptionSaveRequest)
       .pipe(retry(3));
   }
   public updateDisplayPrescription(
-    prescriptionUpdateRequest: PrescriptionUpdateRequest
+    prescriptionUpdateRequest: PrescriptionUpdateRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(
         `${this.baseUrl}/display`,
-        prescriptionUpdateRequest
+        prescriptionUpdateRequest,
       )
       .pipe(retry(3));
   }
   public deletePrescription(
     profileId: number,
-    prescribedId: number
+    prescribedId: number,
   ): Observable<CustomHttpResponse> {
     return this.http
       .delete<CustomHttpResponse>(
-        `${this.baseUrl}/${profileId}/${prescribedId}`
+        `${this.baseUrl}/${profileId}/${prescribedId}`,
       )
       .pipe(retry(3));
   }

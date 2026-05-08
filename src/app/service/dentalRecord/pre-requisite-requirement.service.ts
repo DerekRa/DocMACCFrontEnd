@@ -22,16 +22,16 @@ import { environment } from 'src/environments/environment';
 export class PreRequisiteRequirementService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/preRequisite`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/preRequisite`;
   }
 
   public getXrayTakenPagination(
-    paginationData: XrayTakenPaginationDataRequest
+    paginationData: XrayTakenPaginationDataRequest,
   ): Observable<XrayTakenImageDetails[]> {
     console.log(
       'url = ' +
         `${this.baseUrl}/images/details` +
-        this.convertToHttpParams(paginationData)
+        this.convertToHttpParams(paginationData),
     );
     return this.http
       .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/details`, {
@@ -41,12 +41,12 @@ export class PreRequisiteRequirementService {
   }
 
   public getXrayTakenDisplay(
-    displayDataRequest: XrayTakenDisplayDataRequest
+    displayDataRequest: XrayTakenDisplayDataRequest,
   ): Observable<XrayTakenImageDetails[]> {
     console.log(
       'url = ' +
         `${this.baseUrl}/images/display` +
-        this.convertToHttpParams(displayDataRequest)
+        this.convertToHttpParams(displayDataRequest),
     );
     return this.http
       .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/display`, {
@@ -56,10 +56,10 @@ export class PreRequisiteRequirementService {
   }
 
   public getXrayTakenTempImages(
-    tempImages: XrayTakenTempImageRequest
+    tempImages: XrayTakenTempImageRequest,
   ): Observable<XrayTakenTempImageResponse[]> {
     console.log(
-      'url = ' + `${this.baseUrl}/temp` + this.convertToHttpParams(tempImages)
+      'url = ' + `${this.baseUrl}/temp` + this.convertToHttpParams(tempImages),
     );
     return this.http
       .get<XrayTakenTempImageResponse[]>(`${this.baseUrl}/images/temp`, {
@@ -69,10 +69,10 @@ export class PreRequisiteRequirementService {
   }
 
   public getPreRequisite(
-    getPreRequisite: PreRequisiteDto
+    getPreRequisite: PreRequisiteDto,
   ): Observable<PreRequisiteModel> {
     console.log(
-      'url = ' + `${this.baseUrl}` + this.convertToHttpParams(getPreRequisite)
+      'url = ' + `${this.baseUrl}` + this.convertToHttpParams(getPreRequisite),
     );
     return this.http
       .get<PreRequisiteModel>(`${this.baseUrl}`, {
@@ -90,7 +90,7 @@ export class PreRequisiteRequirementService {
   }
 
   public uploadTempXrayImages(
-    formData: FormData
+    formData: FormData,
   ): Observable<HttpEvent<CustomHttpResponse>> {
     return this.http.post<CustomHttpResponse>(
       `${this.baseUrl}/images`,
@@ -98,12 +98,12 @@ export class PreRequisiteRequirementService {
       {
         reportProgress: true,
         observe: 'events',
-      }
+      },
     );
   }
 
   public createPreRequisite(
-    preRequisiteModel: PreRequisiteModel
+    preRequisiteModel: PreRequisiteModel,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, preRequisiteModel)
@@ -111,29 +111,29 @@ export class PreRequisiteRequirementService {
   }
 
   public updateXrayTakenImageToPermanent(
-    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest
+    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(
         `${this.baseUrl}/images`,
-        xrayTakenPermanentDataRequest
+        xrayTakenPermanentDataRequest,
       )
       .pipe(retry(3));
   }
 
   public updateXrayTakenImageDisplay(
-    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest
+    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(
         `${this.baseUrl}/images/display`,
-        xrayTakenPermanentDataRequest
+        xrayTakenPermanentDataRequest,
       )
       .pipe(retry(3));
   }
 
   public deleteXrayTakenData(
-    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest
+    xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .delete<CustomHttpResponse>(`${this.baseUrl}/images`, {
@@ -143,7 +143,7 @@ export class PreRequisiteRequirementService {
   }
 
   public deleteXrayTakenTempData(
-    removeTempImage: XrayTakenImageTempRemove
+    removeTempImage: XrayTakenImageTempRemove,
   ): Observable<CustomHttpResponse> {
     return this.http
       .delete<CustomHttpResponse>(`${this.baseUrl}/images/temp`, {

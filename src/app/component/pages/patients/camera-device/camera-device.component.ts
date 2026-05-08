@@ -49,6 +49,15 @@ export class CameraDeviceComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   startCamera() {
+    // Check if getUserMedia is supported
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      this.alertService.error(
+        "Camera API is not supported in this browser or context. Ensure you're using HTTPS.",
+      );
+      console.error('getUserMedia is not supported');
+      return;
+    }
+
     this.startCapture = true;
     this.startCaptureHidden = false;
     navigator.mediaDevices

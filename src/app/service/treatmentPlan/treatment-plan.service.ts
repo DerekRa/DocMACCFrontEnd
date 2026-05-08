@@ -17,42 +17,42 @@ import { environment } from 'src/environments/environment';
 export class TreatmentPlanService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/treatmentPlan`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/treatmentPlan`;
   }
 
   public getIntraOralTreatmentListPagination(
-    intraOralTreatmentPaginationRequest: IntraOralTreatmentPaginationRequest
+    intraOralTreatmentPaginationRequest: IntraOralTreatmentPaginationRequest,
   ): Observable<IntraoralTreatmentPlanGroupResponse[]> {
     return this.http
       .get<IntraoralTreatmentPlanGroupResponse[]>(
         `${this.baseUrl}/intraOral/group`,
         {
           params: this.convertToHttpParams(intraOralTreatmentPaginationRequest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public getIntraOralTreatmentDetailListPagination(
-    intraOralTreatmentDetailPaginationRequest: IntraOralTreatmentDetailPaginationRequest
+    intraOralTreatmentDetailPaginationRequest: IntraOralTreatmentDetailPaginationRequest,
   ): Observable<IntraoralTreatmentPlanDetailResponse[]> {
     return this.http
       .get<IntraoralTreatmentPlanDetailResponse[]>(
         `${this.baseUrl}/intraOral/detail`,
         {
           params: this.convertToHttpParams(
-            intraOralTreatmentDetailPaginationRequest
+            intraOralTreatmentDetailPaginationRequest,
           ),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public getOrthodonticTreatmentListPagination(
-    orthodonticTreatmentDetailPaginationRequest: OrthodonticTreatmentPaginationRequest
+    orthodonticTreatmentDetailPaginationRequest: OrthodonticTreatmentPaginationRequest,
   ): Observable<OrthodonticTreatmentResponse[]> {
     return this.http
       .get<OrthodonticTreatmentResponse[]>(`${this.baseUrl}/orthodontic`, {
         params: this.convertToHttpParams(
-          orthodonticTreatmentDetailPaginationRequest
+          orthodonticTreatmentDetailPaginationRequest,
         ),
       })
       .pipe(retry(3));

@@ -22,7 +22,7 @@ import { environment } from 'src/environments/environment';
 export class ProfileModelService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/profile`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/profile`;
   }
 
   public getProfileModelList(): Observable<ProfileModelList> {
@@ -33,14 +33,14 @@ export class ProfileModelService {
     pageNo: number,
     pageSize: number,
     sortBy: string,
-    orderBy: string
+    orderBy: string,
   ): Observable<HttpResponse<ProfileModelList>> {
     return this.http.get<ProfileModelList>(
       `${this.baseUrl}/pagingAndSorting/${pageNo}/${pageSize}/${sortBy}/${orderBy}`,
       {
         observe: 'response',
         withCredentials: true,
-      }
+      },
     );
   }
 
@@ -49,7 +49,7 @@ export class ProfileModelService {
     pageSize: number,
     sortBy: string,
     orderBy: string,
-    lastName: string
+    lastName: string,
   ): Observable<HttpResponse<Name[]>> {
     return this.http
       .get<Name[]>(
@@ -57,7 +57,7 @@ export class ProfileModelService {
         {
           observe: 'response',
           withCredentials: true,
-        }
+        },
       )
       .pipe(retry(2));
   }
@@ -67,7 +67,7 @@ export class ProfileModelService {
       retry(3),
       catchError((error: any) => {
         return of();
-      })
+      }),
     );
   }
 
@@ -76,7 +76,7 @@ export class ProfileModelService {
   }
 
   public createProfileModel(
-    profileModel: ProfileModel
+    profileModel: ProfileModel,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
@@ -90,7 +90,7 @@ export class ProfileModelService {
   }
 
   public updateProfileModel(
-    profileModel: ProfileModel
+    profileModel: ProfileModel,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}`, profileModel)
@@ -98,7 +98,7 @@ export class ProfileModelService {
   }
 
   public deleteProfileModel(
-    deleteProfile: DeleteProfileOrMedical
+    deleteProfile: DeleteProfileOrMedical,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}/delete`, deleteProfile)

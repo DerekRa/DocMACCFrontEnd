@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
 export class PreProcedureRequirementService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/preprocedure/images`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/preprocedure/images`;
   }
 
   // Backend (getAllImagesDataList)
@@ -27,28 +27,28 @@ export class PreProcedureRequirementService {
     pageSize: number,
     sortBy: string,
     orderBy: string,
-    findItem: string
+    findItem: string,
   ): Observable<ImageDetails[]> {
     console.log(
       'url = ' +
-        `${this.baseUrl}/details/${item_name}/${location}/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`
+        `${this.baseUrl}/details/${item_name}/${location}/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`,
     );
     return this.http
-      .get<ImageDetails[]>(
-        `${this.baseUrl}/details/${item_name}/${location}/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`
-      )
+      .get<
+        ImageDetails[]
+      >(`${this.baseUrl}/details/${item_name}/${location}/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`)
       .pipe(retry(3));
   }
   // Backend (getDisplayImages)
   public getPreProcedureDisplay(
     item_name: string,
     location: string,
-    profileId: number
+    profileId: number,
   ): Observable<ImageDetails[]> {
     return this.http
-      .get<ImageDetails[]>(
-        `${this.baseUrl}/details/${item_name}/${location}/${profileId}`
-      )
+      .get<
+        ImageDetails[]
+      >(`${this.baseUrl}/details/${item_name}/${location}/${profileId}`)
       .pipe(retry(3));
   }
   // Backend (uploadFile)
@@ -66,7 +66,7 @@ export class PreProcedureRequirementService {
   }
   // Backend (updateImageDisplay)
   public updateDisplayImage(
-    formData: FormData
+    formData: FormData,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}/display`, formData)
@@ -78,7 +78,7 @@ export class PreProcedureRequirementService {
     location: string,
     nameHashType: string,
     updatedByName: string,
-    updatedById: string
+    updatedById: string,
   ): Observable<CustomHttpResponse> {
     return this.http
       .delete<CustomHttpResponse>(
@@ -91,7 +91,7 @@ export class PreProcedureRequirementService {
           `/` +
           updatedByName +
           `/` +
-          updatedById
+          updatedById,
       )
       .pipe(retry(3));
   }

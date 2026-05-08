@@ -15,17 +15,17 @@ import { environment } from 'src/environments/environment';
 export class DentalCertificateService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/certification`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/certification`;
   }
   public createCertification(
-    certificationRequest: CertificationRequest
+    certificationRequest: CertificationRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, certificationRequest)
       .pipe(retry(3));
   }
   public getCertification(
-    certificationRequest: CertificationGetRequest
+    certificationRequest: CertificationGetRequest,
   ): Observable<CertificationResponse> {
     return this.http
       .get<CertificationResponse>(`${this.baseUrl}`, {
@@ -34,7 +34,7 @@ export class DentalCertificateService {
       .pipe(retry(3));
   }
   public updateCertification(
-    certificationRequest: CertificationRequest
+    certificationRequest: CertificationRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}`, certificationRequest)

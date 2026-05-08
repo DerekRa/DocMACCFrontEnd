@@ -27,7 +27,7 @@ import { environment } from 'src/environments/environment';
 export class PatientAppointmentService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/appointment`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/appointment`;
   }
 
   public getAllPatientAppointment(): Observable<
@@ -42,16 +42,16 @@ export class PatientAppointmentService {
   }
   public getSingleAppointment(
     appointmentId: number,
-    category: string
+    category: string,
   ): Observable<PatientAppointmentResponse> {
     return this.http
       .get<PatientAppointmentResponse>(
-        `${this.baseUrl}/${appointmentId}/${category}`
+        `${this.baseUrl}/${appointmentId}/${category}`,
       )
       .pipe(retry(3));
   }
   public getRegularAppointment(
-    regularAppointmentRequest: RegularAppointmentRequest
+    regularAppointmentRequest: RegularAppointmentRequest,
   ): Observable<RegularAppointmentLatestResponse> {
     return this.http
       .get<RegularAppointmentLatestResponse>(`${this.baseUrl}/regular`, {
@@ -60,45 +60,45 @@ export class PatientAppointmentService {
       .pipe(retry(3));
   }
   public getRegularAppointmentHistory(
-    patientPaginationRequest: PatientPaginationRequest
+    patientPaginationRequest: PatientPaginationRequest,
   ): Observable<RegularAppointmentLatestResponse[]> {
     return this.http
       .get<RegularAppointmentLatestResponse[]>(
         `${this.baseUrl}/regular/history`,
         {
           params: this.convertToHttpParams(patientPaginationRequest),
-        }
+        },
       )
       .pipe(retry(3));
   }
   public createWalkInAppointment(
-    walkInPatientRequest: WalkInPatientRequest
+    walkInPatientRequest: WalkInPatientRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}/walkin`, walkInPatientRequest)
       .pipe(retry(3));
   }
   public updateWalkInAppointment(
-    walkInPatientRequest: WalkInPatientUpdateRequest
+    walkInPatientRequest: WalkInPatientUpdateRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}/walkin`, walkInPatientRequest)
       .pipe(retry(3));
   }
   public removeAppointment(
-    appointmentId: string
+    appointmentId: string,
   ): Observable<CustomHttpResponse> {
     return this.http
       .delete<CustomHttpResponse>(`${this.baseUrl}/${appointmentId}`)
       .pipe(retry(3));
   }
   public createRegularAppointment(
-    regularPatientRequest: RegularPatientRequest
+    regularPatientRequest: RegularPatientRequest,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(
         `${this.baseUrl}/regular`,
-        regularPatientRequest
+        regularPatientRequest,
       )
       .pipe(retry(3));
   }

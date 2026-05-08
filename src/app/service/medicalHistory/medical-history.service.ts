@@ -18,7 +18,7 @@ import { environment } from 'src/environments/environment';
 export class MedicalHistoryService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `http://${environment.localhost}:9090/api/v1/medical`;
+    this.baseUrl = `${environment.localhost}:9090/api/v1/medical`;
   }
 
   public getActivePatients(): Observable<ActiveProfiles[]> {
@@ -30,12 +30,12 @@ export class MedicalHistoryService {
       retry(3),
       catchError((error: any) => {
         return of();
-      })
+      }),
     );
   }
 
   public createMedicalQuestionsModel(
-    medicalQuestionsModel: MedicalQuestionsModel
+    medicalQuestionsModel: MedicalQuestionsModel,
   ): Observable<CustomHttpResponse> {
     return this.http
       .post<CustomHttpResponse>(`${this.baseUrl}`, medicalQuestionsModel)
@@ -43,7 +43,7 @@ export class MedicalHistoryService {
   }
 
   public updateMedicalQuestionsModel(
-    medicalQuestionsModel: MedicalQuestionsModel
+    medicalQuestionsModel: MedicalQuestionsModel,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}`, medicalQuestionsModel)
@@ -51,7 +51,7 @@ export class MedicalHistoryService {
   }
 
   public deleteUpdateMedicalModel(
-    deleteProfile: DeleteProfileOrMedical
+    deleteProfile: DeleteProfileOrMedical,
   ): Observable<CustomHttpResponse> {
     return this.http
       .put<CustomHttpResponse>(`${this.baseUrl}/delete`, deleteProfile)
