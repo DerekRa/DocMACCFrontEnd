@@ -22,7 +22,6 @@ export class IntraoralExaminationComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.recordAction = this.route.snapshot.params['record-action'];
     this.datePick = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
-    console.log('this.datePick = ' + this.datePick);
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusRight', 'desc');
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusLeft', 'asc');
     this.onGetTableData('PermanentTeeth', 'topCenter', 'StatusRight', 'desc');
@@ -31,7 +30,7 @@ export class IntraoralExaminationComponent implements OnInit {
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetTableData('PermanentTeeth', 'bottomCenter', 'StatusLeft', 'asc');
     this.onGetTableData('TemporaryTeeth', 'bottom', 'StatusRight', 'desc');
@@ -41,23 +40,22 @@ export class IntraoralExaminationComponent implements OnInit {
     this.getImageToothSurface('default_tooth_surface.png');
     document.documentElement.style.setProperty(
       '--primary-color',
-      'rgb(255, 249, 249)'
+      'rgb(255, 249, 249)',
     );
   }
+
   constructor(
     private intraoralExaminationService: IntraoralExaminationService,
     private profileModelService: ProfileModelService,
-    // private preRequisiteRequirementService: PreRequisiteRequirementService,
     private router: Router,
     private route: ActivatedRoute,
-    // public alertService: AlertService,
     private fb: FormBuilder,
     public dialog: MatDialog,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
   ) {
     document.documentElement.style.setProperty(
       '--testbgcolor',
-      'rgb(190, 193, 99)'
+      'rgb(190, 193, 99)',
     );
     this.recordAction = this.route.snapshot.params['record-action'];
   }
@@ -94,28 +92,22 @@ export class IntraoralExaminationComponent implements OnInit {
 
   public updateRecordActionToView() {
     this.recordAction = 'view-record';
-    console.log(this.recordAction);
   }
 
   public updateRecordActionToUpdate() {
     this.recordAction = 'add-record';
-    console.log(this.recordAction);
   }
 
   public updateRecordTreatmentPlan() {
     this.recordAction = 'add-treatmentplan-record';
-    console.log(this.recordAction);
   }
 
   private onGetTableData(
     kindsOfTeeth: string,
     teethArea: string,
     teethPositionStatus: string,
-    sorting: string
+    sorting: string,
   ) {
-    const urlPathName = window.location.pathname;
-    // console.log('urlPathName = ' + urlPathName);
-
     this.intraoralExaminationService
       .getIntraOralDisplay(
         this.id,
@@ -124,148 +116,122 @@ export class IntraoralExaminationComponent implements OnInit {
         teethPositionStatus,
         sorting,
         this.isTrackHistory,
-        this.datePick
+        this.datePick,
       )
-      .subscribe(
-        (response: DentalChartDesignResponse[]) => {
-          if (teethArea == 'top' && teethPositionStatus == 'StatusRight') {
-            this.imageDetailsTempRightTop = response;
-          }
-          if (teethArea == 'top' && teethPositionStatus == 'StatusLeft') {
-            this.imageDetailsTempLeftTop = response;
-          }
-          if (
-            teethArea == 'topCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.imageDetailsPermaRightTopCenter = response;
-          }
-          if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
-            this.imageDetailsPermaLeftTopCenter = response;
-          }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.imageDetailsPermaRightBottomCenter = response;
-          }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusLeft'
-          ) {
-            this.imageDetailsPermaLeftBottomCenter = response;
-          }
-          if (teethArea == 'bottom' && teethPositionStatus == 'StatusRight') {
-            this.imageDetailsTempRightBottom = response;
-          }
-          if (teethArea == 'bottom' && teethPositionStatus == 'StatusLeft') {
-            this.imageDetailsTempLeftBottom = response;
-          }
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting default configuration design..')
-      );
+      .subscribe((response: DentalChartDesignResponse[]) => {
+        if (teethArea == 'top' && teethPositionStatus == 'StatusRight') {
+          this.imageDetailsTempRightTop = response;
+        }
+        if (teethArea == 'top' && teethPositionStatus == 'StatusLeft') {
+          this.imageDetailsTempLeftTop = response;
+        }
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusRight') {
+          this.imageDetailsPermaRightTopCenter = response;
+        }
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
+          this.imageDetailsPermaLeftTopCenter = response;
+        }
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusRight'
+        ) {
+          this.imageDetailsPermaRightBottomCenter = response;
+        }
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusLeft'
+        ) {
+          this.imageDetailsPermaLeftBottomCenter = response;
+        }
+        if (teethArea == 'bottom' && teethPositionStatus == 'StatusRight') {
+          this.imageDetailsTempRightBottom = response;
+        }
+        if (teethArea == 'bottom' && teethPositionStatus == 'StatusLeft') {
+          this.imageDetailsTempLeftBottom = response;
+        }
+      });
   }
 
   public getImageTeeth(image: string) {
-    console.log('image : ' + image);
     this.addTeethLink = this.intraoralExaminationService.getImage(image);
   }
+
   public getImageToothSurface(image: string) {
-    console.log('image : ' + image);
     this.defaultToothSurface = this.intraoralExaminationService.getImage(image);
   }
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public addUpdateIntralOralExam(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/intraoral-examination/${this.recordAction}/${this.id}/update-tooth-condition/${teethNumbering}`,
     ]);
   }
+
   public teethProcedureHistory(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/intraoral-examination/view-record/${this.id}/procedure/${teethNumbering}/history`,
     ]);
   }
+
   public teethConditionHistory(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/intraoral-examination/view-record/${this.id}/condition/${teethNumbering}/history`,
     ]);
   }
+
   public teethRecentHistory(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/intraoral-examination/view-record/${this.id}/procedure/${teethNumbering}/recent`,
     ]);
   }
+
   public displayCondition(teethNumbering: number) {
-    // console.log(teethNumbering)
-    // console.log('urlPathName = ' + urlPathName);
     this.intraoralExaminationService
       .getRecentIntraOralExaminationByNumber(this.id, teethNumbering)
-      .subscribe(
-        (response: IntraoralExamination) => {
-          // console.log('response == ' + JSON.stringify(response));
-          this.intraoralExaminationResponse = response;
-          // console.log('intraoralExaminationResponse == ' + JSON.stringify(this.intraoralExaminationResponse));
-          this.teethNumber = '';
-          for (
-            let i = 0;
-            i <
+      .subscribe((response: IntraoralExamination) => {
+        this.intraoralExaminationResponse = response;
+        this.teethNumber = '';
+        for (
+          let i = 0;
+          i <
+          this.intraoralExaminationResponse?.conditionProcedureGroupings
+            ?.conditions.length;
+          i++
+        ) {
+          if (
             this.intraoralExaminationResponse?.conditionProcedureGroupings
-              ?.conditions.length;
-            i++
+              ?.conditions[i].checked
           ) {
-            if (
-              this.intraoralExaminationResponse?.conditionProcedureGroupings
-                ?.conditions[i].checked
-            ) {
-              if (this.teethNumber !== '') {
-                this.teethNumber +=
-                  ', ' +
-                  this.intraoralExaminationResponse?.conditionProcedureGroupings
-                    ?.conditions[i].name;
-              } else {
-                this.teethNumber =
-                  this.intraoralExaminationResponse?.conditionProcedureGroupings?.conditions[
-                    i
-                  ].name;
-              }
+            if (this.teethNumber !== '') {
+              this.teethNumber +=
+                ', ' +
+                this.intraoralExaminationResponse?.conditionProcedureGroupings
+                  ?.conditions[i].name;
+            } else {
+              this.teethNumber =
+                this.intraoralExaminationResponse?.conditionProcedureGroupings?.conditions[
+                  i
+                ].name;
             }
           }
-          // console.log(this.teethNumber);
-        },
-        (error: any) => {
-          console.log('error ==' + JSON.stringify(error));
-        },
-        () => console.log('Done getting Intraoral Examination response..')
-      );
+        }
+      });
   }
+
   onChangeDateOfProcedure(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value?.toLocaleDateString('en-US', { month: '2-digit' }));
-    console.log(event.value?.toLocaleDateString('en-US', { day: '2-digit' }));
     const dateOfProcedure =
       event.value?.toLocaleDateString('en-US', { year: 'numeric' }) +
       '-' +
       event.value?.toLocaleDateString('en-US', { month: '2-digit' }) +
       '-' +
       event.value?.toLocaleDateString('en-US', { day: '2-digit' });
-    console.log('dateOfProcedure = ' + dateOfProcedure);
     this.datePick = dateOfProcedure;
     this.isTrackHistory = true;
-    console.log('this.datePick = ' + this.datePick + ' this.isTrackHistory');
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusRight', 'desc');
     this.onGetTableData('TemporaryTeeth', 'top', 'StatusLeft', 'asc');
     this.onGetTableData('PermanentTeeth', 'topCenter', 'StatusRight', 'desc');
@@ -274,7 +240,7 @@ export class IntraoralExaminationComponent implements OnInit {
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetTableData('PermanentTeeth', 'bottomCenter', 'StatusLeft', 'asc');
     this.onGetTableData('TemporaryTeeth', 'bottom', 'StatusRight', 'desc');

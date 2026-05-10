@@ -66,31 +66,19 @@ export class AmountChargedHistoryComponent implements OnInit {
 
     this.intraoralBillService
       .getBillTotalBreakdown(billBreakdwonRequest)
-      .subscribe(
-        (response: BillBreakdownResponse) => {
-          console.log('response');
-          console.log(response);
-          this.billBreakdown = response;
-          console.log('this.billBreakdown = ' + this.billBreakdown);
-          console.log(
-            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns,
-          );
-          console.log(this.billBreakdown.billBreakdowns);
-          const getProcedure = Number(this.procedureNumber) - 1;
-          console.log('getProcedure :' + getProcedure);
-          for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
-            if (i == getProcedure) {
-              this.breakdown = this.billBreakdown.billBreakdowns[i];
-              console.log('this.breakdown ');
-              console.log(this.breakdown);
-            }
+      .subscribe((response: BillBreakdownResponse) => {
+        this.billBreakdown = response;
+
+        const getProcedure = Number(this.procedureNumber) - 1;
+        for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
+          if (i == getProcedure) {
+            this.breakdown = this.billBreakdown.billBreakdowns[i];
           }
-          this.onGetTableData();
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting intraoral bill breakdown..'),
-      );
+        }
+        this.onGetTableData();
+      });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -122,39 +110,27 @@ export class AmountChargedHistoryComponent implements OnInit {
       .getAmountChargedHistory(amountDataPaginationRequest)
       .subscribe(
         (response: AmountChargedHistoryResponse[]) => {
-          console.log('response');
-          console.log(response);
           this.amountChargedHistory = response;
         },
         (error: any) => {
-          console.log('here at error response....');
           this.amountChargedHistory = [];
           console.log(error);
-          console.log(this.amountChargedHistory);
         },
-        () =>
-          console.log('Done getting intraoral bill amount charged history..'),
       );
 
     this.intraoralBillService
       .getAmountChargedHistory(amountDataPaginationLengthRequest)
       .subscribe(
         (response: AmountChargedHistoryResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
           this.paginationTotalItems = response.length;
         },
         (error: any) => {
-          console.log('here at error response....');
           this.amountChargedHistory = [];
           console.log(error);
-          console.log(this.amountChargedHistory);
         },
-        () =>
-          console.log('Done getting intraoral bill amount charged history..'),
       );
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -169,49 +145,47 @@ export class AmountChargedHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeChargedAmount(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'chargedAmount';
     this.onGetTableData();
   }
+
   public onChangeDiscount(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'discount';
     this.onGetTableData();
   }
+
   public onChangeNote(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'note';
     this.onGetTableData();
   }
+
   public onChangeCreatedDate(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeCreatedByName(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdByName';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';

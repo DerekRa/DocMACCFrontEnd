@@ -11,7 +11,6 @@ import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
 import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
-import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
 import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-request';
 import { BillBreakdown } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown';
 import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown-response';
@@ -38,8 +37,6 @@ export class AmountProcedureComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
   constructor(
     private profileModelService: ProfileModelService,
@@ -47,7 +44,7 @@ export class AmountProcedureComponent implements OnInit {
     private route: ActivatedRoute,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
   public id: any;
   public profileModel: ProfileModel | undefined;
@@ -67,20 +64,13 @@ export class AmountProcedureComponent implements OnInit {
     discount: new FormControl(''),
     note: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () =>
-        console.log(
-          'Done getting single profile using bill intraoral component..'
-        )
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const billBreakdwonRequest: BillBreakdwonRequest = {
       profileId: this.id,
@@ -89,88 +79,59 @@ export class AmountProcedureComponent implements OnInit {
 
     this.intraoralBillService
       .getBillTotalBreakdown(billBreakdwonRequest)
-      .subscribe(
-        (response: BillBreakdownResponse) => {
-          console.log('response');
-          console.log(response);
-          this.billBreakdown = response;
-          console.log('this.billBreakdown = ' + this.billBreakdown);
-          console.log(
-            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns
-          );
-          console.log(this.billBreakdown.billBreakdowns);
-          const getProcedure = Number(this.procedureNumber) - 1;
-          console.log('getProcedure :' + getProcedure);
-          for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
-            if (i == getProcedure) {
-              this.breakdown = this.billBreakdown.billBreakdowns[i];
-              console.log('this.breakdown ');
-              console.log(this.breakdown);
-            }
+      .subscribe((response: BillBreakdownResponse) => {
+        this.billBreakdown = response;
+
+        const getProcedure = Number(this.procedureNumber) - 1;
+        for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
+          if (i == getProcedure) {
+            this.breakdown = this.billBreakdown.billBreakdowns[i];
           }
+        }
 
-          const getAmountCharged: AmountDataRequest = {
-            profileId: this.id,
-            dateOfProcedure: this.dateOfProcedure,
-            category: this.breakdown.category,
-            procedureDone: this.breakdown.procedureDone,
-            toothNumbers: this.breakdown.toothNumbers,
-          };
-          console.log('getAmountCharged = ');
-          console.log(getAmountCharged);
-          this.intraoralBillService
-            .getAmountCharged(getAmountCharged)
-            .subscribe(
-              (response: AmountChargedResponse) => {
-                console.log('AmountChargedResponse response');
-                console.log(response);
-                this.breakdown.note = response.note;
-                console.log(
-                  'this.billBreakdown after note filled = ' + this.billBreakdown
-                );
-                console.log(this.billBreakdown);
+        const getAmountCharged: AmountDataRequest = {
+          profileId: this.id,
+          dateOfProcedure: this.dateOfProcedure,
+          category: this.breakdown.category,
+          procedureDone: this.breakdown.procedureDone,
+          toothNumbers: this.breakdown.toothNumbers,
+        };
 
-                this.form = this.formBuilder.group({
-                  amountCharged: [
-                    this.breakdown.amountCharged,
-                    [Validators.required],
-                  ],
-                  discount: [this.breakdown.discount, [Validators.required]],
-                  note: [
-                    this.breakdown.note,
-                    [
-                      Validators.required,
-                      Validators.minLength(2),
-                      Validators.maxLength(255),
-                    ],
-                  ],
-                });
-              },
-              (error: any) => console.log(error),
-              () => console.log('Done getting amount procedure data..')
-            );
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting intraoral bill breakdown..')
-      );
+        this.intraoralBillService
+          .getAmountCharged(getAmountCharged)
+          .subscribe((response: AmountChargedResponse) => {
+            this.breakdown.note = response.note;
+
+            this.form = this.formBuilder.group({
+              amountCharged: [
+                this.breakdown.amountCharged,
+                [Validators.required],
+              ],
+              discount: [this.breakdown.discount, [Validators.required]],
+              note: [
+                this.breakdown.note,
+                [
+                  Validators.required,
+                  Validators.minLength(2),
+                  Validators.maxLength(255),
+                ],
+              ],
+            });
+          });
+      });
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
-    console.log('this.breakdown === ' + JSON.stringify(this.breakdown));
+
     if (this.form.invalid) {
       return;
     }
 
-    console.log(
-      "this.form.value['chargedAmount'] ===" + this.form.value['amountCharged']
-    );
     const amountChargedRequest: AmountChargedRequest = {
       profileId: this.id,
       chargedAmount: this.form.value['amountCharged'],
@@ -188,7 +149,6 @@ export class AmountProcedureComponent implements OnInit {
       .createAmountCharged(amountChargedRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const strLink =
               '<a href="/bill-records/intraoral/patients/' +
@@ -201,16 +161,11 @@ export class AmountProcedureComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating amount charged..')
       );
   }
 }

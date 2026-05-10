@@ -20,11 +20,13 @@ export class PaymentHistoryComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticBillService: OrthodonticBillService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
+
   public id: any;
   public billId: any;
   public transactionId: any;
@@ -38,17 +40,13 @@ export class PaymentHistoryComponent implements OnInit {
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -68,43 +66,39 @@ export class PaymentHistoryComponent implements OnInit {
       orderBy: this.orderBy,
       findItem: itemSearch,
     };
+
     this.orthodonticBillService.getPaymentHistory(dataPagination).subscribe(
       (response: PaymentHistoryResponse[]) => {
-        console.log('response');
-        console.log(response);
         this.orthodonticData = response;
       },
       (error: any) => {
-        console.log('the error is log::' + error);
         this.orthodonticData = [];
       },
-      () => console.log('Done getting payment changes history..')
     );
+
     this.orthodonticBillService
       .getPaymentHistory(dataPaginationLength)
       .subscribe(
         (response: PaymentHistoryResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
           this.paginationTotalItems = response.length;
         },
         (error: any) => {
-          console.log('error logs::' + error);
           this.paginationTotalItems = 0;
         },
-        () => console.log('Done getting payment changes history length..')
       );
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -121,41 +115,37 @@ export class PaymentHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangePayment(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'paymentAmount';
     this.onGetTableData();
   }
+
   public onChangeNote(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'paymentNote';
     this.onGetTableData();
   }
+
   public onChangeDate(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeReason(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'paymentReasonChange';
     this.onGetTableData();
   }
+
   public onChangePersonInCharge(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdByName';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

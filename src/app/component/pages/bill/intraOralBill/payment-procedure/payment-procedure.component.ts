@@ -35,17 +35,17 @@ export class PaymentProcedureComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private intraoralBillService: IntraoralBillService,
     private route: ActivatedRoute,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public id: any;
   public profileModel: ProfileModel | undefined;
   public billBreakdown: BillBreakdownResponse | any = {};
@@ -63,20 +63,13 @@ export class PaymentProcedureComponent implements OnInit {
     payment: new FormControl(''),
     note: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () =>
-        console.log(
-          'Done getting single profile using bill intraoral component..'
-        )
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const billBreakdwonRequest: BillBreakdwonRequest = {
       profileId: this.id,
@@ -85,56 +78,40 @@ export class PaymentProcedureComponent implements OnInit {
 
     this.intraoralBillService
       .getBillTotalBreakdown(billBreakdwonRequest)
-      .subscribe(
-        (response: BillBreakdownResponse) => {
-          console.log('response');
-          console.log(response);
-          this.billBreakdown = response;
-          console.log('this.billBreakdown === ');
-          console.log(this.billBreakdown);
-          console.log(
-            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns
-          );
-          console.log(this.billBreakdown.billBreakdowns);
-          const getProcedure = Number(this.procedureNumber) - 1;
-          console.log('getProcedure :' + getProcedure);
-          for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
-            if (i == getProcedure) {
-              this.breakdown = this.billBreakdown.billBreakdowns[i];
-              console.log('this.breakdown ');
-              console.log(this.breakdown);
-            }
+      .subscribe((response: BillBreakdownResponse) => {
+        this.billBreakdown = response;
+
+        const getProcedure = Number(this.procedureNumber) - 1;
+        for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
+          if (i == getProcedure) {
+            this.breakdown = this.billBreakdown.billBreakdowns[i];
           }
-          this.form = this.formBuilder.group({
-            payment: [this.breakdown.balance, [Validators.required]],
-            note: [
-              '',
-              [
-                Validators.required,
-                Validators.minLength(2),
-                Validators.maxLength(255),
-              ],
+        }
+        this.form = this.formBuilder.group({
+          payment: [this.breakdown.balance, [Validators.required]],
+          note: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(2),
+              Validators.maxLength(255),
             ],
-          });
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting intraoral bill breakdown..')
-      );
+          ],
+        });
+      });
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
+
     if (this.form.invalid) {
       return;
     }
 
-    console.log("this.form.value['payment'] ===" + this.form.value['payment']);
     const amountPaymentRequest: AmountPaymentRequest = {
       profileId: this.id,
       paymentAmount: this.form.value['payment'],
@@ -151,7 +128,6 @@ export class PaymentProcedureComponent implements OnInit {
       .createAmountPayment(amountPaymentRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const strLink =
               '<a href="/bill-records/intraoral/patients/' +
@@ -164,16 +140,11 @@ export class PaymentProcedureComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating amount payment..')
       );
   }
 }

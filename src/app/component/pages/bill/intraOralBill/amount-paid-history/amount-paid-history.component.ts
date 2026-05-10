@@ -28,14 +28,12 @@ export class AmountPaidHistoryComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
   constructor(
     private profileModelService: ProfileModelService,
     private intraoralBillService: IntraoralBillService,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
   public id: any;
   public profileModel: ProfileModel | undefined;
@@ -55,19 +53,11 @@ export class AmountPaidHistoryComponent implements OnInit {
   public orderByAscDesc: boolean = false;
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () =>
-        console.log(
-          'Done getting single profile using amount charged history component..'
-        )
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetBreakdownData() {
     const billBreakdwonRequest: BillBreakdwonRequest = {
       profileId: this.id,
@@ -76,31 +66,19 @@ export class AmountPaidHistoryComponent implements OnInit {
 
     this.intraoralBillService
       .getBillTotalBreakdown(billBreakdwonRequest)
-      .subscribe(
-        (response: BillBreakdownResponse) => {
-          console.log('response');
-          console.log(response);
-          this.billBreakdown = response;
-          console.log('this.billBreakdown = ' + this.billBreakdown);
-          console.log(
-            'this.billBreakdown = ' + this.billBreakdown.billBreakdowns
-          );
-          console.log(this.billBreakdown.billBreakdowns);
-          const getProcedure = Number(this.procedureNumber) - 1;
-          console.log('getProcedure :' + getProcedure);
-          for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
-            if (i == getProcedure) {
-              this.breakdown = this.billBreakdown.billBreakdowns[i];
-              console.log('this.breakdown ');
-              console.log(this.breakdown);
-            }
+      .subscribe((response: BillBreakdownResponse) => {
+        this.billBreakdown = response;
+
+        const getProcedure = Number(this.procedureNumber) - 1;
+        for (let i = 0; i < this.billBreakdown.billBreakdowns.length; i++) {
+          if (i == getProcedure) {
+            this.breakdown = this.billBreakdown.billBreakdowns[i];
           }
-          this.onGetTableData();
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting intraoral bill breakdown..')
-      );
+        }
+        this.onGetTableData();
+      });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -130,44 +108,28 @@ export class AmountPaidHistoryComponent implements OnInit {
     };
     this.intraoralBillService
       .getAmountPaymentHistory(amountDataPaginationRequest)
-      .subscribe(
-        (response: AmountPaymentResponse[]) => {
-          console.log('response-=-==-');
-          console.log(response);
-          this.amountPaymentHistory = response;
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () =>
-          console.log('Done getting intraoral bill amount charged history..')
-      );
+      .subscribe((response: AmountPaymentResponse[]) => {
+        this.amountPaymentHistory = response;
+      });
 
     this.intraoralBillService
       .getAmountPaymentHistory(amountDataPaginationLengthRequest)
-      .subscribe(
-        (response: AmountPaymentResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () =>
-          console.log('Done getting intraoral bill amount charged history..')
-      );
+      .subscribe((response: AmountPaymentResponse[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -180,34 +142,31 @@ export class AmountPaidHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangePayment(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'paymentAmount';
     this.onGetTableData();
   }
+
   public onChangeNote(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'note';
     this.onGetTableData();
   }
+
   public onChangeCreatedDate(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeCreatedByName(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdByName';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
