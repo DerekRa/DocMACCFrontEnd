@@ -2,7 +2,6 @@
 <main>
   <div class="container">
     <!-- Label -->
-    <!-- Label -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -60,7 +59,7 @@
                   formControlName="fullName"
                   [value]="physician?.fullName"
                   [ngClass]="{
-                    'is-invalid': submitted && f['fullName'].errors
+                    'is-invalid': submitted && f['fullName'].errors,
                   }"
                 />
                 <div
@@ -99,7 +98,7 @@
                   [value]="physician?.officeAddress"
                   formControlName="officeAddress"
                   [ngClass]="{
-                    'is-invalid': submitted && f['officeAddress'].errors
+                    'is-invalid': submitted && f['officeAddress'].errors,
                   }"
                 />
               </div>
@@ -138,7 +137,7 @@
                   [value]="physician?.officeNumber"
                   formControlName="officeNumber"
                   [ngClass]="{
-                    'is-invalid': submitted && f['officeNumber'].errors
+                    'is-invalid': submitted && f['officeNumber'].errors,
                   }"
                 />
                 <div
@@ -177,7 +176,7 @@
                   [value]="physician?.specialty"
                   formControlName="specialty"
                   [ngClass]="{
-                    'is-invalid': submitted && f['specialty'].errors
+                    'is-invalid': submitted && f['specialty'].errors,
                   }"
                 />
                 <div
@@ -201,7 +200,6 @@
             <div class="col-4"><hr /></div>
           </div>
           <div class="grid justify-content-center">
-            <!-- <div class="col-2 text-lg"></div> -->
             <div
               class="col-4"
               *ngIf="action == 'View'; else elseBlockSaveUpdate"

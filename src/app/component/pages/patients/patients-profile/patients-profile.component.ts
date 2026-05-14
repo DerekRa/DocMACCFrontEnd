@@ -6,7 +6,6 @@ import { Name } from 'src/app/model/interface/profileModel/name';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { ProfileModelList } from 'src/app/model/interface/profileModel/profile-model-list';
 import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
-import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { OrthodonticBillService } from 'src/app/service/billRecord/orthodontic-bill.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { IntraoralExaminationService } from 'src/app/service/dentalRecord/intraoral-examination.service';
@@ -128,7 +127,7 @@ export class PatientsProfileComponent implements OnInit {
     private orthodonticExaminationService: OrthodonticExaminationService,
     private orthodonticBillService: OrthodonticBillService,
     private router: Router,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -136,97 +135,58 @@ export class PatientsProfileComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    // this.onPostProfileModel();
-    // this.onPutProfileModel();
-    // this.onDeleteProfileModel();
-    // const value = this.route.paramMap.pipe(map((params: ParamMap) => params.get('state')));
-    // console.log('value == ' + value);
-    // console.log('value getCurrentNavigation == ' + this.router.getCurrentNavigation()?.extras.state);
-    // console.log('value history == ' + history.state);
 
-    // console.log(JSON.stringify(history.state['key']));
-    // console.log(JSON.stringify(value));
-    // this.onGetProfileModels();
-    // this.onGetPagination();
     this.onGetTableData();
-    // this.onGetProfileModel();
   }
 
   private onGetTableData() {
     const urlPathName = window.location.pathname;
-    console.log('urlPathName = ' + urlPathName);
     this.urlLocation = urlPathName;
     const pageNo = this.page - 1;
     const pageSize = this.paginationSize;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
     const sortBy = this.sortBy;
     const orderBy = this.orderBy;
-    this.medicalHistoryService.getActivePatients().subscribe(
-      (response: any) => {
-        console.log('response from medical history service');
-        console.log(response);
+    this.medicalHistoryService
+      .getActivePatients()
+      .subscribe((response: any) => {
         for (const key of response) {
           this.medicalHistoryCollection.push(key.profileId);
         }
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting medical history with records..')
-    );
-    this.intraoralExaminationService.getActivePatients().subscribe(
-      (response: ActiveProfiles[]) => {
+      });
+    this.intraoralExaminationService
+      .getActivePatients()
+      .subscribe((response: ActiveProfiles[]) => {
         for (const key of response) {
           this.intraOralCollection.push(key.profileId);
         }
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting intral oral with records..')
-    );
-    this.orthodonticExaminationService.getActivePatients().subscribe(
-      (response: ActiveProfiles[]) => {
+      });
+    this.orthodonticExaminationService
+      .getActivePatients()
+      .subscribe((response: ActiveProfiles[]) => {
         for (const key of response) {
           this.orthodonticExamCollection.push(key.profileId);
         }
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting orthodontic with records..')
-    );
-    this.orthodonticBillService.getPatientsWithRecords().subscribe(
-      (response: number[]) => {
+      });
+    this.orthodonticBillService
+      .getPatientsWithRecords()
+      .subscribe((response: number[]) => {
         for (const key of response) {
-          console.log('orthodonticBillService key value:' + key);
           this.orthodonticBillCollection.push(key);
         }
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting orthodontic with records..')
-    );
+      });
 
     this.profileModelService
       .getFullNameListPerPage(pageNo, pageSize, sortBy, orderBy, itemSearch)
-      .subscribe(
-        (response: any) => {
-          console.log('response');
-          console.log(response);
-          console.log('-----=-=-=-=----');
-          this.nameList = response.body;
-          console.log(this.nameList);
-          this.nameListLength = response.body;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: any) => {
+        this.nameList = response.body;
+        this.nameListLength = response.body;
+      });
     this.profileModelService
       .getFullNameListPerPage(0, 10000, sortBy, orderBy, itemSearch)
-      .subscribe(
-        (response: any) => {
-          console.log('response');
-          console.log(response);
-          console.log('-----=-=-=-=----');
-          this.paginationTotalItems = response.body.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: any) => {
+        this.paginationTotalItems = response.body.length;
+      });
   }
 
   public onSortPage(event: any) {
@@ -274,28 +234,25 @@ export class PatientsProfileComponent implements OnInit {
   }
   // Patient Profile
   public viewPatientProfile(id: any) {
-    console.log(id);
     this.router.navigate(['patient-profile', id]);
   }
   // Medical History
   public viewMedicalHistory(id: any) {
-    console.log(id);
     this.router.navigate(['medical-history/patient', id]);
   }
+
   public addMedicalHistory(id: any) {
-    console.log(id);
     this.router.navigate(['medical-history/add-patient', id]);
   }
   // Intraoral Examination
   public viewIntralOralExam(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/intraoral-examination/view-record',
       id,
     ]);
   }
+
   public addIntralOralExam(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/intraoral-examination/add-record',
       id,
@@ -303,14 +260,13 @@ export class PatientsProfileComponent implements OnInit {
   }
   // Orthodontic Examination
   public viewOrthodonticExam(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/orthodontic-examination/view-record',
       id,
     ]);
   }
+
   public addOrthodonticExam(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/orthodontic-examination/add-record',
       id,
@@ -318,65 +274,32 @@ export class PatientsProfileComponent implements OnInit {
   }
   // Treatment Plan
   public viewIntraOralTreatment(id: any) {
-    console.log(id);
     this.router.navigate(['dental-records/treatment-plan/intraoral', id]);
   }
+
   public viewOrthodonticTreatment(id: any) {
-    console.log(id);
     this.router.navigate(['dental-records/treatment-plan/orthodontic', id]);
   }
   // Intraoral Bill
   public viewIntraOralBill(id: any) {
-    console.log(id);
     this.router.navigate(['bill-records/intraoral/patients', id]);
   }
   // Orthodontic Bill
   public addOrthodonticBill(id: any) {
-    console.log(id);
     this.router.navigate([
       'bill-records/orthodontic/patients/' + id + '/add-record',
     ]);
   }
+
   public viewOrthodonticBill(id: any) {
-    console.log(id);
     this.router.navigate(['bill-records/orthodontic/patients', id]);
   }
 
   public onGetProfileModels(): void {
-    this.profileModelService.getProfileModelList().subscribe(
-      (response) => {
-        // location.reload();
-        this.profileModelList = response;
-        // console.table(response);
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting profiles..')
-    );
+    this.profileModelService.getProfileModelList().subscribe((response) => {
+      // location.reload();
+      this.profileModelList = response;
+      // console.table(response);
+    });
   }
-
-  public onPostProfileModel(): void {
-    this.profileModelService.createProfileModel(this.profileModel).subscribe(
-      (response: CustomHttpResponse) => console.log(response),
-      (error: any) => console.log(error),
-      () => console.log('Done create single profile..')
-    );
-  }
-
-  public onPutProfileModel(): void {
-    this.profileModelService
-      .updateProfileModel(this.profileModelUpdate)
-      .subscribe(
-        (response: CustomHttpResponse) => console.log(response),
-        (error: CustomHttpResponse) => console.log(error),
-        () => console.log('Done updating single profile..')
-      );
-  }
-
-  // public onDeleteProfileModel(): void {
-  //     this.profileModelService.deleteProfileModel(6).subscribe(
-  //         (response: CustomHttpResponse) => console.log(response),
-  //         (error: CustomHttpResponse) => console.log(error),
-  //         () => console.log('Done deleting single profile..')
-  //     );
-  // }
 }

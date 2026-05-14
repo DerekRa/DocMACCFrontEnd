@@ -47,13 +47,15 @@ export class AddInformedConsentComponent implements OnInit {
   @HostBinding('style.max-height') private maxHeight = '500px';
   @HostBinding('style.min-width') private minWidth = '500px';
   @HostBinding('style.max-width') private maxWidth = '500px';
+
   constructor(
     private readonly keycloak: KeycloakService,
     private route: ActivatedRoute,
     private router: Router,
     public alertService: AlertService,
-    private preProcedureRequirementService: PreProcedureRequirementService
+    private preProcedureRequirementService: PreProcedureRequirementService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.item_name = this.route.snapshot.params['itemName'];
@@ -67,6 +69,7 @@ export class AddInformedConsentComponent implements OnInit {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
   }
+
   @HostListener('dragover', ['$event']) public onDragOver(evt: any) {
     evt.preventDefault();
     evt.stopPropagation();
@@ -110,35 +113,31 @@ export class AddInformedConsentComponent implements OnInit {
   }
 
   onFileChange(event: any) {
-    console.log('file drop here..');
     this.files.push(...event.addedFiles);
     if (this.files.length > 0 && this.files.length < 6) {
-      console.log('here inside temp save.');
       this.loopFiles('temp');
     } else {
       this.alertService.error(
         'Image upload must not exceed 5 items',
-        this.options
+        this.options,
       );
       this.files = [];
     }
   }
 
   onRemove(event: any) {
-    console.log(event);
     this.pictures.splice(this.pictures.indexOf(event), 1);
     this.files.splice(this.pictures.indexOf(event), 1);
   }
+
   onSaveFiles() {
     if (this.files.length > 0) {
-      console.log('here inside permanent save.');
       this.saveMultipleFiles('permanent');
     }
   }
+
   private loopFiles(location: string) {
     for (let x = 0; x < this.files.length; x++) {
-      console.log('this.files:' + JSON.stringify(this.files));
-      console.log('this.files.length:' + this.files.length);
       const reader = new FileReader();
       const formData = new FormData();
       reader.readAsDataURL(this.files[x]);
@@ -154,25 +153,24 @@ export class AddInformedConsentComponent implements OnInit {
           (response: HttpEvent<CustomHttpResponse>) => {
             switch (response.type) {
               case HttpEventType.Sent:
-                console.log('Request has been made!');
+                // Request has been made!
                 break;
               case HttpEventType.UploadProgress:
                 var eventTotal = response.total ? response.total : 0;
                 this.uploadProgress = Math.round(
-                  (response.loaded / eventTotal) * 100
+                  (response.loaded / eventTotal) * 100,
                 );
-                console.log(`Uploaded! ${this.uploadProgress}%`);
+                // Uploaded! ${this.uploadProgress}%
                 break;
               case HttpEventType.ResponseHeader:
-                console.log('Response header has been received!');
+                // Response header has been received!
                 break;
               case HttpEventType.DownloadProgress:
-                console.log('here on download progresssss!');
+                // Download progress has been received!
                 break;
               case HttpEventType.Response:
-                console.log('Image Upload Successfully!');
+                // Response has been received!
                 this.pictures[x] = reader.result as string;
-                console.log(response);
                 const messageSplit = response?.body?.message
                   ? response?.body?.message.split(':')
                   : [];
@@ -181,7 +179,6 @@ export class AddInformedConsentComponent implements OnInit {
                 setTimeout(() => {
                   this.uploadProgress = 0;
                   if (location == 'permanent' && this.files.length == x + 1) {
-                    console.log('hereinside.. inside permanent ' + x);
                     this.pictures = [];
                     this.files = [];
                     this.router.navigate([
@@ -190,32 +187,27 @@ export class AddInformedConsentComponent implements OnInit {
                     ]);
                   }
                   if (location == 'temp' && this.files.length == x + 1) {
-                    console.log('hereinside.. save files false ' + x);
-                    console.log('this.files.length ' + this.files.length);
                     this.saveFiles = false;
                   }
                 }, 1500);
             }
           },
           (error: any) => {
-            console.log('error:::' + JSON.stringify(error));
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
-              console.log('errorResponse.message = ' + errorResponse.message);
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done uploading informed consent images..')
         );
       };
       let loopLength = x + 1;
       if (location == 'permanent' && this.files.length == loopLength) {
-        console.log('hereinside.. outside permanent ' + x);
         // this.pictures = [];
         // this.files = [];
       }
     }
   }
+
   private saveMultipleFiles(location: string) {
     if (this.hashNames.length > 0) {
       for (let x = 0; x < this.hashNames.length; x++) {
@@ -226,10 +218,8 @@ export class AddInformedConsentComponent implements OnInit {
         formData.append('profileId', this.id);
         formData.append('updatedByName', this.userProfile?.firstName || '');
         formData.append('updatedById', this.userProfile?.id || '');
-        console.log('this.hashNames:' + this.hashNames[x]);
         this.preProcedureRequirementService.updateImages(formData).subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'OK') {
               this.alertService.success(response.message, this.options);
               if (this.hashNames.length == x + 1) {
@@ -241,13 +231,11 @@ export class AddInformedConsentComponent implements OnInit {
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating single image..')
         );
       }
     }

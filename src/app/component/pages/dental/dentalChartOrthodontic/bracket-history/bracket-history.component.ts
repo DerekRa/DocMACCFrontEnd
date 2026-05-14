@@ -23,24 +23,19 @@ export class BracketHistoryComponent implements OnInit {
     this.onGetProfileModel();
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
-    console.log(paramsURL[0]);
-    console.log(paramsURL[1]);
-    console.log(paramsURL[2]);
-    console.log(paramsURL[3]);
-    console.log(paramsURL[4]);
-    console.log(paramsURL[5]);
-    console.log(paramsURL[6]);
+
     this.action = paramsURL[6];
-    console.log('urlPathName = ' + urlPathName);
     this.setCategoryValue();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticExaminationService: OrthodonticExaminationService,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
   public id: any;
@@ -59,17 +54,13 @@ export class BracketHistoryComponent implements OnInit {
   public bracketPrescription: BracketResponse | undefined;
   public maxillaryWireType: BracketResponse | undefined;
   public mandibularWireType: BracketResponse | undefined;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -98,36 +89,22 @@ export class BracketHistoryComponent implements OnInit {
 
     this.orthodonticExaminationService
       .getBracketPrescriptionWireTypesPagination(bracketPaginationRequest)
-      .subscribe(
-        (response: BracketResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.bracketHistoryData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: BracketResponse[]) => {
+        this.bracketHistoryData = response;
+      });
 
     this.orthodonticExaminationService
       .getBracketPrescriptionWireTypesPagination(bracketPaginationRequestLength)
-      .subscribe(
-        (response: BracketResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
+      .subscribe((response: BracketResponse[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -138,13 +115,13 @@ export class BracketHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeDateOfProcedure(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   private setCategoryValue() {
     if (this.action == 'bracket-prescription-history') {
       this.categoryTitle = 'Bracket Prescription';
@@ -159,13 +136,13 @@ export class BracketHistoryComponent implements OnInit {
       this.category = 'MandibularWireType';
     }
   }
+
   public onChangeBracket(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'values';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

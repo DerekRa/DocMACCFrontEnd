@@ -12,10 +12,9 @@ export class HomeDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<HomeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private patientAppointmentService: PatientAppointmentService
+    private patientAppointmentService: PatientAppointmentService,
   ) {}
   onNoClick(): void {
-    console.log('click on close..');
     this.dialogRef.close();
   }
 }

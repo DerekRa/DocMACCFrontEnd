@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { co } from '@fullcalendar/core/internal-common';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
@@ -137,19 +136,16 @@ export class UpdatePatientProfileComponent implements OnInit {
     };
     this.profileModelService.updateProfileModel(profileModelUpdate).subscribe(
       (response: CustomHttpResponse) => {
-        console.log(response);
         if (response.httpStatus == 'OK') {
           this.alertService.success(response.message, this.options);
         }
       },
       (error: any) => {
-        console.log(error);
         const errorResponse: CustomHttpResponse = error['error'];
         if (errorResponse.httpStatus == 'BAD_REQUEST') {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done updating single profile..'),
     );
   }
 
@@ -158,17 +154,12 @@ export class UpdatePatientProfileComponent implements OnInit {
 
     if (event.target.files && event.target.files.length) {
       const [file] = event.target.files;
-      console.log('01');
       reader.readAsDataURL(file);
       reader.onload = () => {
         const formData = new FormData();
-        console.log('02');
         formData.append('id', this.id);
         formData.append('file', file);
-        console.log(file);
         formData.append('imgLink', this.profileModelService.getImageURL());
-        console.log(this.profileModelService.getImageURL());
-        console.log('03');
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {
             if (response.httpStatus == 'OK') {
@@ -186,12 +177,10 @@ export class UpdatePatientProfileComponent implements OnInit {
           },
           (error: any) => {
             const errorResponse: CustomHttpResponse = error['error'];
-            console.log(error);
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done uploading profile picture..'),
         );
       };
     }
@@ -204,7 +193,6 @@ export class UpdatePatientProfileComponent implements OnInit {
     // update preview and form value
     this.picture = payload.dataUrl;
     this.form.patchValue({ imgLink: payload.dataUrl });
-    console.log('Received picture from camera: ', payload);
     // upload same as file input does
     const reader = new FileReader();
     reader.readAsDataURL(payload.file);
@@ -214,14 +202,6 @@ export class UpdatePatientProfileComponent implements OnInit {
 
       formData.append('file', payload.file);
       formData.append('imgLink', this.profileModelService.getImageURL());
-      console.log('id: ', this.id);
-      console.log('Uploading picture captured from camera: ', payload.file);
-      console.log(
-        'Image URL from service: ',
-        this.profileModelService.getImageURL(),
-      );
-      console.log('FormData to be sent: ', formData);
-      console.log('Reader result (data URL): ', reader.result);
 
       this.profileModelService.uploadPicture(formData).subscribe(
         (response: CustomHttpResponse) => {
@@ -242,122 +222,112 @@ export class UpdatePatientProfileComponent implements OnInit {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done uploading profile picture via camera..'),
       );
     };
   }
 
   public onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        this.profileModel = response;
-        // prefer any previously shared picture over server value
-        const shared =
-          this.pictureService.getCurrentValue &&
-          this.pictureService.getCurrentValue();
-        if (shared) {
-          this.picture = shared;
-          this.form.patchValue({ imgLink: shared });
-        } else {
-          this.picture = this.profileModel?.imgLink;
-        }
-        this.form = this.formBuilder.group({
-          id: [this.profileModel?.id],
-          imgLink: [this.profileModel?.imgLink],
-          lastName: [
-            this.profileModel?.name?.lastName,
-            [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(100),
-            ],
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+      // prefer any previously shared picture over server value
+      const shared =
+        this.pictureService.getCurrentValue &&
+        this.pictureService.getCurrentValue();
+      if (shared) {
+        this.picture = shared;
+        this.form.patchValue({ imgLink: shared });
+      } else {
+        this.picture = this.profileModel?.imgLink;
+      }
+      this.form = this.formBuilder.group({
+        id: [this.profileModel?.id],
+        imgLink: [this.profileModel?.imgLink],
+        lastName: [
+          this.profileModel?.name?.lastName,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
           ],
-          middleName: [
-            this.profileModel?.name?.middleName,
-            [Validators.minLength(2), Validators.maxLength(100)],
+        ],
+        middleName: [
+          this.profileModel?.name?.middleName,
+          [Validators.minLength(2), Validators.maxLength(100)],
+        ],
+        firstName: [
+          this.profileModel?.name?.firstName,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(100),
           ],
-          firstName: [
-            this.profileModel?.name?.firstName,
-            [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(100),
-            ],
+        ],
+        nickName: [
+          this.profileModel?.name?.nickName,
+          [Validators.minLength(2), Validators.maxLength(100)],
+        ],
+        religion: [
+          this.profileModel?.religion,
+          [Validators.required, Validators.minLength(2)],
+        ],
+        nationality: [
+          this.profileModel?.nationality,
+          [Validators.minLength(2)],
+        ],
+        occupation: [this.profileModel?.occupation, [Validators.minLength(2)]],
+        homeAddress: [
+          this.profileModel?.contactDetail?.homeAddress,
+          [
+            Validators.required,
+            Validators.minLength(2),
+            Validators.maxLength(1000),
           ],
-          nickName: [
-            this.profileModel?.name?.nickName,
-            [Validators.minLength(2), Validators.maxLength(100)],
-          ],
-          religion: [
-            this.profileModel?.religion,
-            [Validators.required, Validators.minLength(2)],
-          ],
-          nationality: [
-            this.profileModel?.nationality,
-            [Validators.minLength(2)],
-          ],
-          occupation: [
-            this.profileModel?.occupation,
-            [Validators.minLength(2)],
-          ],
-          homeAddress: [
-            this.profileModel?.contactDetail?.homeAddress,
-            [
-              Validators.required,
-              Validators.minLength(2),
-              Validators.maxLength(1000),
-            ],
-          ],
-          homeNumber: [
-            this.profileModel?.contactDetail?.contactNumber?.homeNumber,
-            [Validators.minLength(2)],
-          ],
-          officeNumber: [
-            this.profileModel?.contactDetail?.contactNumber?.officeNumber,
-            [Validators.minLength(2)],
-          ],
-          cellNumber: [
-            this.profileModel?.contactDetail?.contactNumber?.cellNumber,
-            [Validators.required, Validators.minLength(2)],
-          ],
-          faxNumber: [
-            this.profileModel?.contactDetail?.contactNumber?.faxNumber,
-            [Validators.minLength(2)],
-          ],
-          emailAddress: [
-            this.profileModel?.contactDetail?.emailAddress,
-            [Validators.email],
-          ],
-          dentalInsurance: [
-            this.profileModel?.dentalInsurance,
-            [Validators.minLength(2)],
-          ],
-          firstDentalVisit: [
-            this.profileModel?.firstDentalVisit,
-            [Validators.required],
-          ],
-          parentsGuardian: [
-            this.profileModel?.minor?.parentsGuardian,
-            [Validators.minLength(2), Validators.maxLength(255)],
-          ],
-          parentsGuardianOccupation: [
-            this.profileModel?.minor?.parentsGuardianOccupation,
-            [Validators.minLength(2), Validators.maxLength(255)],
-          ],
-          referralName: [
-            this.profileModel?.minor?.referralName,
-            [Validators.minLength(2), Validators.maxLength(255)],
-          ],
-          reasonDentalConsultation: [
-            this.profileModel?.minor?.reasonDentalConsultation,
-            [Validators.minLength(2), Validators.maxLength(1000)],
-          ],
-        });
-      },
-      (error: CustomHttpResponse) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..'),
-    );
+        ],
+        homeNumber: [
+          this.profileModel?.contactDetail?.contactNumber?.homeNumber,
+          [Validators.minLength(2)],
+        ],
+        officeNumber: [
+          this.profileModel?.contactDetail?.contactNumber?.officeNumber,
+          [Validators.minLength(2)],
+        ],
+        cellNumber: [
+          this.profileModel?.contactDetail?.contactNumber?.cellNumber,
+          [Validators.required, Validators.minLength(2)],
+        ],
+        faxNumber: [
+          this.profileModel?.contactDetail?.contactNumber?.faxNumber,
+          [Validators.minLength(2)],
+        ],
+        emailAddress: [
+          this.profileModel?.contactDetail?.emailAddress,
+          [Validators.email],
+        ],
+        dentalInsurance: [
+          this.profileModel?.dentalInsurance,
+          [Validators.minLength(2)],
+        ],
+        firstDentalVisit: [
+          this.profileModel?.firstDentalVisit,
+          [Validators.required],
+        ],
+        parentsGuardian: [
+          this.profileModel?.minor?.parentsGuardian,
+          [Validators.minLength(2), Validators.maxLength(255)],
+        ],
+        parentsGuardianOccupation: [
+          this.profileModel?.minor?.parentsGuardianOccupation,
+          [Validators.minLength(2), Validators.maxLength(255)],
+        ],
+        referralName: [
+          this.profileModel?.minor?.referralName,
+          [Validators.minLength(2), Validators.maxLength(255)],
+        ],
+        reasonDentalConsultation: [
+          this.profileModel?.minor?.reasonDentalConsultation,
+          [Validators.minLength(2), Validators.maxLength(1000)],
+        ],
+      });
+    });
   }
 }

@@ -46,11 +46,6 @@ export class AddUpdateXrayTakenComponent implements OnInit {
       this.form = this.formBuilder.group({
         remarks: ['', [Validators.minLength(2), Validators.maxLength(1000)]],
       });
-      console.log('this.id = ' + this.id);
-      console.log('this.dentalChart = ' + this.dentalChart);
-      console.log('this.labelName = ' + this.labelName);
-      console.log('this.action = ' + this.action);
-      console.log('this.userProfile = ' + JSON.stringify(this.userProfile));
     }
   }
 
@@ -61,8 +56,9 @@ export class AddUpdateXrayTakenComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public alertService: AlertService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
+
   public id: any;
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
@@ -87,9 +83,11 @@ export class AddUpdateXrayTakenComponent implements OnInit {
   public form: FormGroup = new FormGroup({
     remarks: new FormControl(''),
   });
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   @Output() private filesChangeEmiter: EventEmitter<File[]> =
     new EventEmitter();
 
@@ -112,8 +110,8 @@ export class AddUpdateXrayTakenComponent implements OnInit {
       this.examType = 'Orthodontic Examination';
       this.examinationType = 'orthodontic_examination';
     }
-    console.log('this.examType = ' + this.examType);
   }
+
   private onGetTempRemarkAndFiles() {
     const getTempImages: XrayTakenTempImageRequest = {
       profileId: this.id,
@@ -125,77 +123,58 @@ export class AddUpdateXrayTakenComponent implements OnInit {
     };
     this.preRequisiteRequirementService
       .getXrayTakenTempImages(getTempImages)
-      .subscribe(
-        (responseTempImges: XrayTakenTempImageResponse[]) => {
-          console.log('response -=-=-=-=-=-====');
-          console.log(responseTempImges);
-          this.xrayTakenTempImages = responseTempImges;
-          for (let i = 0; i < this.xrayTakenTempImages.length; i++) {
-            const reader = new FileReader();
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', this.xrayTakenTempImages[i].imgLink, true);
-            xhr.responseType = 'blob';
-            xhr.onload = function (e) {
-              if (this.status == 200) {
-                reader.readAsDataURL(this.response);
-                // myBlob is now the blob that the object URL pointed to.
-              }
-            };
-            xhr.send();
-
-            reader.onload = () => {
-              if (this.pictures.length > 0) {
-                this.pictures[this.pictures.length++] = reader.result as string;
-              } else {
-                this.pictures[0] = reader.result as string;
-              }
-            };
-
-            if (this.nameHashTypes.length > 0) {
-              this.nameHashTypes[this.nameHashTypes.length++] =
-                this.xrayTakenTempImages[i].hashNameType;
-            } else {
-              this.nameHashTypes[0] = this.xrayTakenTempImages[i].hashNameType;
+      .subscribe((responseTempImges: XrayTakenTempImageResponse[]) => {
+        this.xrayTakenTempImages = responseTempImges;
+        for (let i = 0; i < this.xrayTakenTempImages.length; i++) {
+          const reader = new FileReader();
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', this.xrayTakenTempImages[i].imgLink, true);
+          xhr.responseType = 'blob';
+          xhr.onload = function (e) {
+            if (this.status == 200) {
+              reader.readAsDataURL(this.response);
+              // myBlob is now the blob that the object URL pointed to.
             }
+          };
+          xhr.send();
+
+          reader.onload = () => {
+            if (this.pictures.length > 0) {
+              this.pictures[this.pictures.length++] = reader.result as string;
+            } else {
+              this.pictures[0] = reader.result as string;
+            }
+          };
+
+          if (this.nameHashTypes.length > 0) {
+            this.nameHashTypes[this.nameHashTypes.length++] =
+              this.xrayTakenTempImages[i].hashNameType;
+          } else {
+            this.nameHashTypes[0] = this.xrayTakenTempImages[i].hashNameType;
           }
-          if (this.xrayTakenTempImages.length > 0) {
-            this.saveFiles = false;
-          }
-          console.log('pictures length = ' + this.pictures.length);
-        },
-        (error: any) => {
-          console.log('error in getting temp images..');
-          console.log(error);
-        },
-        () => console.log('Done getting profiles..')
-      );
+        }
+        if (this.xrayTakenTempImages.length > 0) {
+          this.saveFiles = false;
+        }
+      });
   }
+
   onFileChange(event: any) {
-    console.log('file drop here..');
     this.files.push(...event.addedFiles);
     if (this.files.length > 0 && this.files.length < 15) {
-      console.log('here inside temp save.');
       this.saveTempRemarkAndFiles();
     } else {
       this.alertService.error(
         'Image upload must not exceed 5 items',
-        this.options
+        this.options,
       );
       this.files = [];
     }
   }
+
   private saveTempRemarkAndFiles() {
     if (this.files.length > 0) {
-      console.log('this.files.length = ' + this.files.length);
-      console.log('this.files:' + JSON.stringify(this.files));
-      console.log('this.userProfile:' + JSON.stringify(this.userProfile));
-      console.log('this.dentalChart = ' + this.dentalChart);
-      console.log('this.labelName = ' + this.labelName);
-      console.log('this.id = ' + this.id);
-      console.log('this.remarks = ' + this.remarks);
-
       for (let x = 0; x < this.files.length; x++) {
-        console.log('this.files:' + JSON.stringify(this.files));
         const reader = new FileReader();
         const formData = new FormData();
         reader.readAsDataURL(this.files[x]);
@@ -213,33 +192,32 @@ export class AddUpdateXrayTakenComponent implements OnInit {
               (response: HttpEvent<CustomHttpResponse>) => {
                 switch (response.type) {
                   case HttpEventType.Sent:
-                    console.log('Request has been made!');
+                    // Request has been made!
                     break;
                   case HttpEventType.ResponseHeader:
-                    console.log('Response header has been received!');
+                    // Response header has been received!
                     break;
                   case HttpEventType.UploadProgress:
                     var eventTotal = response.total ? response.total : 0;
                     this.uploadProgress = Math.round(
-                      (response.loaded / eventTotal) * 100
+                      (response.loaded / eventTotal) * 100,
                     );
-                    console.log(`Uploaded! ${this.uploadProgress}%`);
+                    // Uploaded! ${this.uploadProgress}%
                     break;
                   case HttpEventType.Response:
-                    console.log('Image Upload Successfully!');
+                    // Image Upload Successfully!
                     if (this.pictures.length > 0) {
                       this.pictures[this.pictures.length++] =
                         reader.result as string;
                     } else {
                       this.pictures[0] = reader.result as string;
                     }
-                    console.log(response);
                     const messageSplit = response?.body?.message
                       ? response?.body?.message.split(':')
                       : [];
                     this.alertService.success(
                       '' + messageSplit[0],
-                      this.options
+                      this.options,
                     );
                     if (this.nameHashTypes.length > 0) {
                       this.nameHashTypes[this.nameHashTypes.length++] =
@@ -248,22 +226,14 @@ export class AddUpdateXrayTakenComponent implements OnInit {
                       this.nameHashTypes[0] = messageSplit[1];
                     }
                     if (this.filesSaved.length > 0) {
-                      console.log('file saved x =' + x);
                       this.filesSaved[this.filesSaved.length++] = this.files[x];
                     } else {
                       this.filesSaved[0] = this.files[0];
                     }
 
-                    console.log(
-                      'this.filesSaved.length === ' + this.filesSaved.length
-                    );
                     setTimeout(() => {
                       this.uploadProgress = 0;
                       if (this.files.length == x + 1) {
-                        console.log(
-                          'this.filesSaved.length = ' + this.filesSaved.length
-                        );
-                        console.log('this.files.length ' + this.files.length);
                         this.saveFiles = false;
                         this.files = [];
                       }
@@ -272,53 +242,32 @@ export class AddUpdateXrayTakenComponent implements OnInit {
               },
               (error: any) => {
                 const errorResponse: CustomHttpResponse = error['error'];
-                console.log('errorResponse.message = ' + errorResponse.message);
                 if (error.status === 417) {
-                  console.log('error.statusText = ' + error.statusText);
                   this.alertService.error(
                     'Wrong file format. Only accept .jpg / .png',
-                    this.options
+                    this.options,
                   );
                 }
               },
-              () => console.log('Done uploading informed consent images..')
             );
         };
       }
     }
   }
+
   public onSaveFiles() {
-    console.log('onSaveFiles called..');
     this.submitted = true;
     if (this.form.invalid) {
-      console.log('form is invalid');
       this.alertService.error(
         'Please fill out the remarks correctly.',
-        this.options
+        this.options,
       );
       return;
     }
-    this.remarks = this.form.value.remarks;
-    console.log('remarks = ' + this.remarks);
-    console.log('this.id = ' + this.id);
-    console.log('this.dentalChart = ' + this.dentalChart);
-    console.log('this.labelName = ' + this.labelName);
-    console.log('this.userProfile = ' + JSON.stringify(this.userProfile));
-    console.log('this.files.length = ' + this.files.length);
-    console.log('this.pictures.length = ' + this.pictures.length);
-    console.log('this.nameHashTypes.length = ' + this.nameHashTypes.length);
-    console.log('this.filesSaved.length = ' + this.filesSaved.length);
-    console.log(
-      'this.xrayTakenTempImages.length = ' + this.xrayTakenTempImages.length
-    );
-    console.log('this.saveFiles = ' + this.saveFiles);
-    console.log('this.pictures.length = ' + this.files.length);
-    console.log(
-      'this.xrayTakenTempImages.length = ' + this.xrayTakenTempImages.length
-    );
-    if (this.pictures.length > 0 || this.xrayTakenTempImages.length > 0) {
-      console.log('here inside permanent save.');
 
+    this.remarks = this.form.value.remarks;
+
+    if (this.pictures.length > 0 || this.xrayTakenTempImages.length > 0) {
       const updateDataToPermanent: XrayTakenPermanentDataRequest = {
         xrayTakenId: 0,
         profileId: this.id,
@@ -329,11 +278,11 @@ export class AddUpdateXrayTakenComponent implements OnInit {
         labelName: this.labelName,
         remarks: this.form.value.remarks,
       };
+
       this.preRequisiteRequirementService
         .updateXrayTakenImageToPermanent(updateDataToPermanent)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'OK') {
               this.options.autoClose = true;
 
@@ -354,28 +303,17 @@ export class AddUpdateXrayTakenComponent implements OnInit {
             }
           },
           (error: any) => {
-            console.log('error in updating to permanent..');
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating all files to permanent..')
         );
     }
   }
+
   public onRemove(event: any) {
     //remove also on db
-    console.log(event);
-
-    console.log(
-      'name hash = ' + this.nameHashTypes[this.pictures.indexOf(event)]
-    );
-    console.log(this.nameHashTypes.indexOf(event));
-    console.log(this.pictures.indexOf(event));
-    console.log(this.files.indexOf(event));
-
     const removeTempImage: XrayTakenImageTempRemove = {
       profileId: this.id,
       createdByName: this.userProfile?.firstName || '',
@@ -390,7 +328,6 @@ export class AddUpdateXrayTakenComponent implements OnInit {
       .deleteXrayTakenTempData(removeTempImage)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'OK') {
             this.options.autoClose = true;
             this.alertService.success(response.message, this.options);
@@ -400,13 +337,11 @@ export class AddUpdateXrayTakenComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done deletting single file..')
       );
 
     this.nameHashTypes.splice(this.pictures.indexOf(event), 1);

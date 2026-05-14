@@ -1,7 +1,6 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
-// import { CustomHttpResponse } from 'src/app/model/interface/custom-http-response';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
 import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/delete-profile';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
@@ -30,6 +29,7 @@ export class PatientProfileComponent implements OnInit {
   };
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
+
   constructor(
     private profileModelService: ProfileModelService,
     private pictureService: PictureSharingService,
@@ -40,6 +40,7 @@ export class PatientProfileComponent implements OnInit {
     private route: ActivatedRoute,
     private readonly keycloak: KeycloakService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
@@ -56,8 +57,6 @@ export class PatientProfileComponent implements OnInit {
 
     this.onGetProfileModel(this.id);
     this.onGetMedicalModel(this.id);
-
-    console.log('Patient ID from route: ' + this.id);
   }
 
   public deletePatientProfile(id: any) {
@@ -67,7 +66,6 @@ export class PatientProfileComponent implements OnInit {
     };
     this.profileModelService.deleteProfileModel(deleteProfile).subscribe(
       (response: CustomHttpResponse) => {
-        console.log(response);
         if (response.httpStatus == 'OK') {
           this.options.autoClose = true;
           this.alertService.success(response.message, this.options);
@@ -76,13 +74,11 @@ export class PatientProfileComponent implements OnInit {
         }
       },
       (error: any) => {
-        console.log(error);
         const errorResponse: CustomHttpResponse = error['error'];
         if (errorResponse.httpStatus == 'BAD_REQUEST') {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done deleting single profile..'),
     );
   }
 
@@ -91,72 +87,48 @@ export class PatientProfileComponent implements OnInit {
   }
 
   public onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        console.log('res=' + JSON.stringify(response));
-        this.profileModel = response;
-        // if a picture has been shared by the updater, keep that instead of the
-        // value returned by the server (avoids flicker/old image on navigation)
-        const shared = this.pictureService.getCurrentValue();
-        if (shared) {
-          this.profileModel.imgLink = shared;
-        }
-        this.profileModel.age =
-          this.computeAgeEvent(this.profileModel.birthday) + ' years old';
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..'),
-    );
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+      // if a picture has been shared by the updater, keep that instead of the
+      // value returned by the server (avoids flicker/old image on navigation)
+      const shared = this.pictureService.getCurrentValue();
+      if (shared) {
+        this.profileModel.imgLink = shared;
+      }
+      this.profileModel.age =
+        this.computeAgeEvent(this.profileModel.birthday) + ' years old';
+    });
   }
 
   public onGetMedicalModel(id: number): void {
-    this.medicalHistoryService.getMedicalModel(id).subscribe(
-      (response: MedicalModel) => {
-        console.log('res=' + JSON.stringify(response));
+    this.medicalHistoryService
+      .getMedicalModel(id)
+      .subscribe((response: MedicalModel) => {
         this.medicalModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => {
-        console.log('medical data = ' + this.medicalModel);
-        console.log('Done getting single profile..');
-      },
-    );
+      });
   }
 
   public printPDFProfile(id: any) {
-    this.exportPdfService.getExportPDFProfile(id).subscribe(
-      (response: any) => {
-        if (response.type === HttpEventType.DownloadProgress) {
-          this.percentDone = Math.round(
-            (100 * response.loaded) / response.total,
-          );
-          console.log(`Downloaded ${this.percentDone}%`);
-        }
-        var file = new Blob([response], { type: 'application/pdf' });
-        var fileURL = URL.createObjectURL(file);
-        // if you want to open PDF in new tab
-        // window.open(response);
-        var a = document.createElement('a');
-        a.href = fileURL;
-        a.target = '_blank';
-        a.download = this.profileModel?.name?.lastName
-          ? this.profileModel?.name?.lastName +
-            this.profileModel?.name?.firstName +
-            this.profileModel?.name?.middleName +
-            '.pdf'
-          : 'blankpage.pdf';
-        document.body.appendChild(a);
-        a.click();
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting pdf profile..'),
-    );
+    this.exportPdfService.getExportPDFProfile(id).subscribe((response: any) => {
+      if (response.type === HttpEventType.DownloadProgress) {
+        this.percentDone = Math.round((100 * response.loaded) / response.total);
+      }
+      var file = new Blob([response], { type: 'application/pdf' });
+      var fileURL = URL.createObjectURL(file);
+      // if you want to open PDF in new tab
+      // window.open(response);
+      var a = document.createElement('a');
+      a.href = fileURL;
+      a.target = '_blank';
+      a.download = this.profileModel?.name?.lastName
+        ? this.profileModel?.name?.lastName +
+          this.profileModel?.name?.firstName +
+          this.profileModel?.name?.middleName +
+          '.pdf'
+        : 'blankpage.pdf';
+      document.body.appendChild(a);
+      a.click();
+    });
   }
 
   computeAgeEvent(bday: string) {

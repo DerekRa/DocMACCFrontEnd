@@ -23,6 +23,7 @@ export class MedicalQuestionsComponent implements OnInit {
     this.onGetInformedConsentDisplay(this.id);
     this.onGetMedicalClearanceDisplay(this.id);
   }
+
   public profileModel: ProfileModel | undefined;
   public medicalModel: MedicalModel | undefined;
   public picture: string = 'assets/images/img2x2.png';
@@ -36,105 +37,81 @@ export class MedicalQuestionsComponent implements OnInit {
   public imgLink: any;
   public hashName: any;
   public imgNameOriginal: any;
+
   constructor(
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     private preProcedureRequirementService: PreProcedureRequirementService,
     private route: ActivatedRoute,
     public alertService: AlertService,
-    private router: Router
+    private router: Router,
   ) {}
+
   public onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        console.log('res prof=' + response);
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onGetMedicalModel(id: number): void {
-    this.medicalHistoryService.getMedicalModel(id).subscribe(
-      (response: MedicalModel) => {
-        console.log(response);
-        console.log('res -=-=' + JSON.stringify(response));
+    this.medicalHistoryService
+      .getMedicalModel(id)
+      .subscribe((response: MedicalModel) => {
         this.medicalModel = response;
-        console.log(
-          'res model=' + JSON.stringify(this.medicalModel.medicalModel)
-        );
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+      });
   }
+
   public onGetInformedConsentDisplay(id: number): void {
     this.preProcedureRequirementService
       .getPreProcedureDisplay('informedConsents', 'permanent', this.id)
-      .subscribe(
-        (response: ImageDetails[]) => {
-          console.log('response::' + response);
-          this.imageDetailsIC = response;
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting display informed consents..')
-      );
+      .subscribe((response: ImageDetails[]) => {
+        this.imageDetailsIC = response;
+      });
   }
+
   public onGetMedicalClearanceDisplay(id: number): void {
     this.preProcedureRequirementService
       .getPreProcedureDisplay('medicalClearance', 'permanent', this.id)
-      .subscribe(
-        (response: ImageDetails[]) => {
-          console.log('response::' + response);
-          this.imageDetailsMC = response;
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting display medical clearance..')
-      );
+      .subscribe((response: ImageDetails[]) => {
+        this.imageDetailsMC = response;
+      });
   }
+
   public updateViewItem(
     hashNameType: string,
     originalName: string,
-    imgLink: string
+    imgLink: string,
   ) {
     this.hashName = hashNameType;
     this.imgNameOriginal = originalName;
     this.imgLink = imgLink;
   }
+
   onViewInformedConsents(id: any) {
-    console.log(id);
     this.router.navigate([
       'medical-history/patient/preProcedure',
       'informedConsents',
       id,
     ]);
   }
+
   onViewMedicalClearances(id: any) {
-    console.log(id);
     this.router.navigate([
       'medical-history/patient/preProcedure',
       'medicalClearance',
       id,
     ]);
   }
+
   onViewPhysicians(id: any) {
-    console.log(id);
     this.router.navigate(['medical-history/patient/physicians', id]);
   }
+
   onUpdateHealthCheck(id: any) {
-    console.log(id);
     this.router.navigate(['medical-history/update-patient', id]);
   }
+
   deleteMedicalModel(id: any) {
-    console.log('id to delete == ' + id);
     const deleteProfile: DeleteProfileOrMedical = {
       id: id,
       updatedBy: 'Killua',
@@ -143,7 +120,6 @@ export class MedicalQuestionsComponent implements OnInit {
       .deleteUpdateMedicalModel(deleteProfile)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'OK') {
             this.options.autoClose = true;
             this.alertService.success(response.message, this.options);
@@ -152,13 +128,11 @@ export class MedicalQuestionsComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done deleting single profile..')
       );
   }
 }

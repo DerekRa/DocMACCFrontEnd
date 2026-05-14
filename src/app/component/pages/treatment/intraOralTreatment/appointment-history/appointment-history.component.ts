@@ -21,7 +21,7 @@ export class AppointmentHistoryComponent implements OnInit {
   constructor(
     private patientAppointmentService: PatientAppointmentService,
     private profileModelService: ProfileModelService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   public id: any;
@@ -36,15 +36,9 @@ export class AppointmentHistoryComponent implements OnInit {
   public regularAppointmentData: RegularAppointmentLatestResponse[] = [];
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
 
   private onGetTableData() {
@@ -70,43 +64,28 @@ export class AppointmentHistoryComponent implements OnInit {
     };
     this.patientAppointmentService
       .getRegularAppointmentHistory(patientPaginationRequest)
-      .subscribe(
-        (response: RegularAppointmentLatestResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.regularAppointmentData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: RegularAppointmentLatestResponse[]) => {
+        this.regularAppointmentData = response;
+      });
 
     this.patientAppointmentService
       .getRegularAppointmentHistory(patientPaginationRequestLength)
-      .subscribe(
-        (response: RegularAppointmentLatestResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
+      .subscribe((response: RegularAppointmentLatestResponse[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
 
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -125,41 +104,37 @@ export class AppointmentHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeDateOfAppointment(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'rangeDateTimeFrom';
     this.onGetTableData();
   }
+
   public onChangeDateCreated(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeServiceAvailed(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'serviceToAvail';
     this.onGetTableData();
   }
+
   public onChangeServiceTitle(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'eventTitle';
     this.onGetTableData();
   }
+
   public onChangeInCharge(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdByName';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

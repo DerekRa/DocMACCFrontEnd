@@ -28,7 +28,6 @@ export class OrthodonticExaminationComponent implements OnInit {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
     this.datePick = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
-    console.log('this.datePick = ' + this.datePick);
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel();
     this.getImageTeeth('addTeeth.png');
@@ -39,7 +38,7 @@ export class OrthodonticExaminationComponent implements OnInit {
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetTableData('PermanentTeeth', 'bottomCenter', 'StatusLeft', 'asc');
     this.getBracketPrescriptionWireTypes('BracketPrescription');
@@ -59,14 +58,8 @@ export class OrthodonticExaminationComponent implements OnInit {
       this.bracesAction = 'update-braces';
     }
     this.recordAction = paramsURL[4];
-    console.log(paramsURL[0]);
-    console.log(paramsURL[1]);
-    console.log(paramsURL[2]);
-    console.log(paramsURL[3]);
-    console.log(paramsURL[4]);
-    console.log(paramsURL[5]);
-    console.log('urlPathName = ' + urlPathName);
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private intraoralExaminationService: IntraoralExaminationService,
@@ -76,8 +69,9 @@ export class OrthodonticExaminationComponent implements OnInit {
     public alertService: AlertService,
     private fb: FormBuilder,
     private readonly keycloak: KeycloakService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
   ) {}
+
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
   public id: any;
@@ -121,25 +115,20 @@ export class OrthodonticExaminationComponent implements OnInit {
   public formMandibularWireType: FormGroup = new FormGroup({
     mandibularWireType: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData(
     kindsOfTeeth: string,
     teethArea: string,
     teethPositionStatus: string,
-    sorting: string
+    sorting: string,
   ) {
     const urlPathName = window.location.pathname;
-    // console.log('urlPathName = ' + urlPathName);
 
     this.intraoralExaminationService
       .getIntraOralDisplay(
@@ -149,36 +138,30 @@ export class OrthodonticExaminationComponent implements OnInit {
         teethPositionStatus,
         sorting,
         this.isTrackHistory,
-        this.datePick
+        this.datePick,
       )
-      .subscribe(
-        (response: DentalChartDesignResponse[]) => {
-          if (
-            teethArea == 'topCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.imageDetailsPermaRightTopCenter = response;
-          }
-          if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
-            this.imageDetailsPermaLeftTopCenter = response;
-          }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.imageDetailsPermaRightBottomCenter = response;
-          }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusLeft'
-          ) {
-            this.imageDetailsPermaLeftBottomCenter = response;
-          }
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting default configuration design..')
-      );
+      .subscribe((response: DentalChartDesignResponse[]) => {
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusRight') {
+          this.imageDetailsPermaRightTopCenter = response;
+        }
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
+          this.imageDetailsPermaLeftTopCenter = response;
+        }
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusRight'
+        ) {
+          this.imageDetailsPermaRightBottomCenter = response;
+        }
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusLeft'
+        ) {
+          this.imageDetailsPermaLeftBottomCenter = response;
+        }
+      });
   }
+
   private getBracketPrescriptionWireTypes(category: string) {
     const bracketLatestRequest: BracketLatestRequest = {
       profileId: this.id,
@@ -186,78 +169,62 @@ export class OrthodonticExaminationComponent implements OnInit {
     };
     this.orthodonticExaminationService
       .getBracketPrescriptionWireTypesLatest(bracketLatestRequest)
-      .subscribe(
-        (response: BracketResponse) => {
-          if (category == 'BracketPrescription') {
-            this.bracketPrescription = response;
-            this.formBracketPrescription = this.fb.group({
-              bracketPrescription: [this.bracketPrescription.values],
-            });
-          }
-          if (category == 'MaxillaryWireType') {
-            this.maxillaryWireType = response;
-            this.formMaxillaryWireType = this.fb.group({
-              maxillaryWireType: [this.maxillaryWireType.values],
-            });
-          }
-          if (category == 'MandibularWireType') {
-            this.mandibularWireType = response;
-            this.formMandibularWireType = this.fb.group({
-              mandibularWireType: [this.mandibularWireType.values],
-            });
-          }
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting default configuration design..')
-      );
+      .subscribe((response: BracketResponse) => {
+        if (category == 'BracketPrescription') {
+          this.bracketPrescription = response;
+          this.formBracketPrescription = this.fb.group({
+            bracketPrescription: [this.bracketPrescription.values],
+          });
+        }
+        if (category == 'MaxillaryWireType') {
+          this.maxillaryWireType = response;
+          this.formMaxillaryWireType = this.fb.group({
+            maxillaryWireType: [this.maxillaryWireType.values],
+          });
+        }
+        if (category == 'MandibularWireType') {
+          this.mandibularWireType = response;
+          this.formMandibularWireType = this.fb.group({
+            mandibularWireType: [this.mandibularWireType.values],
+          });
+        }
+      });
   }
+
   public displayCondition(teethNumbering: number) {
-    // console.log(teethNumbering)
-    // console.log('urlPathName = ' + urlPathName);
     this.intraoralExaminationService
       .getRecentIntraOralExaminationByNumber(this.id, teethNumbering)
-      .subscribe(
-        (response: IntraoralExamination) => {
-          // console.log('response == ' + JSON.stringify(response));
-          this.intraoralExaminationResponse = response;
-          // console.log('intraoralExaminationResponse == ' + JSON.stringify(this.intraoralExaminationResponse));
-          this.teethNumber = '';
-          for (
-            let i = 0;
-            i <
+      .subscribe((response: IntraoralExamination) => {
+        this.intraoralExaminationResponse = response;
+        this.teethNumber = '';
+        for (
+          let i = 0;
+          i <
+          this.intraoralExaminationResponse?.conditionProcedureGroupings
+            ?.conditions.length;
+          i++
+        ) {
+          if (
             this.intraoralExaminationResponse?.conditionProcedureGroupings
-              ?.conditions.length;
-            i++
+              ?.conditions[i].checked
           ) {
-            if (
-              this.intraoralExaminationResponse?.conditionProcedureGroupings
-                ?.conditions[i].checked
-            ) {
-              if (this.teethNumber !== '') {
-                this.teethNumber +=
-                  ', ' +
-                  this.intraoralExaminationResponse?.conditionProcedureGroupings
-                    ?.conditions[i].name;
-              } else {
-                this.teethNumber =
-                  this.intraoralExaminationResponse?.conditionProcedureGroupings?.conditions[
-                    i
-                  ].name;
-              }
+            if (this.teethNumber !== '') {
+              this.teethNumber +=
+                ', ' +
+                this.intraoralExaminationResponse?.conditionProcedureGroupings
+                  ?.conditions[i].name;
+            } else {
+              this.teethNumber =
+                this.intraoralExaminationResponse?.conditionProcedureGroupings?.conditions[
+                  i
+                ].name;
             }
           }
-          // console.log(this.teethNumber);
-        },
-        (error: any) => {
-          console.log('error ==' + JSON.stringify(error));
-        },
-        () => console.log('Done getting Intraoral Examination response..')
-      );
+        }
+      });
   }
+
   onSubmitBracketPrescription(): void {
-    console.log(
-      'form value =-=-= ' + JSON.stringify(this.formBracketPrescription.value)
-    );
     if (this.formBracketPrescription.invalid) {
       return;
     }
@@ -270,13 +237,11 @@ export class OrthodonticExaminationComponent implements OnInit {
     };
     this.createBracketPrescriptionWireTypes(
       bracketRequest,
-      'BracketPrescription'
+      'BracketPrescription',
     );
   }
+
   onSubmitMaxillaryWireType(): void {
-    console.log(
-      'form value =-=-= ' + JSON.stringify(this.formMaxillaryWireType.value)
-    );
     if (this.formMaxillaryWireType.invalid) {
       return;
     }
@@ -289,13 +254,11 @@ export class OrthodonticExaminationComponent implements OnInit {
     };
     this.createBracketPrescriptionWireTypes(
       bracketRequest,
-      'MaxillaryWireType'
+      'MaxillaryWireType',
     );
   }
+
   onSubmitMandibularWireType(): void {
-    console.log(
-      'form value =-=-= ' + JSON.stringify(this.formMandibularWireType.value)
-    );
     if (this.formMandibularWireType.invalid) {
       return;
     }
@@ -308,18 +271,18 @@ export class OrthodonticExaminationComponent implements OnInit {
     };
     this.createBracketPrescriptionWireTypes(
       bracketRequest,
-      'MandibularWireType'
+      'MandibularWireType',
     );
   }
+
   private createBracketPrescriptionWireTypes(
     bracketRequest: BracketRequest,
-    bracket: string
+    bracket: string,
   ) {
     this.orthodonticExaminationService
       .createBracketPrescriptionWireTypes(bracketRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             this.alertService.success(response.message, this.options);
             this.getBracketPrescriptionWireTypes(bracket);
@@ -338,55 +301,53 @@ export class OrthodonticExaminationComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating bracket prescription..')
       );
   }
+
   public updateRecordActionToView() {
     this.recordAction = 'view-record';
     this.bracesAction = 'update-braces';
     this.submittedBracketPrescription = true;
     this.submittedMaxillary = true;
     this.submittedMandibular = true;
-    console.log(this.recordAction);
   }
+
   public updateRecordActionToUpdate() {
     this.recordAction = 'add-record';
     this.bracesAction = 'add-braces';
     this.submittedBracketPrescription = false;
     this.submittedMaxillary = false;
     this.submittedMandibular = false;
-    console.log(this.recordAction);
   }
+
   public addUpdateOrthodonticExam(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/orthodontic-examination/add-record/${this.id}/${this.bracesAction}/${teethNumbering}`,
     ]);
   }
+
   public teethHistory(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/orthodontic-examination/view-record/${this.id}/orthodontic-history/${teethNumbering}`,
     ]);
   }
+
   public teethRecentHistory(teethNumbering: number) {
-    console.log('teethNumbering = ' + teethNumbering);
     this.router.navigate([
       `dental-records/dental-chart/orthodontic-examination/view-record/${this.id}/orthodontic-recent/${teethNumbering}`,
     ]);
   }
+
   public getImageTeeth(image: string) {
-    console.log('image : ' + image);
     this.addTeethLink = this.intraoralExaminationService.getImage(image);
   }
+
   public getImageToothSurface(image: string) {
-    console.log('image : ' + image);
     this.defaultToothSurface = this.intraoralExaminationService.getImage(image);
   }
 }

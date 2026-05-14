@@ -59,6 +59,7 @@ export class AddPatientProfileComponent implements OnInit {
   };
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
+
   constructor(
     private profileModelService: ProfileModelService,
     public alertService: AlertService,
@@ -66,6 +67,7 @@ export class AddPatientProfileComponent implements OnInit {
     private formBuilder: FormBuilder,
     private readonly keycloak: KeycloakService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
@@ -145,12 +147,6 @@ export class AddPatientProfileComponent implements OnInit {
         formData.append('id', this.id);
         formData.append('file', file);
         formData.append('imgLink', this.profileModelService.getImageURL());
-        console.log('file name=' + file.name);
-        console.log('file type=' + file.type);
-        console.log('file size=' + file.size);
-        console.log('imgLink=' + this.profileModelService.getImageURL());
-        console.log('id=' + this.id);
-        console.log('form data=' + formData.toString());
         this.profileModelService.uploadPicture(formData).subscribe(
           (response: CustomHttpResponse) => {
             if (response.httpStatus == 'OK') {
@@ -170,12 +166,10 @@ export class AddPatientProfileComponent implements OnInit {
           },
           (error: any) => {
             const errorResponse: CustomHttpResponse = error['error'];
-            console.log(error);
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done uploading profile picture..'),
         );
       };
     }
@@ -188,34 +182,6 @@ export class AddPatientProfileComponent implements OnInit {
       return;
     }
 
-    console.log('imgLink:' + this.form.value['imgLink']);
-    console.log('firstName:' + this.form.value['firstName']);
-    console.log('lastName:' + this.form.value['lastName']);
-    console.log('middleName:' + this.form.value['middleName']);
-    console.log('nickName:' + this.form.value['nickName']);
-    console.log('gender:' + this.form.value['gender']);
-    console.log('birthday:' + this.form.value['birthday']);
-    console.log('religion:' + this.form.value['religion']);
-    console.log('age:' + this.form.controls['age'].value);
-    console.log('nationality:' + this.form.value['nationality']);
-    console.log('occupation:' + this.form.value['occupation']);
-    console.log('homeNumber:' + this.form.value['homeNumber']);
-    console.log('officeNumber:' + this.form.value['officeNumber']);
-    console.log('cellNumber:' + this.form.value['cellNumber']);
-    console.log('faxNumber:' + this.form.value['faxNumber']);
-    console.log('emailAddress:' + this.form.value['emailAddress']);
-    console.log('homeAddress:' + this.form.value['homeAddress']);
-    console.log('firstDentalVisit:' + this.form.value['firstDentalVisit']);
-    console.log('dentalInsurance:' + this.form.value['dentalInsurance']);
-    console.log('parentsGuardian' + this.form.value['parentsGuardian']);
-    console.log(
-      'parentsGuardianOccupation:' +
-        this.form.value['parentsGuardianOccupation'],
-    );
-    console.log('referralName:' + this.form.value['referralName']);
-    console.log(
-      'reasonDentalConsultation:' + this.form.value['reasonDentalConsultation'],
-    );
     const addProfileModel: ProfileModel = {
       imgLink: this.form.value['imgLink'],
       name: {
@@ -253,7 +219,6 @@ export class AddPatientProfileComponent implements OnInit {
     };
     this.profileModelService.createProfileModel(addProfileModel).subscribe(
       (response: CustomHttpResponse) => {
-        console.log(response);
         if (response.httpStatus == 'CREATED') {
           const messageSplit = response.message.split(':');
           const strLink =
@@ -265,13 +230,11 @@ export class AddPatientProfileComponent implements OnInit {
         }
       },
       (error: any) => {
-        console.log(error);
         const errorResponse: CustomHttpResponse = error['error'];
         if (errorResponse.httpStatus == 'BAD_REQUEST') {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done creating single profile..'),
     );
   }
 
@@ -292,8 +255,6 @@ export class AddPatientProfileComponent implements OnInit {
 
   public viewPatientProfile(event: any, id: any) {
     event.closest('.btn-close').click();
-    console.log(id);
-    console.log('click here');
     this.router.navigate(['patient-profile', id]);
   }
 
@@ -307,9 +268,9 @@ export class AddPatientProfileComponent implements OnInit {
   }
 
   public onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response: ProfileModel) => {
-        console.log('res=' + response);
+    this.profileModelService
+      .getProfileModel(id)
+      .subscribe((response: ProfileModel) => {
         this.profileModel = response;
         this.form = this.formBuilder.group({
           id: [this.profileModel?.id],
@@ -402,11 +363,6 @@ export class AddPatientProfileComponent implements OnInit {
             [Validators.minLength(2), Validators.maxLength(1000)],
           ],
         });
-      },
-      (error: CustomHttpResponse) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..'),
-    );
+      });
   }
 }

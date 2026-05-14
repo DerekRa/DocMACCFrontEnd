@@ -18,12 +18,14 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private treatmentPlanService: TreatmentPlanService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
+
   public id: any;
   public profileModel: ProfileModel | undefined;
   public intraOralTreatmentPlanData: IntraoralTreatmentPlanDetailResponse[] =
@@ -36,17 +38,13 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -74,46 +72,32 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
       };
     this.treatmentPlanService
       .getIntraOralTreatmentDetailListPagination(
-        intraOralTreatmentDetailPagination
+        intraOralTreatmentDetailPagination,
       )
-      .subscribe(
-        (response: IntraoralTreatmentPlanDetailResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.intraOralTreatmentPlanData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: IntraoralTreatmentPlanDetailResponse[]) => {
+        this.intraOralTreatmentPlanData = response;
+      });
 
     this.treatmentPlanService
       .getIntraOralTreatmentDetailListPagination(
-        intraOralTreatmentDetailPaginationLength
+        intraOralTreatmentDetailPaginationLength,
       )
-      .subscribe(
-        (response: IntraoralTreatmentPlanDetailResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
+      .subscribe((response: IntraoralTreatmentPlanDetailResponse[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -131,41 +115,37 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeCategory(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'category';
     this.onGetTableData();
   }
+
   public onChangeProcedureDone(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'procedureDone';
     this.onGetTableData();
   }
+
   public onChangeToothNumber(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'toothNumber';
     this.onGetTableData();
   }
+
   public onChangeToothSurface(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'toothSurface';
     this.onGetTableData();
   }
+
   public onChangeNote(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'note';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

@@ -17,10 +17,11 @@ export class OrthodonticTreatmentListComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private treatmentPlanService: TreatmentPlanService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   public id: any;
@@ -35,15 +36,9 @@ export class OrthodonticTreatmentListComponent implements OnInit {
   public orderByAscDesc: boolean = false;
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
 
   private onGetTableData() {
@@ -71,44 +66,30 @@ export class OrthodonticTreatmentListComponent implements OnInit {
       };
     this.treatmentPlanService
       .getOrthodonticTreatmentListPagination(orthodonticTreatmentPagination)
-      .subscribe(
-        (response: OrthodonticTreatmentResponse[]) => {
-          console.log('response');
-          console.log(response);
-          this.orthodonticTreatmentPlanData = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting orthodontic treatment..')
-      );
+      .subscribe((response: OrthodonticTreatmentResponse[]) => {
+        this.orthodonticTreatmentPlanData = response;
+      });
 
     this.treatmentPlanService
       .getOrthodonticTreatmentListPagination(
-        orthodonticTreatmentPaginationLength
+        orthodonticTreatmentPaginationLength,
       )
-      .subscribe(
-        (response: OrthodonticTreatmentResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting orthodontic treatment..')
-      );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
+      .subscribe((response: OrthodonticTreatmentResponse[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -121,27 +102,25 @@ export class OrthodonticTreatmentListComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeDateOfProcedure(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'dateOfProcedure';
     this.onGetTableData();
   }
+
   public onChangeBracketHeight(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'bracketHeight';
     this.onGetTableData();
   }
+
   public onChangeWireType(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'wireType';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

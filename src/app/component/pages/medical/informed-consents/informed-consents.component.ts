@@ -51,8 +51,9 @@ export class InformedConsentsComponent implements OnInit {
     private profileModelService: ProfileModelService,
     private router: Router,
     private route: ActivatedRoute,
-    public alertService: AlertService
+    public alertService: AlertService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.item_name = this.route.snapshot.params['itemName'];
@@ -70,7 +71,6 @@ export class InformedConsentsComponent implements OnInit {
 
   private onGetTableData() {
     const urlPathName = window.location.pathname;
-    // console.log('urlPathName = ' + urlPathName);
     this.urlLocation = urlPathName;
     const pageNo = this.page - 1;
     const pageSize = this.paginationSize;
@@ -88,17 +88,11 @@ export class InformedConsentsComponent implements OnInit {
         pageSize,
         sortBy,
         orderBy,
-        itemSearch
+        itemSearch,
       )
-      .subscribe(
-        (response: ImageDetails[]) => {
-          console.log('response: ' + response);
-          console.log(response);
-          this.imageDetails = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: ImageDetails[]) => {
+        this.imageDetails = response;
+      });
     this.preProcedureRequirementService
       .getPreProcedureRequirementPerPage(
         this.item_name,
@@ -108,27 +102,19 @@ export class InformedConsentsComponent implements OnInit {
         10000,
         sortBy,
         orderBy,
-        itemSearch
+        itemSearch,
       )
-      .subscribe(
-        (response: ImageDetails[]) => {
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: ImageDetails[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   private onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -139,32 +125,34 @@ export class InformedConsentsComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeOriginalName(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'originalName';
     this.onGetTableData();
   }
+
   public onChangeCreatedDate(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.page = event;
     this.onGetTableData();
   }
+
   public updateDeleteItem(hashNameType: string, originalName: string) {
     this.imgNameDelete = hashNameType;
     this.imgNameOriginal = originalName;
-    console.log('hashname: deleted :' + this.imgNameDelete);
-    console.log('imgNameOriginal: ' + this.imgNameOriginal);
   }
+
   public deletePreProcedureRequirement() {
     this.preProcedureRequirementService
       .deletePreProcedureRequirement(
@@ -172,11 +160,10 @@ export class InformedConsentsComponent implements OnInit {
         'permanent',
         this.imgNameDelete,
         this.userProfile?.firstName || '',
-        this.userProfile?.id || ''
+        this.userProfile?.id || '',
       )
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'OK') {
             this.options.autoClose = true;
             this.alertService.success(response.message, this.options);
@@ -186,28 +173,25 @@ export class InformedConsentsComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done deletting single file..')
       );
-    console.log('hashname: deleted :' + this.imgNameDelete);
-    console.log('imgNameOriginal: ' + this.imgNameOriginal);
   }
+
   public updateViewItem(
     hashNameType: string,
     originalName: string,
-    imgLink: string
+    imgLink: string,
   ) {
     this.hashName = hashNameType;
     this.imgNameOriginal = originalName;
     this.imgLink = imgLink;
   }
+
   public updateDisplay(hashName: string) {
-    console.log('hashName :' + hashName);
     const formData = new FormData();
     formData.append('hashName', hashName);
     formData.append('itemName', this.item_name);
@@ -217,19 +201,16 @@ export class InformedConsentsComponent implements OnInit {
     formData.append('updatedById', this.userProfile?.id || '');
     this.preProcedureRequirementService.updateDisplayImage(formData).subscribe(
       (response: CustomHttpResponse) => {
-        console.log(response);
         if (response.httpStatus == 'OK') {
           this.alertService.success(response.message, this.options);
         }
       },
       (error: any) => {
-        console.log(error);
         const errorResponse: CustomHttpResponse = error['error'];
         if (errorResponse.httpStatus == 'BAD_REQUEST') {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done updating single image..')
     );
   }
 }

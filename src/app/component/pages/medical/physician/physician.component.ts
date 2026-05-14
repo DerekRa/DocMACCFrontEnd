@@ -40,6 +40,7 @@ export class PhysicianComponent implements OnInit {
   });
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
@@ -48,10 +49,10 @@ export class PhysicianComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.physicianId = this.route.snapshot.params['physicianId'];
     this.action = this.route.snapshot.params['action'];
-    console.log('action = ' + this.action);
     this.onGetPhysician();
     this.onGetProfileModel();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private physicianHistoryService: PhysicianHistoryService,
@@ -59,44 +60,32 @@ export class PhysicianComponent implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     public alertService: AlertService,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   urlCurrentLocation() {
     const urlPathName = window.location.pathname;
     const urlAction = urlPathName.split('/');
     return urlAction[5];
   }
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        console.log('res prof=');
-        console.log(response);
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onGetPhysician(): void {
     this.physicianHistoryService
       .getPhysician(this.id, this.physicianId)
-      .subscribe(
-        (response) => {
-          console.log('res physician=');
-          console.log(response);
-          this.physician = response;
-          if (this.urlCurrentLocation() === 'Update') {
-            this.updatePhysician();
-          }
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting single physician..')
-      );
+      .subscribe((response) => {
+        this.physician = response;
+        if (this.urlCurrentLocation() === 'Update') {
+          this.updatePhysician();
+        }
+      });
   }
+
   public deletePhysician() {
     const physician: Physician = {
       id: this.physicianId,
@@ -104,10 +93,8 @@ export class PhysicianComponent implements OnInit {
       createdByName: this.userProfile?.firstName || '',
       createdById: this.userProfile?.id || '',
     };
-    console.log('delete noiw');
     this.physicianHistoryService.deletePhysician(physician).subscribe(
       (response: CustomHttpResponse) => {
-        console.log(response);
         if (response.httpStatus == 'OK') {
           this.alertService.success(response.message, this.options);
           this.router.navigate([
@@ -117,15 +104,14 @@ export class PhysicianComponent implements OnInit {
         }
       },
       (error: any) => {
-        console.log(error);
         const errorResponse: CustomHttpResponse = error['error'];
         if (errorResponse.httpStatus == 'BAD_REQUEST') {
           this.alertService.error(errorResponse.message, this.options);
         }
       },
-      () => console.log('Done deleting single physician..')
     );
   }
+
   public updatePhysician() {
     this.action = 'Update';
     this.form = this.formBuilder.group({
@@ -166,15 +152,16 @@ export class PhysicianComponent implements OnInit {
       `/medical-history/patient/physicians/${this.id}/Update/${this.physician?.id}`,
     ]);
   }
+
   public cancelPhysician() {
     this.action = 'View';
     this.router.navigate([
       `/medical-history/patient/physicians/${this.id}/View/${this.physician?.id}`,
     ]);
   }
+
   public savePhysician() {
     if (this.action === 'Update') {
-      console.log('form value =-=-= ' + JSON.stringify(this.form.value));
       this.submitted = true;
       if (this.form.invalid) {
         return;
@@ -189,10 +176,8 @@ export class PhysicianComponent implements OnInit {
         createdByName: this.userProfile?.firstName || '',
         createdById: this.userProfile?.id || '',
       };
-      console.log('physician == ' + JSON.stringify(physician));
       this.physicianHistoryService.updatePhysicianHistory(physician).subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'OK') {
             const messageSplit = response.message.split(':');
             this.options.autoClose = false;
@@ -205,16 +190,15 @@ export class PhysicianComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done updating physician records..')
       );
     }
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }

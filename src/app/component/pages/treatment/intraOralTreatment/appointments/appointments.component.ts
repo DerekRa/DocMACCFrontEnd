@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PatientAppointmentResponse } from 'src/app/model/interface/appointmentModel/patient-appointment-response';
 import { RegularAppointmentLatestResponse } from 'src/app/model/interface/appointmentModel/regular-appointment-latest-response';
 import { RegularAppointmentRequest } from 'src/app/model/interface/appointmentModel/regular-appointment-request';
 import { PatientAppointmentService } from 'src/app/service/home/patient-appointment.service';
@@ -14,7 +13,7 @@ export class AppointmentsComponent implements OnInit {
   constructor(
     private patientAppointmentService: PatientAppointmentService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -26,8 +25,6 @@ export class AppointmentsComponent implements OnInit {
   eventData: RegularAppointmentLatestResponse | undefined;
 
   private getAppointment() {
-    console.log('id :' + this.id);
-
     const regularAppointmentRequest: RegularAppointmentRequest = {
       profileId: this.id,
       category: 'registered',
@@ -35,28 +32,20 @@ export class AppointmentsComponent implements OnInit {
 
     this.patientAppointmentService
       .getRegularAppointment(regularAppointmentRequest)
-      .subscribe(
-        (response: RegularAppointmentLatestResponse) => {
-          console.log('response');
-          console.log(response);
-          this.eventData = response;
-          console.log('------');
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting appointment..')
-      );
+      .subscribe((response: RegularAppointmentLatestResponse) => {
+        this.eventData = response;
+      });
   }
 
   onUpdateAppointment() {
-    console.log('this.id = ' + this.id);
     this.router.navigate([
       'dental-records/treatment-plan/intraoral/' +
         this.id +
         '/appointment/update',
     ]);
   }
+
   onViewAppointments() {
-    console.log('this.id = ' + this.id);
     this.router.navigate([
       'dental-records/treatment-plan/intraoral/' +
         this.id +

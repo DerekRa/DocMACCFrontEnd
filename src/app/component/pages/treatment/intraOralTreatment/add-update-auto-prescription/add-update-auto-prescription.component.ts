@@ -54,7 +54,7 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
     private readonly keycloak: KeycloakService,
     public alertService: AlertService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   public id: any;
@@ -78,27 +78,15 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
   });
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
 
   public onGetPrescriptionChoices(): void {
-    this.prescriptionService.getPrescriptionChoices().subscribe(
-      (response) => {
-        this.prescriptionChoices = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting prescription choices..')
-    );
+    this.prescriptionService.getPrescriptionChoices().subscribe((response) => {
+      this.prescriptionChoices = response;
+    });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -106,25 +94,18 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
   }
 
   onChangeBrandName(event: any) {
-    console.log(event.target.value);
     for (const [key, value] of Object.entries(this.prescriptionChoices)) {
-      console.log(`Key: ${key}, Value: ${value}`);
       if (value.brandName == event.target.value) {
         this.form.controls['genericName'].setValue(value.genericName);
         this.form.controls['dispense'].setValue(value.dispense);
         this.form.controls['dosage'].setValue(value.size + ' ' + value.unit);
         this.form.controls['remarks'].setValue(value.remarks);
       }
-      console.log(value);
     }
   }
 
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
     if (this.form.invalid) {
       return;
     }
@@ -145,7 +126,6 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
       .createPrescription(prescriptionSaveRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const messageSplit = response.message.split(':');
             const strLink =
@@ -159,16 +139,11 @@ export class AddUpdateAutoPrescriptionComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating walkin appointment..')
       );
   }
 }
