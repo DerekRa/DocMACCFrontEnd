@@ -46,7 +46,6 @@ export class HeaderComponent implements OnInit {
 
   public async ngOnInit() {
     const links = document.querySelectorAll('.nav-active-link');
-    console.log(links.length);
     if (links.length) {
       links.forEach((link) => {
         link.addEventListener('click', (e) => {
@@ -60,16 +59,12 @@ export class HeaderComponent implements OnInit {
     }
 
     this.isLoggedIn = await this.keycloak.isLoggedIn();
-    // console.log(this.isLoggedIn);
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
       this.user.authStatus = 'AUTH';
       this.user.name = this.userProfile.firstName || '';
       this.user.id = this.userProfile.id || '';
       window.sessionStorage.setItem('userdetails', JSON.stringify(this.user));
-      console.log('user :::' + JSON.stringify(this.user));
-      console.log('userProfile :::' + JSON.stringify(this.userProfile));
-      // console.log('getToken :::' + this.keycloak.getToken());
       // console.log(
       //   'getUserRoles :::' +
       //     JSON.stringify(this.keycloak.getUserRoles().includes('TEST'))
@@ -85,13 +80,7 @@ export class HeaderComponent implements OnInit {
 
   public logout() {
     let redirectURI: string = `${environment.localhost}:4200/home`;
-    console.log('logout was click!....');
     console.log('redirectURI :::' + redirectURI);
     this.keycloak.logout(redirectURI);
   }
-
-  // logout(): void {
-  //     console.log('logout was click!....');
-  //     this.keycloakService.logout();
-  // }
 }

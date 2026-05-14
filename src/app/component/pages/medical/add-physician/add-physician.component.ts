@@ -37,14 +37,16 @@ export class AddUpdatePhysicianComponent {
   });
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder,
     public alertService: AlertService,
     private physicianHistoryService: PhysicianHistoryService,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
@@ -87,21 +89,22 @@ export class AddUpdatePhysicianComponent {
       ],
     });
   }
+
   urlCurrentLocation() {
     const urlPathName = window.location.pathname;
     const urlAction = urlPathName.split('/');
     return urlAction[5];
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   onSubmit(): void {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
     if (this.form.invalid) {
       return;
     }
-    console.log('this.urlCurrentLocation()  = ' + this.urlCurrentLocation());
     if (this.urlCurrentLocation() === 'Add') {
       const addPhysician: Physician = {
         profileId: this.id,
@@ -116,7 +119,6 @@ export class AddUpdatePhysicianComponent {
         .createPhysicianHistory(addPhysician)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -128,18 +130,16 @@ export class AddUpdatePhysicianComponent {
               this.options.autoClose = false;
               this.alertService.success(
                 messageSplit[0] + strLink,
-                this.options
+                this.options,
               );
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done adding single physician..')
         );
     }
   }

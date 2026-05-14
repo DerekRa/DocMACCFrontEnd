@@ -36,8 +36,9 @@ export class XrayTakenComponent implements OnInit {
     private profileModelService: ProfileModelService,
     private router: Router,
     private route: ActivatedRoute,
-    public alertService: AlertService
+    public alertService: AlertService,
   ) {}
+
   public id: any;
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
@@ -74,6 +75,7 @@ export class XrayTakenComponent implements OnInit {
     }
     this.examinationType = this.dentalChart;
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -102,36 +104,23 @@ export class XrayTakenComponent implements OnInit {
 
     this.preRequisiteRequirementService
       .getXrayTakenPagination(paginationData)
-      .subscribe(
-        (response: XrayTakenImageDetails[]) => {
-          this.xrayTakenImageDetails = response;
-          console.log('xrayTakenImageDetails: ');
-          console.log(this.xrayTakenImageDetails);
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: XrayTakenImageDetails[]) => {
+        this.xrayTakenImageDetails = response;
+      });
+
     this.preRequisiteRequirementService
       .getXrayTakenPagination(paginationDataTotalLength)
-      .subscribe(
-        (response: XrayTakenImageDetails[]) => {
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: XrayTakenImageDetails[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   private onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public updateDisplay(xrayTakenId: any) {
     const xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest = {
       xrayTakenId: xrayTakenId,
@@ -146,21 +135,19 @@ export class XrayTakenComponent implements OnInit {
       .updateXrayTakenImageDisplay(xrayTakenPermanentDataRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'OK') {
             this.alertService.success(response.message, this.options);
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done updating periapical xray..')
       );
   }
+
   public deletePreProcedureRequirement() {
     if (this.xrayTakenImageDetailDelete?.xrayTakenId != undefined) {
       let xrayTakenPermanentDataRequest: XrayTakenPermanentDataRequest = {
@@ -176,7 +163,6 @@ export class XrayTakenComponent implements OnInit {
         .deleteXrayTakenData(xrayTakenPermanentDataRequest)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'OK') {
               this.options.autoClose = true;
               this.alertService.success(response.message, this.options);
@@ -186,20 +172,20 @@ export class XrayTakenComponent implements OnInit {
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done deletting single file..')
         );
     }
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -210,32 +196,32 @@ export class XrayTakenComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeRemarks(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'remarks';
     this.onGetTableData();
   }
+
   public onChangeCreatedDate(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
   }
+
   public updateDeleteItem(xrayTakenImageDetail: XrayTakenImageDetails) {
     this.xrayTakenImageDetailDelete = xrayTakenImageDetail;
-    console.log(
-      'xrayTakenImageDetailDelete: deleted :' + this.xrayTakenImageDetailDelete
-    );
   }
+
   public updateViewItem(
     hashNameType: string,
     originalName: string,
-    imgLink: string
+    imgLink: string,
   ) {
     this.hashName = hashNameType;
     this.imgNameOriginal = originalName;

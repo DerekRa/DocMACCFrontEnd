@@ -1,19 +1,18 @@
-import { Physician } from 'src/app/model/interface/medicalHistoryModel/physician';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of, retry } from 'rxjs';
+import { Physician } from 'src/app/model/interface/medicalHistoryModel/physician';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
-// const baseUrl = 'http://localhost:9090/api/v1/physicians';
-// const baseUrl = 'http://localhost:8084/api/v1/physicians';
 @Injectable({
   providedIn: 'root',
 })
 export class PhysicianHistoryService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/physicians`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.PHYSICIAN_HISTORY_API_URL}`;
   }
   public getPhysiciansPerPage(
     profileId: number,

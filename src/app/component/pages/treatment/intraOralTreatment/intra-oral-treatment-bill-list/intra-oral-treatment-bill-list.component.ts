@@ -7,8 +7,6 @@ import { IntraOralTreatmentPaginationRequest } from 'src/app/model/interface/tre
 import { IntraoralTreatmentPlanGroupResponse } from 'src/app/model/interface/treatmentPlanModel/intraoral-treatment-plan-group-response';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
 import { TreatmentPlanService } from 'src/app/service/treatmentPlan/treatment-plan.service';
-// import { ProfileModelService } from 'src/app/service/profile-model.service';
-// import { TreatmentPlanService } from 'src/app/service/treatment-plan.service';
 
 @Component({
   selector: 'app-intra-oral-treatment-bill-list',
@@ -24,23 +22,23 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
-    console.log('paramsURL[1] = ' + paramsURL[1]);
     if (paramsURL[1] == 'dental-records') {
       this.pageLocation = 'Treatment';
     } else if (paramsURL[1] == 'bill-records') {
       this.pageLocation = 'Bill';
     }
-    console.log('urlPathName = ' + urlPathName);
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private treatmentPlanService: TreatmentPlanService,
     private route: ActivatedRoute,
     private router: Router,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public id: any;
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
@@ -54,17 +52,13 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -93,50 +87,41 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
       .getIntraOralTreatmentListPagination(intraOralTreatmentPagination)
       .subscribe(
         (response: IntraoralTreatmentPlanGroupResponse[]) => {
-          console.log('response');
-          console.log(response);
           this.intraOralTreatmentPlanData = response;
         },
         (error: any) => {
-          console.log('the error is log::' + error);
-          console.log(error);
           this.intraOralTreatmentPlanData = [];
         },
-        () => console.log('Done getting treatment plan pagination..')
       );
 
     this.treatmentPlanService
       .getIntraOralTreatmentListPagination(intraOralTreatmentPaginationLength)
       .subscribe(
         (response: IntraoralTreatmentPlanGroupResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
           this.paginationTotalItems = response.length;
         },
         (error: any) => {
           this.paginationTotalItems = 0;
         },
-        () => console.log('Done getting treatment plan pagination length..')
       );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -151,34 +136,31 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeDateOfProcedure(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'dateOfProcedure';
     this.onGetTableData();
   }
+
   public onChangeTotalBalance(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'totalBalance';
     this.onGetTableData();
   }
+
   public onChangeCategory(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'category';
     this.onGetTableData();
   }
+
   public onChangeProcedureDone(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'procedure';
     this.onGetTableData();
   }
+
   public viewIntraOralTreatmentDetail(dateOfProcedure: any) {
     if (dateOfProcedure !== undefined) {
       this.router.navigate([
@@ -188,6 +170,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
       ]);
     }
   }
+
   public viewIntraOralBillBreakdown(dateOfProcedure: any) {
     if (dateOfProcedure !== undefined) {
       this.router.navigate([
@@ -197,6 +180,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
       ]);
     }
   }
+
   public viewIntraOralTreatmentCertificate(dateOfProcedure: any) {
     if (dateOfProcedure !== undefined) {
       this.router.navigate([
@@ -207,6 +191,7 @@ export class IntraOralTreatmentBillListComponent implements OnInit {
       ]);
     }
   }
+
   public viewIntraOralTreatmentPrescription(dateOfProcedure: any) {
     if (dateOfProcedure !== undefined) {
       this.router.navigate([

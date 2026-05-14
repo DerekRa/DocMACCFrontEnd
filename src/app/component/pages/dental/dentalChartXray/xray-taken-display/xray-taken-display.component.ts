@@ -24,11 +24,11 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
     // private profileModelService: ProfileModelService,
     private preRequisiteRequirementService: PreRequisiteRequirementService,
     private router: Router,
-    private route: ActivatedRoute // public alertService: AlertService, // private fb: FormBuilder
+    private route: ActivatedRoute, // public alertService: AlertService, // private fb: FormBuilder
   ) {}
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('this.recordAction changes = ' + this.recordAction);
-  }
+
+  ngOnChanges(changes: SimpleChanges): void {}
+
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
     this.setExamType();
@@ -39,6 +39,7 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
     this.onGetXrayTakenDisplay('OcclusalLower');
     this.onGetXrayTakenDisplay('Others');
   }
+
   @Input('idData') id: any;
   @Input('recordData') recordAction: any;
   @Input('examTypeData') examType: any;
@@ -68,6 +69,7 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
     }
     this.examinationType = this.examUrl;
   }
+
   public onGetXrayTakenDisplay(labelName: string): void {
     const formData = new FormData();
     const displayDataRequest: XrayTakenDisplayDataRequest = {
@@ -78,55 +80,47 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
     };
     this.preRequisiteRequirementService
       .getXrayTakenDisplay(displayDataRequest)
-      .subscribe(
-        (response: XrayTakenImageDetails[]) => {
-          switch (labelName) {
-            case 'Periapical':
-              this.periapicalImageDetails = response;
-              break;
-            case 'Panoramic':
-              this.panoramicImageDetails = response;
-              console.log('====-=-=-=-panoramicImageDetails: ');
-              console.log(this.panoramicImageDetails);
-              break;
-            case 'CephaloMetric':
-              this.cephaloMetricImageDetails = response;
-              break;
-            case 'OcclusalUpper':
-              this.occlusalUpperImageDetails = response;
-              break;
-            case 'OcclusalLower':
-              this.occlusalLowerImageDetails = response;
-              break;
-            case 'Others':
-              this.othersImageDetails = response;
-              break;
-            default:
-              console.log('no found label name.');
-          }
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting display Periapical data..')
-      );
+      .subscribe((response: XrayTakenImageDetails[]) => {
+        switch (labelName) {
+          case 'Periapical':
+            this.periapicalImageDetails = response;
+            break;
+          case 'Panoramic':
+            this.panoramicImageDetails = response;
+            break;
+          case 'CephaloMetric':
+            this.cephaloMetricImageDetails = response;
+            break;
+          case 'OcclusalUpper':
+            this.occlusalUpperImageDetails = response;
+            break;
+          case 'OcclusalLower':
+            this.occlusalLowerImageDetails = response;
+            break;
+          case 'Others':
+            this.othersImageDetails = response;
+            break;
+          default:
+          // no found label name.
+        }
+      });
   }
+
   onViewPeriapicalHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' + this.examUrl + '/Periapical',
       id,
     ]);
   }
+
   onViewPanoramicHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' + this.examUrl + '/Panoramic',
       id,
     ]);
   }
+
   onViewCephaloMetricHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' +
         this.examUrl +
@@ -134,8 +128,8 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
       id,
     ]);
   }
+
   onViewOcclusalUpperHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' +
         this.examUrl +
@@ -143,8 +137,8 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
       id,
     ]);
   }
+
   onViewOcclusalLowerHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' +
         this.examUrl +
@@ -152,18 +146,19 @@ export class XrayTakenDisplayComponent implements OnInit, OnChanges {
       id,
     ]);
   }
+
   onViewOthersHistory(id: any) {
-    console.log(id);
     this.router.navigate([
       'dental-records/dental-chart/xray-taken/' + this.examUrl + '/Others',
       id,
     ]);
   }
+
   public updateViewItem(
     hashNameType: string,
     originalName: string,
     imgLink: string,
-    remarks: string
+    remarks: string,
   ) {
     this.hashName = hashNameType;
     this.imgNameOriginal = originalName;

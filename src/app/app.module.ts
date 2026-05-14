@@ -86,13 +86,15 @@ function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        url: 'http://192.168.0.127:7080/', //doc macc desktop ip address
+        // url: 'http://192.168.0.127:7080/', //doc macc desktop ip address
+        url: 'http://docmaccdentalclinic.local:7080/', //doc macc desktop ip address
         realm: 'maccDentalclinicRealm',
         clientId: 'maccDentalclinicClient',
       },
       initOptions: {
         pkceMethod: 'S256',
-        redirectUri: 'http://192.168.0.127:4200/home',
+        // redirectUri: 'http://192.168.0.127:4200/home',
+        redirectUri: 'http://docmaccdentalclinic.local:4200/home',
         checkLoginIframe: false,
       },
       loadUserProfileAtStartUp: false,
@@ -182,28 +184,14 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
-    // NavbarNavComponent,
-    // NavbarComponent,
-    // NavbarBrandDirective,
-    // NavbarTextComponent,
-    // NavbarTogglerDirective,
-    // NavbarModule,
-    // NavModule,
-    // GridModule,
   ],
   providers: [
-    // KeycloakService,
     {
       provide: APP_INITIALIZER,
       useFactory: initializeKeycloak,
       multi: true,
       deps: [KeycloakService],
     },
-    // {
-    //   provide: APP_CONFIG,
-    //   // useValue: environment,
-    //   // useExisting: ConfigurationsService,
-    // },
     provideAnimations(),
     DatePipe,
   ],

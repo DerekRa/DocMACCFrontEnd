@@ -40,34 +40,34 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     this.onGetProfileModel();
     let currentDateTime = this.datepipe.transform(
       new Date(),
-      'MM/dd/yyyy h:mm:ss'
+      'MM/dd/yyyy h:mm:ss',
     );
-    console.log(currentDateTime);
     let currentDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
     this.onGetData(currentDate + '');
     this.onGetToothNumbers(
       'PermanentTeeth',
       'topCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers('PermanentTeeth', 'topCenter', 'StatusLeft', 'asc');
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusRight',
-      'desc'
+      'desc',
     );
     this.onGetToothNumbers(
       'PermanentTeeth',
       'bottomCenter',
       'StatusLeft',
-      'asc'
+      'asc',
     );
     this.getBracketPrescriptionWireTypes('BracketPrescription');
     this.getBracketPrescriptionWireTypes('MaxillaryWireType');
     this.getBracketPrescriptionWireTypes('MandibularWireType');
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticExaminationService: OrthodonticExaminationService,
@@ -76,8 +76,9 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     public datepipe: DatePipe,
     private fb: FormBuilder, // public datepipe: DatePipe
     public alertService: AlertService,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
   public id: any;
@@ -109,19 +110,14 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     bracketHeight: new FormControl(''),
     note: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onGetData(dateOfProcedure: string) {
-    console.log('get data dateOfProcedure = ' + dateOfProcedure);
     const orthodonticExaminationLatest: OrthodonticExaminationLatest = {
       profileId: this.id,
       toothNumber: this.teethNumbering,
@@ -129,48 +125,41 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     };
     this.orthodonticExaminationService
       .getOrthodonticExaminationLatest(orthodonticExaminationLatest)
-      .subscribe(
-        (response) => {
-          this.braces = response;
-          console.log('this.braces = ' + this.braces);
-          console.log(this.braces);
-          if (this.braces.dateOfProcedure == null) {
-            this.newDataToInsert = true;
-          } else {
-            this.newDataToInsert = false;
-          }
-          let dop = this.datepipe.transform(
-            new Date(dateOfProcedure),
-            'yyyy-MM-dd'
-          );
-          this.braces.dateOfProcedure =
-            this.braces.dateOfProcedure == null
-              ? new Date(dateOfProcedure)
-              : this.braces.dateOfProcedure;
-          this.form = this.fb.group({
-            profileId: [this.braces?.profileId],
-            toothNumber: [this.braces?.toothNumber],
-            dateOfProcedure: [dop, Validators.required],
-            bracketHeight: [this.braces?.bracketHeight, Validators.required],
-            note: [this.braces?.note, Validators.required],
-          });
-          // this.toothNumbersId = [];
-          this.toothNumbersValue = [];
-          // this.toothNumbersId.push(this.braces?.dentalChartDesignId);
-          this.toothNumbersValue.push(Number(this.teethNumbering));
-        },
-        (error: any) => {
-          console.log('error');
-          console.log(error);
-        },
-        () => console.log('Done getting single profile..')
-      );
+      .subscribe((response) => {
+        this.braces = response;
+
+        if (this.braces.dateOfProcedure == null) {
+          this.newDataToInsert = true;
+        } else {
+          this.newDataToInsert = false;
+        }
+        let dop = this.datepipe.transform(
+          new Date(dateOfProcedure),
+          'yyyy-MM-dd',
+        );
+        this.braces.dateOfProcedure =
+          this.braces.dateOfProcedure == null
+            ? new Date(dateOfProcedure)
+            : this.braces.dateOfProcedure;
+        this.form = this.fb.group({
+          profileId: [this.braces?.profileId],
+          toothNumber: [this.braces?.toothNumber],
+          dateOfProcedure: [dop, Validators.required],
+          bracketHeight: [this.braces?.bracketHeight, Validators.required],
+          note: [this.braces?.note, Validators.required],
+        });
+        // this.toothNumbersId = [];
+        this.toothNumbersValue = [];
+        // this.toothNumbersId.push(this.braces?.dentalChartDesignId);
+        this.toothNumbersValue.push(Number(this.teethNumbering));
+      });
   }
+
   private onGetToothNumbers(
     kindsOfTeeth: string,
     teethArea: string,
     teethPositionStatus: string,
-    sorting: string
+    sorting: string,
   ) {
     this.intraoralExaminationService
       .getToothNumbersDisplay(
@@ -178,104 +167,97 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
         kindsOfTeeth,
         teethArea,
         teethPositionStatus,
-        sorting
+        sorting,
       )
-      .subscribe(
-        (response: ToothNumbersDentalChart[]) => {
-          if (
-            teethArea == 'topCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.toothDetailsPermaRightTopCenter = [];
-            for (let i = 0; i < response.length; i++) {
-              if (response[i].teethNumbering == this.teethNumbering) {
-                this.showMaxillaryWireType = true;
-              }
-              this.toothDetailsPermaRightTopCenter.push({
-                formControlName:
-                  'fcToothNumberName' + response[i].teethNumbering,
-                inputId: 'toothNumberId' + response[i].teethNumbering,
-                label: response[i].teethNumbering,
-                name: 'toothNumber' + response[i].teethNumbering,
-                value: response[i].id,
-                checked:
-                  this.teethNumbering == response[i].teethNumbering
-                    ? true
-                    : false,
-              });
+      .subscribe((response: ToothNumbersDentalChart[]) => {
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusRight') {
+          this.toothDetailsPermaRightTopCenter = [];
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].teethNumbering == this.teethNumbering) {
+              this.showMaxillaryWireType = true;
             }
+            this.toothDetailsPermaRightTopCenter.push({
+              formControlName: 'fcToothNumberName' + response[i].teethNumbering,
+              inputId: 'toothNumberId' + response[i].teethNumbering,
+              label: response[i].teethNumbering,
+              name: 'toothNumber' + response[i].teethNumbering,
+              value: response[i].id,
+              checked:
+                this.teethNumbering == response[i].teethNumbering
+                  ? true
+                  : false,
+            });
           }
-          if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
-            this.toothDetailsPermaLeftTopCenter = [];
-            for (let i = 0; i < response.length; i++) {
-              if (response[i].teethNumbering == this.teethNumbering) {
-                this.showMaxillaryWireType = true;
-              }
-              this.toothDetailsPermaLeftTopCenter.push({
-                formControlName:
-                  'fcToothNumberName' + response[i].teethNumbering,
-                inputId: 'toothNumberId' + response[i].teethNumbering,
-                label: response[i].teethNumbering,
-                name: 'toothNumber' + response[i].teethNumbering,
-                value: response[i].id,
-                checked:
-                  this.teethNumbering == response[i].teethNumbering
-                    ? true
-                    : false,
-              });
+        }
+
+        if (teethArea == 'topCenter' && teethPositionStatus == 'StatusLeft') {
+          this.toothDetailsPermaLeftTopCenter = [];
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].teethNumbering == this.teethNumbering) {
+              this.showMaxillaryWireType = true;
             }
+            this.toothDetailsPermaLeftTopCenter.push({
+              formControlName: 'fcToothNumberName' + response[i].teethNumbering,
+              inputId: 'toothNumberId' + response[i].teethNumbering,
+              label: response[i].teethNumbering,
+              name: 'toothNumber' + response[i].teethNumbering,
+              value: response[i].id,
+              checked:
+                this.teethNumbering == response[i].teethNumbering
+                  ? true
+                  : false,
+            });
           }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusRight'
-          ) {
-            this.toothDetailsPermaRightBottomCenter = [];
-            for (let i = 0; i < response.length; i++) {
-              if (response[i].teethNumbering == this.teethNumbering) {
-                this.showMandibularWireType = true;
-              }
-              this.toothDetailsPermaRightBottomCenter.push({
-                formControlName:
-                  'fcToothNumberName' + response[i].teethNumbering,
-                inputId: 'toothNumberId' + response[i].teethNumbering,
-                label: response[i].teethNumbering,
-                name: 'toothNumber' + response[i].teethNumbering,
-                value: response[i].id,
-                checked:
-                  this.teethNumbering == response[i].teethNumbering
-                    ? true
-                    : false,
-              });
+        }
+
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusRight'
+        ) {
+          this.toothDetailsPermaRightBottomCenter = [];
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].teethNumbering == this.teethNumbering) {
+              this.showMandibularWireType = true;
             }
+            this.toothDetailsPermaRightBottomCenter.push({
+              formControlName: 'fcToothNumberName' + response[i].teethNumbering,
+              inputId: 'toothNumberId' + response[i].teethNumbering,
+              label: response[i].teethNumbering,
+              name: 'toothNumber' + response[i].teethNumbering,
+              value: response[i].id,
+              checked:
+                this.teethNumbering == response[i].teethNumbering
+                  ? true
+                  : false,
+            });
           }
-          if (
-            teethArea == 'bottomCenter' &&
-            teethPositionStatus == 'StatusLeft'
-          ) {
-            this.toothDetailsPermaLeftBottomCenter = [];
-            for (let i = 0; i < response.length; i++) {
-              if (response[i].teethNumbering == this.teethNumbering) {
-                this.showMandibularWireType = true;
-              }
-              this.toothDetailsPermaLeftBottomCenter.push({
-                formControlName:
-                  'fcToothNumberName' + response[i].teethNumbering,
-                inputId: 'toothNumberId' + response[i].teethNumbering,
-                label: response[i].teethNumbering,
-                name: 'toothNumber' + response[i].teethNumbering,
-                value: response[i].id,
-                checked:
-                  this.teethNumbering == response[i].teethNumbering
-                    ? true
-                    : false,
-              });
+        }
+
+        if (
+          teethArea == 'bottomCenter' &&
+          teethPositionStatus == 'StatusLeft'
+        ) {
+          this.toothDetailsPermaLeftBottomCenter = [];
+          for (let i = 0; i < response.length; i++) {
+            if (response[i].teethNumbering == this.teethNumbering) {
+              this.showMandibularWireType = true;
             }
+            this.toothDetailsPermaLeftBottomCenter.push({
+              formControlName: 'fcToothNumberName' + response[i].teethNumbering,
+              inputId: 'toothNumberId' + response[i].teethNumbering,
+              label: response[i].teethNumbering,
+              name: 'toothNumber' + response[i].teethNumbering,
+              value: response[i].id,
+              checked:
+                this.teethNumbering == response[i].teethNumbering
+                  ? true
+                  : false,
+            });
           }
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting default numbers design..')
-      );
+        }
+      });
   }
+
   private getBracketPrescriptionWireTypes(category: string) {
     const bracketLatestRequest: BracketLatestRequest = {
       profileId: this.id,
@@ -283,27 +265,20 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     };
     this.orthodonticExaminationService
       .getBracketPrescriptionWireTypesLatest(bracketLatestRequest)
-      .subscribe(
-        (response: BracketResponse) => {
-          if (category == 'BracketPrescription') {
-            this.bracketPrescription = response;
-          }
-          if (category == 'MaxillaryWireType') {
-            this.maxillaryWireType = response;
-          }
-          if (category == 'MandibularWireType') {
-            this.mandibularWireType = response;
-          }
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting default configuration design..')
-      );
+      .subscribe((response: BracketResponse) => {
+        if (category == 'BracketPrescription') {
+          this.bracketPrescription = response;
+        }
+        if (category == 'MaxillaryWireType') {
+          this.maxillaryWireType = response;
+        }
+        if (category == 'MandibularWireType') {
+          this.mandibularWireType = response;
+        }
+      });
   }
+
   onCheckboxChangeToothNumbers(event: any) {
-    console.log(event);
-    console.log(event.target.checked);
-    console.log(event.target.value);
-    console.log(event.target.name);
     const idNumber = event.target.value.split('-');
     if (event.target.checked) {
       // this.toothNumbersId.push(Number(idNumber[0]));
@@ -311,7 +286,7 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
     } else {
       // const indexId: number = this.toothNumbersId.indexOf(Number(idNumber[0]));
       const indexNumber: number = this.toothNumbersValue.indexOf(
-        Number(idNumber[1])
+        Number(idNumber[1]),
       );
       // if (indexId !== -1) {
       //     this.toothNumbersId.splice(indexId, 1);
@@ -320,14 +295,9 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
         this.toothNumbersValue.splice(indexNumber, 1);
       }
     }
-    // console.log(this.toothNumbersId);
-    console.log(this.toothNumbersValue);
   }
+
   onChangeDateOfProcedure(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value?.toLocaleDateString('en-US', { month: 'numeric' }));
-    console.log(event.value?.toLocaleDateString('en-US', { day: 'numeric' }));
-    console.log(event);
-    console.log(event.value);
     let month =
       event.value?.toLocaleDateString('en-US', { month: 'numeric' }).length == 1
         ? '0' + event.value?.toLocaleDateString('en-US', { month: 'numeric' })
@@ -345,14 +315,13 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
 
     this.onGetData(dateOfProcedure);
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   onSubmit(): void {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    console.log(JSON.stringify(this.form.value));
-    console.log('dateOfProcedure = ' + this.form.value['dateOfProcedure']);
 
     if (this.toothNumbersValue.length == 0) {
       return;
@@ -361,12 +330,9 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
       return;
     }
 
-    for (let i = 0; i < this.toothNumbersValue.length; i++) {
-      console.log('tooth number = ' + this.toothNumbersValue[i]);
-    }
     const dateFormat = this.datepipe.transform(
       this.form.value['dateOfProcedure'],
-      'yyyy-MM-dd'
+      'yyyy-MM-dd',
     );
     for (let i = 0; i < this.toothNumbersValue.length; i++) {
       const orthodonticExamination: OrthodonticExamination = {
@@ -385,7 +351,6 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
         .createOrthodonticExamination(orthodonticExamination)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -395,26 +360,24 @@ export class AddUpdateOrthodonticExaminationComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 messageSplit[0] + strLink,
-                this.options
+                this.options,
               );
               //Go to current date
               // let currentDateTime = this.datepipe.transform(new Date(), 'MM/dd/yyyy h:mm:ss');
               let currentDate = this.datepipe.transform(
                 new Date(),
-                'yyyy-MM-dd'
+                'yyyy-MM-dd',
               );
               // this.resetAllCheckboxes();
               this.onGetData(currentDate + '');
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating single profile..')
         );
     }
   }

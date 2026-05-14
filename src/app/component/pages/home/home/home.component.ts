@@ -40,12 +40,10 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.onGetAppointmentData();
     setTimeout(() => {
-      console.log('here...');
-      console.log(this.appointments);
-      console.log('........');
       this.loadCalendarOptions();
     }, 2000);
   }
+
   constructor(
     public dialog: MatDialog,
     private profileModelService: ProfileModelService,
@@ -53,7 +51,7 @@ export class HomeComponent implements OnInit {
     private route: ActivatedRoute, // private readonly store: Storage
     private router: Router,
     public alertService: AlertService,
-    private keycloakService: KeycloakService
+    private keycloakService: KeycloakService,
   ) {}
 
   viewDate: Date = new Date();
@@ -98,12 +96,10 @@ export class HomeComponent implements OnInit {
     const reference = document.getElementById('#reference');
     const popper = document.getElementById('#tooltip');
     var newParagraph = document.createElement('popper-content');
-    console.log(popper);
     //     // Add text to the new paragraph
     newParagraph.textContent =
       'This is a dynamic paragraph created using JavaScript.';
     if (popper != null) {
-      console.log(mouseEnterInfo.event.extendedProps['firstName']);
       createPopper(mouseEnterInfo.el, popper, {
         placement: 'left',
       });
@@ -111,56 +107,46 @@ export class HomeComponent implements OnInit {
   }
 
   onGetAppointmentData() {
-    this.patientAppointmentService.getAllPatientAppointment().subscribe(
-      (response: any) => {
-        console.log('====----==response');
-        console.log(response.body);
+    this.patientAppointmentService
+      .getAllPatientAppointment()
+      .subscribe((response: any) => {
         this.appointments = response.body;
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting all appointments..')
-    );
+      });
   }
+
   onGetSingleAppointmentData(arg: any) {
     this.patientAppointmentService
       .getSingleAppointment(arg.event.id, arg.event.extendedProps.category)
-      .subscribe(
-        (response: PatientAppointmentResponse) => {
-          console.log('response');
-          console.log(response);
-          this.eventData = response;
-          const dialogRef = this.dialog.open(HomeDialogComponent, {
-            data: {
-              firstName: this.eventData.firstName,
-              lastName: this.eventData.lastName,
-              middleName: this.eventData.middleName,
-              cellNumber: this.eventData.cellNumber,
-              title: this.eventData.title,
-              serviceToAvail: this.eventData.serviceToAvail,
-              start: this.eventData.start,
-              // end: this.eventData.end
-            },
-          });
+      .subscribe((response: PatientAppointmentResponse) => {
+        this.eventData = response;
+        const dialogRef = this.dialog.open(HomeDialogComponent, {
+          data: {
+            firstName: this.eventData.firstName,
+            lastName: this.eventData.lastName,
+            middleName: this.eventData.middleName,
+            cellNumber: this.eventData.cellNumber,
+            title: this.eventData.title,
+            serviceToAvail: this.eventData.serviceToAvail,
+            start: this.eventData.start,
+            // end: this.eventData.end
+          },
+        });
 
-          dialogRef.afterClosed().subscribe((result) => {
-            console.log('result');
-            console.log(result);
-            console.log('The dialog was closed');
-            if (result == 'edit') {
-              this.router.navigate([
-                `home/appointment/${arg.event.extendedProps.category}/${this.eventData?.id}`,
-              ]);
-            }
-          });
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting all appointments..')
-      );
+        dialogRef.afterClosed().subscribe((result) => {
+          if (result == 'edit') {
+            this.router.navigate([
+              `home/appointment/${arg.event.extendedProps.category}/${this.eventData?.id}`,
+            ]);
+          }
+        });
+      });
   }
+
   deletePatientAppointment() {
     const appointmentId = this.eventData?.id ? this.eventData?.id : '0';
-    this.patientAppointmentService.removeAppointment(appointmentId).subscribe(
-      (response: CustomHttpResponse) => {
+    this.patientAppointmentService
+      .removeAppointment(appointmentId)
+      .subscribe((response: CustomHttpResponse) => {
         if (response.httpStatus == 'OK') {
           this.options.autoClose = false;
           this.alertService.success(response.message, this.options);
@@ -169,11 +155,9 @@ export class HomeComponent implements OnInit {
             this.loadCalendarOptions();
           }, 1500);
         }
-      },
-      (error: any) => console.log(error),
-      () => console.log('Done getting all appointments..')
-    );
+      });
   }
+
   loadCalendarOptions() {
     this.calendarOptions = {
       headerToolbar: {
@@ -194,9 +178,9 @@ export class HomeComponent implements OnInit {
         addNewEvent: {
           text: 'add event (NEW PATIENT)',
           click: function (arg, el) {
-            console.log(arg.view);
-            console.log(arg.view?.location);
-            console.log(el);
+            // arg.view.type will be the current view type, such as 'dayGridMonth'
+            // arg.view?.location.href will be the current URL of the view
+            // el will be the button element that was clicked
             window.location.href = arg.view?.location.href + '/appointment';
             //home/appointment
             // this.router.navigate([`home/appointment`]);
@@ -220,7 +204,6 @@ export class HomeComponent implements OnInit {
   }
 
   logout() {
-    console.log('logout was click!....');
     this.keycloakService.logout();
   }
 }

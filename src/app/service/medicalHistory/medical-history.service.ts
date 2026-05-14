@@ -1,16 +1,14 @@
 import { Observable, catchError, of, retry } from 'rxjs';
 
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
-import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
 import { MedicalQuestionsModel } from 'src/app/model/interface/medicalHistoryModel/medical-questions-model';
 import { DeleteProfileOrMedical } from 'src/app/model/interface/profileModel/delete-profile';
+import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
+import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
-
-// const baseUrl = 'http://localhost:9090/api/v1/medical';
-// const baseUrl = 'http://localhost:8008/api/v1/medical';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +16,7 @@ import { environment } from 'src/environments/environment';
 export class MedicalHistoryService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/medical`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.MEDICAL_HISTORY_API_URL}`;
   }
 
   public getActivePatients(): Observable<ActiveProfiles[]> {

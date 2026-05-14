@@ -8,7 +8,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { bo, s } from '@fullcalendar/core/internal-common';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
@@ -194,14 +193,16 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
   public submitted = false;
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
+
   constructor(
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     private route: ActivatedRoute,
     public alertService: AlertService,
     private fb: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   async ngOnInit(): Promise<void> {
     this.isLoggedIn = await this.keycloak.isLoggedIn();
     if (this.isLoggedIn) {
@@ -213,7 +214,6 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     this.onGetProfileModel(this.id);
     this.onGetMedicalModel(this.id);
-    console.log('this.medicalModel = ' + this.medicalModel);
     if (this.medicalModel == undefined) {
       this.form = this.fb.group({
         id: [''],
@@ -242,24 +242,19 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       });
     }
   }
+
   public onGetProfileModel(id: number): void {
-    this.profileModelService.getProfileModel(id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onGetMedicalModel(id: number): void {
-    this.medicalHistoryService.getMedicalModel(id).subscribe(
-      (response: MedicalModel) => {
+    this.medicalHistoryService
+      .getMedicalModel(id)
+      .subscribe((response: MedicalModel) => {
         this.medicalModel = response;
         this.allergyList = this.medicalModel?.questions?.allergies;
-
-        console.log('this.allergyList = ' + JSON.stringify(this.allergyList));
 
         this.form = this.fb.group({
           id: [this.medicalModel?.questions?.id],
@@ -312,7 +307,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           haveYouHadAnyOfTheFollowing: this.fb.array(
             this.medicalModel?.questions?.haveYouHadAnyOfTheFollowing
               ? this.medicalModel?.questions?.haveYouHadAnyOfTheFollowing
-              : this.medicalConditionList
+              : this.medicalConditionList,
           ),
           otherHaveYouHadAnyOfTheFollowing: [
             this.medicalModel?.questions?.otherHaveYouHadAnyOfTheFollowing,
@@ -331,24 +326,21 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         if (this.medicalModel?.questions?.prescriptionMedication == 'No') {
           this.form.controls['specificPrescriptionMedication'].disable();
         }
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => {
-        console.log('Done getting medical health..');
-      }
-    );
+      });
   }
+
   get getFormAllergies() {
     return this.form.controls['allergies'] as FormArray;
   }
+
   get getFormMediclConditions() {
     return this.form.controls['haveYouHadAnyOfTheFollowing'] as FormArray;
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   onChangeConditionYesNo(event: any, controlName: any) {
     if (event.target.value == 'Yes') {
       this.form.controls[controlName].enable();
@@ -360,22 +352,15 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     }
     this.form.controls[controlName].updateValueAndValidity();
   }
+
   onCheckboxChangeAllergies(event: any) {
-    console.log('onCheckboxChangeAllergies called...');
-    console.log(
-      'this.form.value.allergies.length = ' + this.form.value.allergies.length
-    );
     let otherAllergiesChecked = false;
     for (let i = 0; i < this.form.value.allergies.length; i++) {
       if (event.target.value == this.form.value.allergies[i].value) {
         if (this.form.value.allergies[i].checked) {
           this.form.value.allergies[i].checked = false;
           this.f['allergies'].setErrors({ required: true });
-          console.log('unchecked called...' + i);
-          console.log('unchecked = ' + this.form.value.allergies[i].value);
-          console.log(
-            'checked status = ' + this.form.value.allergies[i].checked
-          );
+
           if (!otherAllergiesChecked) {
             this.f['allergies'].setErrors({ required: true });
           } else {
@@ -385,11 +370,6 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
             // When unchecking "None", do nothing special
           }
         } else {
-          console.log('checked called...' + i);
-          console.log('checked = ' + this.form.value.allergies[i].value);
-          console.log(
-            'checked status = ' + this.form.value.allergies[i].checked
-          );
           this.f['allergies'].setErrors(null);
           this.form.value.allergies[i].checked = true;
 
@@ -403,7 +383,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           } else {
             // If any other is checked, uncheck "None"
             const noneIndex = this.form.value.allergies.findIndex(
-              (a: any) => a.value === 'None Allergy'
+              (a: any) => a.value === 'None Allergy',
             );
             if (noneIndex !== -1) {
               this.form.value.allergies[noneIndex].checked = false;
@@ -411,12 +391,12 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           }
         }
       } else if (this.form.value.allergies[i].checked) {
-        console.log('checked called...' + i);
         otherAllergiesChecked = true;
         this.f['allergies'].setErrors(null);
       }
     }
   }
+
   onCheckboxChangeHadAnyFollowing(event: any) {
     for (
       let i = 0;
@@ -435,6 +415,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       }
     }
   }
+
   validatorData(event: any) {
     if (event == 'one') {
       return [
@@ -456,17 +437,19 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       return [];
     }
   }
+
   urlCurrentLocation() {
     const urlPathName = window.location.pathname;
     const urlAction = urlPathName.split('/');
     return urlAction[2];
   }
+
   onSubmit(): void {
     this.submitted = true;
-    //console.log('form value =-=-= ' + JSON.stringify(this.form.value));
     if (this.form.invalid) {
       return;
     }
+
     const question: Question = {
       id: this.form.value['id'],
       goodHealth: this.form.value['goodHealth'],
@@ -494,7 +477,6 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
       otherHaveYouHadAnyOfTheFollowing:
         this.form.value['otherHaveYouHadAnyOfTheFollowing'],
     };
-    //console.log('question == ' + JSON.stringify(question));
 
     if (this.urlCurrentLocation() === 'add-patient') {
       const addMedicalModel: MedicalQuestionsModel = {
@@ -509,7 +491,6 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         .createMedicalQuestionsModel(addMedicalModel)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -519,18 +500,16 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 messageSplit[0] + strLink,
-                this.options
+                this.options,
               );
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating single profile..')
         );
     } else if (this.urlCurrentLocation() === 'update-patient') {
       const updateMedicalModel: MedicalQuestionsModel = {
@@ -545,7 +524,6 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         .updateMedicalQuestionsModel(updateMedicalModel)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'OK') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -555,18 +533,16 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 messageSplit[0] + strLink,
-                this.options
+                this.options,
               );
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating medical records..')
         );
     }
   }
@@ -575,7 +551,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
   isNoneAllergyChecked(): boolean {
     const allergies = this.form?.value?.allergies || [];
     const noneAllergy = allergies.find(
-      (a: any) => a.fcname === 'noneAllergy' || a.value === 'None Allergy'
+      (a: any) => a.fcname === 'noneAllergy' || a.value === 'None Allergy',
     );
     return !!(noneAllergy && noneAllergy.checked);
   }

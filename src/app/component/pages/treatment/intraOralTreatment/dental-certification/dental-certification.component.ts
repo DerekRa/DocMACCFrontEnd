@@ -36,6 +36,7 @@ export class DentalCertificationComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private dentalCertificateService: DentalCertificateService,
@@ -43,8 +44,9 @@ export class DentalCertificationComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     public alertService: AlertService,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public id: any;
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
@@ -64,17 +66,13 @@ export class DentalCertificationComponent implements OnInit {
     recommendations: new FormControl(''),
     dateOfProcedure: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   public onGetData() {
     const certificationRequest: CertificationGetRequest = {
       profileId: this.id,
@@ -87,8 +85,6 @@ export class DentalCertificationComponent implements OnInit {
       .subscribe(
         (response) => {
           this.certificationData = response;
-          console.log('this.certificationData = ' + this.certificationData);
-          console.log(this.certificationData);
           if (this.certificationData?.createdByName == null) {
             this.newDataToInsert = true;
           } else {
@@ -97,11 +93,7 @@ export class DentalCertificationComponent implements OnInit {
           this.validationOnFields();
         },
         (error: any) => {
-          console.log('error');
-          console.log(error);
           this.certificationData = error;
-          console.log('this.certificationData = ' + this.certificationData);
-          console.log(this.certificationData);
           if (this.certificationData?.createdByName == null) {
             this.newDataToInsert = true;
           } else {
@@ -109,55 +101,51 @@ export class DentalCertificationComponent implements OnInit {
           }
           this.validationOnFields();
         },
-        () => console.log('Done getting certificationData..')
       );
   }
+
   public updateCertification() {
     this.updateCertificate = !this.updateCertificate;
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   public printPDFCertificate() {
     this.exportPdfService
       .getExportPDFCertificate(
         this.id,
         this.dateOfProcedure,
         this.userProfile?.firstName || '',
-        this.userProfile?.id || ''
+        this.userProfile?.id || '',
       )
-      .subscribe(
-        (response: any) => {
-          if (response.type === HttpEventType.DownloadProgress) {
-            this.percentDone = Math.round(
-              (100 * response.loaded) / response.total
-            );
-            console.log(`Downloaded ${this.percentDone}%`);
-          }
-          var file = new Blob([response], { type: 'application/pdf' });
-          var fileURL = URL.createObjectURL(file);
-          // if you want to open PDF in new tab
-          // window.open(response);
-          var a = document.createElement('a');
-          a.href = fileURL;
-          a.target = '_blank';
-          a.download = this.profileModel?.name?.lastName
-            ? this.profileModel?.name?.lastName +
-              this.profileModel?.name?.firstName +
-              this.profileModel?.name?.middleName +
-              'Certification' +
-              this.dateOfProcedure +
-              '.pdf'
-            : 'blankpage.pdf';
-          document.body.appendChild(a);
-          a.click();
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting pdf certification..')
-      );
+      .subscribe((response: any) => {
+        if (response.type === HttpEventType.DownloadProgress) {
+          this.percentDone = Math.round(
+            (100 * response.loaded) / response.total,
+          );
+        }
+        var file = new Blob([response], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+        // if you want to open PDF in new tab
+        // window.open(response);
+        var a = document.createElement('a');
+        a.href = fileURL;
+        a.target = '_blank';
+        a.download = this.profileModel?.name?.lastName
+          ? this.profileModel?.name?.lastName +
+            this.profileModel?.name?.firstName +
+            this.profileModel?.name?.middleName +
+            'Certification' +
+            this.dateOfProcedure +
+            '.pdf'
+          : 'blankpage.pdf';
+        document.body.appendChild(a);
+        a.click();
+      });
   }
+
   private validationOnFields() {
     this.form = this.fb.group({
       diagnosis: [
@@ -175,21 +163,14 @@ export class DentalCertificationComponent implements OnInit {
       dateOfProcedure: [this.dateOfProcedure, Validators.required],
     });
   }
+
   onSubmit(): void {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    console.log(JSON.stringify(this.form.value));
-    console.log(JSON.stringify(this.form.value['diagnosis']));
-    console.log(JSON.stringify(this.form.value['recommendations']));
-    console.log('dateOfProcedure = ' + this.form.value['dateOfProcedure']);
     this.form.value['dateOfProcedure'] = this.dateOfProcedure;
-    console.log('dateOfProcedure = ' + this.form.value['dateOfProcedure']);
     if (this.form.invalid) {
-      console.log('return empty diag and reom 000');
       return;
     }
     if (this.form.value['diagnosis'] == '') {
-      console.log('return empty diag and reom');
       return;
     }
 
@@ -203,12 +184,10 @@ export class DentalCertificationComponent implements OnInit {
       recommendations: this.form.value['recommendations'],
     };
     if (this.newDataToInsert) {
-      console.log('save');
       this.dentalCertificateService
         .createCertification(certificationRequest)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               this.options.autoClose = false;
               this.alertService.success(response.message);
@@ -217,21 +196,17 @@ export class DentalCertificationComponent implements OnInit {
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done saving certification..')
         );
     } else {
-      console.log('update');
       this.dentalCertificateService
         .updateCertification(certificationRequest)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'OK') {
               this.options.autoClose = false;
               this.alertService.success(response.message);
@@ -240,13 +215,11 @@ export class DentalCertificationComponent implements OnInit {
             }
           },
           (error: any) => {
-            console.log(error);
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done updating certification..')
         );
     }
   }

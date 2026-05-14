@@ -1,26 +1,25 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
-import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
-import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
+import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
 import { IntraoralExamination } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/intraoral-examination';
-import { ConditionProcedureModelRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/condition-procedure-model-request';
-import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/tooth-numbers-dental-chart';
+import { ToothConditionHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-condition-history-pagination-response';
 import { ToothHistoryPaginationRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-history-pagination-request';
 import { ToothProcedureHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-procedure-history-pagination-response';
-import { DentalChartDesignResponse } from 'src/app/model/interface/dentalChartModel/dental-chart-design-response';
+import { ConditionProcedureModelRequest } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/condition-procedure-model-request';
+import { ToothNumbersDentalChart } from 'src/app/model/interface/dentalChartModel/intraoralExaminationSaveUpdateModel/tooth-numbers-dental-chart';
+import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
+import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
-import { ToothConditionHistoryPaginationResponse } from 'src/app/model/interface/dentalChartModel/intraoralExaminationModel/tooth-condition-history-pagination-response';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
-// const baseUrl = 'http://localhost:9090/api/v1/intraOral';
-// const baseUrl = 'http://localhost:8085/api/v1/intraOral';
 @Injectable({
   providedIn: 'root',
 })
 export class IntraoralExaminationService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/intraoral`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.INTRAORAL_EXAMINATION_API_URL}`;
   }
 
   public getActivePatients(): Observable<ActiveProfiles[]> {
@@ -64,7 +63,6 @@ export class IntraoralExaminationService {
       .pipe(retry(3));
   }
   public getImage(imageName: string): string {
-    // return this.http.get<any>(`${baseUrl}/images/${imageName}`);
     return this.baseUrl + `/images/${imageName}`;
   }
   public getIntraOralExaminationByNumber(

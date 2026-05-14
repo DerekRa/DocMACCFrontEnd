@@ -1,27 +1,26 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
-import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
-import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
+import { BracketLatestRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-latest-request';
+import { BracketPaginationRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-pagination-request';
+import { BracketRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-request';
+import { BracketResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-response';
 import { OrthodonticExamination } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination';
 import { OrthodonticExaminationLatest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-latest';
-import { OrthodonticExaminationResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-response';
 import { OrthodonticExaminationPagination } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-pagination';
-import { BracketRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-request';
-import { BracketLatestRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-latest-request';
-import { BracketResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-response';
-import { BracketPaginationRequest } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/bracket-pagination-request';
+import { OrthodonticExaminationResponse } from 'src/app/model/interface/dentalChartModel/orthodonticExaminationModel/orthodontic-examination-response';
+import { ActiveProfiles } from 'src/app/model/interface/shared/active-profiles';
+import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
-// const baseUrl = 'http://localhost:9090/api/v1/orthodontic';
-// const baseUrl = 'http://localhost:8087/api/v1/orthodontic';
 @Injectable({
   providedIn: 'root',
 })
 export class OrthodonticExaminationService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/orthodontic`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.ORTHODONTIC_EXAMINATION_API_URL}`;
   }
   public getActivePatients(): Observable<ActiveProfiles[]> {
     return this.http.get<ActiveProfiles[]>(

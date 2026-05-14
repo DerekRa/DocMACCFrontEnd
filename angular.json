@@ -77,11 +77,13 @@
           "configurations": {
             "production": {
               "browserTarget": "docmeyanneccorpuz:build:production",
-              "host": "0.0.0.0"
+              "host": "0.0.0.0",
+              "allowedHosts": ["docmaccdentalclinic.local"]
             },
             "development": {
               "browserTarget": "docmeyanneccorpuz:build:development",
-              "host": "0.0.0.0"
+              "host": "0.0.0.0",
+              "allowedHosts": ["docmaccdentalclinic.local"]
             }
           },
           "defaultConfiguration": "development"

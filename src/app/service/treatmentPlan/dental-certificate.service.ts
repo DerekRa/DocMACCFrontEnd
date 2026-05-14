@@ -1,5 +1,3 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { CertificationGetRequest } from 'src/app/model/interface/treatmentPlanModel/certification-get-request';
@@ -7,15 +5,18 @@ import { CertificationRequest } from 'src/app/model/interface/treatmentPlanModel
 import { CertificationResponse } from 'src/app/model/interface/treatmentPlanModel/certification-response';
 import { environment } from 'src/environments/environment';
 
-// const baseUrl = 'http://localhost:9090/api/v1/certification';
-// const baseUrl = 'http://localhost:8089/api/v1/certification';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { AppServicesConstants } from '../constants/app-services.constants';
+
 @Injectable({
   providedIn: 'root',
 })
 export class DentalCertificateService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/certification`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.CERTIFICATION_API_URL}`;
   }
   public createCertification(
     certificationRequest: CertificationRequest,
@@ -40,9 +41,6 @@ export class DentalCertificateService {
       .put<CustomHttpResponse>(`${this.baseUrl}`, certificationRequest)
       .pipe(retry(3));
   }
-  //   public updateProfileModel(certificationRequest: CertificationRequest): Observable<CustomHttpResponse> {
-  //     return this.http.put<CustomHttpResponse>(`${baseUrl}`, certificationRequest).pipe(retry(3));
-  // }
   public convertToHttpParams(request: any): HttpParams {
     let httpParams = new HttpParams();
     Object.keys(request).forEach(function (key) {

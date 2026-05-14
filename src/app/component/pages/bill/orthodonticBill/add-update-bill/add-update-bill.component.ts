@@ -34,9 +34,8 @@ export class AddUpdateBillComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticBillService: OrthodonticBillService,
@@ -44,15 +43,15 @@ export class AddUpdateBillComponent implements OnInit {
     private router: Router,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public id: any;
   public billId: any = 0;
   public dateOfBill: any = '';
   public profileModel: ProfileModel | undefined;
   public billData: OrthodonticBillDataResponse | any = {};
   public urlLocation: string = 'add-new';
-  // public breakdown: BillBreakdown | any = {};
   public dateOfProcedure: string = '';
   public procedureNumber: string = '';
   public isLoggedIn = false;
@@ -67,23 +66,19 @@ export class AddUpdateBillComponent implements OnInit {
     totalBill: new FormControl(''),
     reason: new FormControl(''),
   });
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private updateCheckUrlPath() {
     const urlPathName = window.location.pathname;
-    console.log('urlPathName = ' + urlPathName);
     this.urlLocation = urlPathName.split('/')[5];
     if (
       !(
@@ -97,13 +92,10 @@ export class AddUpdateBillComponent implements OnInit {
     }
   }
   private onGetTableData() {
-    console.log('this.urlLocation==' + this.urlLocation);
-
     if (this.billId !== 0) {
-      this.orthodonticBillService.getBill(this.id, this.billId).subscribe(
-        (response: OrthodonticBillDataResponse) => {
-          console.log('response for OrthodonticBillDataResponse');
-          console.log(response);
+      this.orthodonticBillService
+        .getBill(this.id, this.billId)
+        .subscribe((response: OrthodonticBillDataResponse) => {
           this.billData = response;
           this.form = this.formBuilder.group({
             totalBill: [this.billData.totalBill, [Validators.required]],
@@ -124,12 +116,7 @@ export class AddUpdateBillComponent implements OnInit {
               ],
             ],
           });
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting bill data..')
-      );
+        });
     } else {
       this.form = this.formBuilder.group({
         totalBill: ['', [Validators.required]],
@@ -145,19 +132,14 @@ export class AddUpdateBillComponent implements OnInit {
       });
     }
   }
+
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
+
     if (this.form.invalid) {
       return;
     }
 
-    console.log(
-      "this.form.value['billName'] ===" + this.form.value['billName']
-    );
     if (this.billId == 0) {
       const billDataRequest: BillDataRequest = {
         profileId: this.id,
@@ -166,11 +148,9 @@ export class AddUpdateBillComponent implements OnInit {
         createdByName: this.userProfile?.firstName || '',
         createdById: this.userProfile?.id || '',
       };
-      console.log('billDataRequest :::' + billDataRequest);
-      console.log(billDataRequest);
+
       this.orthodonticBillService.createBill(billDataRequest).subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const strLink =
               '<a href="/bill-records/orthodontic/patients/' +
@@ -181,16 +161,11 @@ export class AddUpdateBillComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating bill data..')
       );
     } else {
       // update now on the bill history
@@ -203,11 +178,8 @@ export class AddUpdateBillComponent implements OnInit {
         reasonChanged: this.form.value['reason'],
       };
 
-      console.log('billDataRequest :::' + billDataRequest);
-      console.log(billDataRequest);
       this.orthodonticBillService.createNewBill(billDataRequest).subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const strLink =
               '<a href="/bill-records/orthodontic/patients/' +
@@ -222,19 +194,15 @@ export class AddUpdateBillComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating new bill data..')
       );
     }
   }
+
   viewBillHistory() {
     if (this.billId !== undefined) {
       // bill-records/orthodontic/patients/:id/:billId/:dateOfBill/history

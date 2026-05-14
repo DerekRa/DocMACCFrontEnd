@@ -31,12 +31,11 @@ export class PhysiciansComponent implements OnInit {
   constructor(
     private physicianHistoryService: PhysicianHistoryService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
 
   private onGetTableData() {
     const urlPathName = window.location.pathname;
-    // console.log('urlPathName = ' + urlPathName);
     this.urlLocation = urlPathName;
     const pageNo = this.page - 1;
     const pageSize = this.paginationSize;
@@ -52,35 +51,30 @@ export class PhysiciansComponent implements OnInit {
         pageSize,
         sortBy,
         orderBy,
-        itemSearch
+        itemSearch,
       )
-      .subscribe(
-        (response: Physician[]) => {
-          this.physicianList = response;
-          this.physicianListLength = response;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: Physician[]) => {
+        this.physicianList = response;
+        this.physicianListLength = response;
+      });
     this.physicianHistoryService
       .getPhysiciansPerPage(profileId, 0, 10000, sortBy, orderBy, itemSearch)
-      .subscribe(
-        (response: Physician[]) => {
-          this.paginationTotalItems = response.length;
-        },
-        (error: any) => console.log(error),
-        () => console.log('Done getting profiles..')
-      );
+      .subscribe((response: Physician[]) => {
+        this.paginationTotalItems = response.length;
+      });
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchName(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -101,26 +95,31 @@ export class PhysiciansComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangePhysicianName(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'fullName';
     this.onGetTableData();
   }
+
   public onChangePhysicianOfficeAddress(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'officeAddress';
     this.onGetTableData();
   }
+
   public onChangePhysicianOfficeNumber(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'officeNumber';
     this.onGetTableData();
   }
+
   public onChangePhysicianSpecialty(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'specialty';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.page = event;
     this.onGetTableData();

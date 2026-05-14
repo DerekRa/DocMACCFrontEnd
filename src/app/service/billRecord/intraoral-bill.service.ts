@@ -1,14 +1,12 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams,
-} from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, EMPTY, Observable, retry, throwError } from 'rxjs';
-import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
+import { catchError, EMPTY, Observable, retry } from 'rxjs';
 import { AmountChargedHistoryResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-history-response';
+import { AmountChargedRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-request';
+import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
 import { AmountData } from 'src/app/model/interface/billModel/intraOralBill/amount-data';
 import { AmountDataPaginationRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-pagination-request';
+import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-request';
 import { AmountPaymentRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-payment-request';
 import { AmountPaymentResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-payment-response';
 import { BillBreakdown } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdown';
@@ -16,8 +14,7 @@ import { BillBreakdownResponse } from 'src/app/model/interface/billModel/intraOr
 import { BillBreakdwonRequest } from 'src/app/model/interface/billModel/intraOralBill/bill-breakdwon-request';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
 import { environment } from 'src/environments/environment';
-import { AmountChargedResponse } from 'src/app/model/interface/billModel/intraOralBill/amount-charged-response';
-import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBill/amount-data-request';
+import { AppServicesConstants } from '../constants/app-services.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +22,7 @@ import { AmountDataRequest } from 'src/app/model/interface/billModel/intraOralBi
 export class IntraoralBillService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/intraOralBill`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.INTRAORAL_BILL_API_URL}`;
   }
 
   public getBillTotalBreakdown(

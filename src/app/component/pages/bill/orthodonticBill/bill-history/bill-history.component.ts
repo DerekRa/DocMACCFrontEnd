@@ -18,12 +18,14 @@ export class BillHistoryComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticBillService: OrthodonticBillService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
+
   public id: any;
   public profileModel: ProfileModel | undefined;
   public orthodonticData: OrthodonticBillDataResponse[] | any;
@@ -34,17 +36,13 @@ export class BillHistoryComponent implements OnInit {
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -64,46 +62,37 @@ export class BillHistoryComponent implements OnInit {
       orderBy: this.orderBy,
       findItem: itemSearch,
     };
+
     this.orthodonticBillService.getBillHistory(dataPagination).subscribe(
       (response: OrthodonticBillDataResponse[]) => {
-        console.log('response');
-        console.log(response);
         this.orthodonticData = response;
       },
       (error: any) => {
-        console.log('the error is log::' + error);
         this.orthodonticData = [];
       },
-      () => console.log('Done getting profiles..')
     );
 
     this.orthodonticBillService.getBillHistory(dataPaginationLength).subscribe(
       (response: OrthodonticBillDataResponse[]) => {
-        console.log('response for paginationTotalItems');
-        console.log(response);
-        console.log(response.length);
         this.paginationTotalItems = response.length;
       },
       (error: any) => {
-        console.log('error logs::' + error);
         this.paginationTotalItems = 0;
       },
-      () => console.log('Done getting profiles..')
     );
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -118,34 +107,30 @@ export class BillHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public onChangeDate(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'createdDate';
     this.onGetTableData();
   }
+
   public onChangeBillName(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'billName';
     this.onGetTableData();
   }
+
   public onChangeTotalBill(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'totalBill';
     this.onGetTableData();
   }
   public onChangeTotalBalance(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'totalBalance';
     this.onGetTableData();
   }
+
   public viewOrthodonticBreakdown(billId: number, dateOfBill: string) {
     this.router.navigate([
       'bill-records/orthodontic/patients/',
@@ -154,6 +139,7 @@ export class BillHistoryComponent implements OnInit {
       dateOfBill,
     ]);
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();

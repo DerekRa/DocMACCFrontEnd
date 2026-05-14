@@ -1,17 +1,18 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-// const baseUrl = 'http://localhost:9090/api/v1/exportFile';
-// const baseUrl = 'http://localhost:8007/api/v1/exportFile';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+
+import { AppServicesConstants } from '../constants/app-services.constants';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ExportPdfService {
   private baseUrl: string = '';
   constructor(private http: HttpClient) {
-    this.baseUrl = `${environment.localhost}:9090/api/v1/exportFile`;
+    this.baseUrl = `${environment.localhost}:${environment.port}${AppServicesConstants.EXPORT_PDF_API_URL}`;
   }
   public getExportPDFProfile(number: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/exportPDFPatientProfile/${number}`, {

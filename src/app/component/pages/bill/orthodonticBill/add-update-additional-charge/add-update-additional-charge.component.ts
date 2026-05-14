@@ -38,17 +38,17 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticBillService: OrthodonticBillService,
     private route: ActivatedRoute,
     public alertService: AlertService,
     private formBuilder: FormBuilder,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public id: any;
   public billId: any = 0;
   public transactionId: any = 0;
@@ -68,50 +68,35 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
     additionalCharge: new FormControl(''),
     reason: new FormControl(''),
   });
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
-    console.log('this.urlLocation==' + this.urlLocation);
     if (this.urlLocation == 'update-additional-charge') {
-      console.log('this.transactionId==' + this.transactionId);
       this.transactionId = this.route.snapshot.params['transactionId'];
-      console.log('this.transactionId==' + this.transactionId);
       this.orthodonticBillService
         .getAdditionalCharge(this.transactionId)
-        .subscribe(
-          (response: AdditionalChargeHistoryResponse) => {
-            console.log('response for AdditionalChargeHistoryResponse');
-            console.log(response);
-            this.billData = response;
-            this.form = this.formBuilder.group({
-              additionalCharge: [
-                this.billData.additionalChargeAmount,
-                [Validators.required],
+        .subscribe((response: AdditionalChargeHistoryResponse) => {
+          this.billData = response;
+          this.form = this.formBuilder.group({
+            additionalCharge: [
+              this.billData.additionalChargeAmount,
+              [Validators.required],
+            ],
+            reason: [
+              '',
+              [
+                Validators.required,
+                Validators.minLength(2),
+                Validators.maxLength(255),
               ],
-              reason: [
-                '',
-                [
-                  Validators.required,
-                  Validators.minLength(2),
-                  Validators.maxLength(255),
-                ],
-              ],
-            });
-          },
-          (error: any) => {
-            console.log(error);
-          },
-          () => console.log('Done getting additional charge data..')
-        );
+            ],
+          });
+        });
     } else {
       this.form = this.formBuilder.group({
         additionalCharge: ['', [Validators.required]],
@@ -121,26 +106,17 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
   }
   private onGetBillData() {
     if (this.billId !== 0) {
-      this.orthodonticBillService.getBill(this.id, this.billId).subscribe(
-        (response: OrthodonticBillDataResponse) => {
-          console.log('response for OrthodonticBillDataResponse');
-          console.log(response);
+      this.orthodonticBillService
+        .getBill(this.id, this.billId)
+        .subscribe((response: OrthodonticBillDataResponse) => {
           this.billData = response;
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting bill data..')
-      );
-    } else {
+        });
     }
   }
+
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
+
     if (this.form.invalid) {
       return;
     }
@@ -152,13 +128,11 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
         createdByName: this.userProfile?.firstName || '',
         createdById: this.userProfile?.id || '',
       };
-      console.log('billDataRequest :::' + billDataRequest);
-      console.log(billDataRequest);
+
       this.orthodonticBillService
         .createAdditionalCharge(billDataRequest)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               const strLink =
                 '<a href="/bill-records/orthodontic/patients/' +
@@ -171,21 +145,16 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 response.message + strLink,
-                this.options
+                this.options,
               );
             }
           },
           (error: any) => {
-            console.log(error.status);
-            console.log(error);
-            console.log(JSON.stringify(error));
             const errorResponse: CustomHttpResponse = error['error'];
-            console.log(errorResponse);
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done creating additional charge data..')
         );
     } else {
       const billDataRequest: AdditionalChargeUpdateDataRequest = {
@@ -196,13 +165,11 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
         createdByName: this.userProfile?.firstName || '',
         createdById: this.userProfile?.id || '',
       };
-      console.log('billDataRequest :::' + billDataRequest);
-      console.log(billDataRequest);
+
       this.orthodonticBillService
         .createNewAdditionalCharge(billDataRequest)
         .subscribe(
           (response: CustomHttpResponse) => {
-            console.log(response);
             if (response.httpStatus == 'CREATED') {
               const strLink =
                 '<a href="/bill-records/orthodontic/patients/' +
@@ -215,24 +182,20 @@ export class AddUpdateAdditionalChargeComponent implements OnInit {
               this.options.autoClose = false;
               this.alertService.success(
                 response.message + strLink,
-                this.options
+                this.options,
               );
             }
           },
           (error: any) => {
-            console.log(error.status);
-            console.log(error);
-            console.log(JSON.stringify(error));
             const errorResponse: CustomHttpResponse = error['error'];
-            console.log(errorResponse);
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
             }
           },
-          () => console.log('Done creating additional charge update data..')
         );
     }
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }

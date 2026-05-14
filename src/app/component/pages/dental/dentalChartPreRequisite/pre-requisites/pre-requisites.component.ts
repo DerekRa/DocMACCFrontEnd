@@ -24,19 +24,16 @@ import { PreRequisiteRequirementService } from 'src/app/service/dentalRecord/pre
 export class PreRequisitesComponent implements OnInit {
   constructor(
     private readonly keycloak: KeycloakService,
-    // private IntraoralExaminationService: IntraoralExaminationService,
-    // private profileModelService: ProfileModelService,
     private preRequisiteRequirementService: PreRequisiteRequirementService,
     private router: Router,
-    // private route: ActivatedRoute,
     public alertService: AlertService,
-    private fb: FormBuilder // public dialog: MatDialog
+    private fb: FormBuilder, // public dialog: MatDialog
   ) {
     if (this.preRequisiteModel == undefined) {
       this.form = this.fb.group({
         id: [''],
         periodontalScreeningTMDRequestList: this.fb.array(
-          this.periodontalScreeningList
+          this.periodontalScreeningList,
         ),
         occlusion: this.fb.group({
           classMolar: [''],
@@ -53,6 +50,7 @@ export class PreRequisitesComponent implements OnInit {
       });
     }
   }
+
   async ngOnInit(): Promise<void> {
     this.setExamType();
     this.onGetPreRequisite();
@@ -178,61 +176,51 @@ export class PreRequisitesComponent implements OnInit {
       this.examinationType = 'orthodontic_examination';
     }
   }
+
   public onGetPreRequisite(): void {
     const formData = new FormData();
     formData.append('profileId', this.id);
-    console.log('get prerequisite -=-= -= -= - =- =- =- =- =');
-    console.log('recordAction = ' + this.recordAction);
     const getPreRequisite: PreRequisiteDto = {
       profileId: this.id,
       examinationType: this.examUrl,
     };
-    console.log('getPreRequisite below');
-    console.log(getPreRequisite);
     this.preRequisiteRequirementService
       .getPreRequisite(getPreRequisite)
-      .subscribe(
-        (response: PreRequisiteModel) => {
-          this.preRequisiteModel = response;
-          console.log('this.preRequisiteModel below..');
-          console.log(this.preRequisiteModel);
-          this.preRequisiteModel.periodontalScreeningTMDRequestList = this
-            .preRequisiteModel?.periodontalScreeningTMDRequestList
-            ? this.preRequisiteModel.periodontalScreeningTMDRequestList
-            : this.periodontalScreeningList;
-          this.preRequisiteModel.occlusion = this.preRequisiteModel?.occlusion
-            ? this.preRequisiteModel.occlusion
-            : this.occlusion;
-          this.preRequisiteModel.appliances = this.preRequisiteModel?.appliances
-            ? this.preRequisiteModel.appliances
-            : this.appliances;
-          this.form = this.fb.group({
-            id: [this.preRequisiteModel.id],
-            periodontalScreeningTMDRequestList: this.fb.array(
-              this.preRequisiteModel?.periodontalScreeningTMDRequestList
-            ),
-            occlusion: this.fb.group({
-              classMolar: [this.preRequisiteModel.occlusion.classMolar],
-              overjet: [this.preRequisiteModel.occlusion.overjet],
-              overbite: [this.preRequisiteModel.occlusion.overbite],
-              midlineDeviation: [
-                this.preRequisiteModel.occlusion.midlineDeviation,
-              ],
-              crossbite: [this.preRequisiteModel.occlusion.crossbite],
-            }),
-            appliances: this.fb.group({
-              orthodontic: [this.preRequisiteModel.appliances.orthodontic],
-              stayplate: [this.preRequisiteModel.appliances.stayplate],
-              others: [this.preRequisiteModel.appliances.others],
-            }),
-          });
-        },
-        (error: any) => {
-          console.log(error);
-        },
-        () => console.log('Done getting display Periapical data..')
-      );
+      .subscribe((response: PreRequisiteModel) => {
+        this.preRequisiteModel = response;
+        this.preRequisiteModel.periodontalScreeningTMDRequestList = this
+          .preRequisiteModel?.periodontalScreeningTMDRequestList
+          ? this.preRequisiteModel.periodontalScreeningTMDRequestList
+          : this.periodontalScreeningList;
+        this.preRequisiteModel.occlusion = this.preRequisiteModel?.occlusion
+          ? this.preRequisiteModel.occlusion
+          : this.occlusion;
+        this.preRequisiteModel.appliances = this.preRequisiteModel?.appliances
+          ? this.preRequisiteModel.appliances
+          : this.appliances;
+        this.form = this.fb.group({
+          id: [this.preRequisiteModel.id],
+          periodontalScreeningTMDRequestList: this.fb.array(
+            this.preRequisiteModel?.periodontalScreeningTMDRequestList,
+          ),
+          occlusion: this.fb.group({
+            classMolar: [this.preRequisiteModel.occlusion.classMolar],
+            overjet: [this.preRequisiteModel.occlusion.overjet],
+            overbite: [this.preRequisiteModel.occlusion.overbite],
+            midlineDeviation: [
+              this.preRequisiteModel.occlusion.midlineDeviation,
+            ],
+            crossbite: [this.preRequisiteModel.occlusion.crossbite],
+          }),
+          appliances: this.fb.group({
+            orthodontic: [this.preRequisiteModel.appliances.orthodontic],
+            stayplate: [this.preRequisiteModel.appliances.stayplate],
+            others: [this.preRequisiteModel.appliances.others],
+          }),
+        });
+      });
   }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
@@ -262,12 +250,9 @@ export class PreRequisitesComponent implements OnInit {
       }
     }
   }
+
   onSubmit(): void {
     this.submitted = true;
-    // console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
     if (this.form.invalid) {
       return;
     }
@@ -286,7 +271,6 @@ export class PreRequisitesComponent implements OnInit {
       .createPreRequisite(preRequisiteModelSave)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED' || response.httpStatus == 'OK') {
             this.alertService.success(response.message, this.options);
             this.onGetPreRequisite();
@@ -298,13 +282,11 @@ export class PreRequisitesComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error);
           const errorResponse: CustomHttpResponse = error['error'];
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating pre requisite..')
       );
   }
 }

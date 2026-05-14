@@ -25,22 +25,17 @@ export class BracesHistoryComponent implements OnInit {
     this.onGetTableData();
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
-    console.log(paramsURL[0]);
-    console.log(paramsURL[1]);
-    console.log(paramsURL[2]);
-    console.log(paramsURL[3]);
-    console.log(paramsURL[4]);
-    console.log(paramsURL[5]);
-    console.log(paramsURL[6]);
+
     this.action = paramsURL[6];
-    console.log('this.action = ' + this.action);
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticExaminationService: OrthodonticExaminationService,
     private route: ActivatedRoute,
-    private readonly keycloak: KeycloakService
+    private readonly keycloak: KeycloakService,
   ) {}
+
   public isLoggedIn = false;
   public userProfile: KeycloakProfile | null = null;
   public id: any;
@@ -55,17 +50,13 @@ export class BracesHistoryComponent implements OnInit {
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
   public bracesHistoryData: OrthodonticExaminationResponse[] = [];
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -91,72 +82,42 @@ export class BracesHistoryComponent implements OnInit {
       orderBy: this.orderBy,
       findItem: itemSearch,
     };
-    console.log('this.action----=-=');
     const urlPathName = window.location.pathname;
     const paramsURL = urlPathName.split('/');
     this.action = paramsURL[6];
-    console.log(this.action);
+
     if (this.action == 'orthodontic-recent') {
-      console.log('here at latest orthodontic......');
       this.orthodonticExaminationService
         .getOrthodonticExaminationPaginationLatest(bracesPaginationRequest)
-        .subscribe(
-          (response: OrthodonticExaminationResponse[]) => {
-            console.log('response');
-            console.log(response);
-            this.bracesHistoryData = response;
-          },
-          (error: any) => console.log(error),
-          () => console.log('Done getting profiles..')
-        );
+        .subscribe((response: OrthodonticExaminationResponse[]) => {
+          this.bracesHistoryData = response;
+        });
 
       this.orthodonticExaminationService
         .getOrthodonticExaminationPaginationLatest(bracesPaginationLength)
-        .subscribe(
-          (response: OrthodonticExaminationResponse[]) => {
-            console.log('response for paginationTotalItems');
-            console.log(response);
-            console.log(response.length);
-            this.paginationTotalItems = response.length;
-          },
-          (error: any) => console.log(error),
-          () => console.log('Done getting profiles..')
-        );
+        .subscribe((response: OrthodonticExaminationResponse[]) => {
+          this.paginationTotalItems = response.length;
+        });
     } else {
       this.orthodonticExaminationService
         .getOrthodonticExaminationPagination(bracesPaginationRequest)
-        .subscribe(
-          (response: OrthodonticExaminationResponse[]) => {
-            console.log('response');
-            console.log(response);
-            this.bracesHistoryData = response;
-          },
-          (error: any) => console.log(error),
-          () => console.log('Done getting profiles..')
-        );
+        .subscribe((response: OrthodonticExaminationResponse[]) => {
+          this.bracesHistoryData = response;
+        });
 
       this.orthodonticExaminationService
         .getOrthodonticExaminationPagination(bracesPaginationLength)
-        .subscribe(
-          (response: OrthodonticExaminationResponse[]) => {
-            console.log('response for paginationTotalItems');
-            console.log(response);
-            console.log(response.length);
-            this.paginationTotalItems = response.length;
-          },
-          (error: any) => console.log(error),
-          () => console.log('Done getting profiles..')
-        );
+        .subscribe((response: OrthodonticExaminationResponse[]) => {
+          this.paginationTotalItems = response.length;
+        });
     }
-
-    console.log('paginationSize = ' + this.paginationSize);
-    console.log('pageNoDisplay = ' + this.pageNoDisplay);
-    console.log('paginationTotalItems = ' + this.paginationTotalItems);
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onSortPage(event: any) {
     this.orderByAscDesc = this.orderByAscDesc ? false : true;
     this.orderBy = this.orderByAscDesc ? 'ASC' : 'DESC';
@@ -169,31 +130,30 @@ export class BracesHistoryComponent implements OnInit {
     }
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
   }
+
   public onChangeDateOfProcedure(event: any) {
-    console.log('date was changed..');
     this.itemNameSearch = event.target.value;
-    console.log('date:' + this.itemNameSearch);
     this.sortBy = 'dateOfProcedure';
     this.onGetTableData();
   }
+
   public onChangeBracketHeight(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'bracketHeight';
     this.onGetTableData();
   }
+
   public onChangeNote(event: any) {
     this.itemNameSearch = event.target.value;
-    console.log('itemNameSearch');
-    console.log(this.itemNameSearch);
     this.sortBy = 'note';
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';

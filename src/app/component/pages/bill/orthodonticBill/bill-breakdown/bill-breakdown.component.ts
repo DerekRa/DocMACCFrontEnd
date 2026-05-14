@@ -20,13 +20,15 @@ export class BillBreakdownComponent implements OnInit {
     this.onGetProfileModel();
     this.onGetTableData();
   }
+
   constructor(
     private profileModelService: ProfileModelService,
     private orthodonticBillService: OrthodonticBillService,
     private exportPdfService: ExportPdfService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
+
   public id: any;
   public billId: any;
   public dateOfBill: string = '';
@@ -39,20 +41,13 @@ export class BillBreakdownComponent implements OnInit {
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () =>
-        console.log(
-          'Done getting single profile using bill intraoral component..'
-        )
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private onGetTableData() {
     const pageNo = this.pageNoDisplay - 1;
     const itemSearch = this.itemNameSearch == '' ? '**' : this.itemNameSearch;
@@ -72,47 +67,44 @@ export class BillBreakdownComponent implements OnInit {
       orderBy: this.orderBy,
       findItem: itemSearch,
     };
+
     this.orthodonticBillService.getBillBreakdown(dataPagination).subscribe(
       (response: BreakdownResponse[]) => {
-        console.log('response');
-        console.log(response);
         this.billBreakdown = response;
       },
       (error: any) => {
-        console.log('the error is log here::' + JSON.stringify(error));
         this.billBreakdown = [];
       },
-      () => console.log('Done getting orthodontic breakown list..')
     );
+
     this.orthodonticBillService
       .getBillBreakdown(dataPaginationLength)
       .subscribe(
         (response: BreakdownResponse[]) => {
-          console.log('response for paginationTotalItems');
-          console.log(response);
-          console.log(response.length);
           this.paginationTotalItems = response.length;
         },
         (error: any) => {
-          console.log('error logs::' + error);
           this.paginationTotalItems = 0;
         },
-        () => console.log('Done getting orthodontic breakown list length..')
       );
   }
+
   public onChangeShowPage(event: any) {
     this.paginationSize = event.target.value;
     this.onGetTableData();
   }
+
   public onChangeSearchAll(event: any) {
     this.itemNameSearch = event.target.value;
     this.sortBy = 'searchAllColumns';
     this.onGetTableData();
   }
+
   public handlePageChange(event: any) {
     this.pageNoDisplay = event;
     this.onGetTableData();
   }
+
   updateBill() {
     if (this.billId !== undefined) {
       // bill-records/orthodontic/patients/:id/:billId/:dateOfBill/update-bill
@@ -125,6 +117,7 @@ export class BillBreakdownComponent implements OnInit {
       ]);
     }
   }
+
   addAdditionalCharge() {
     if (this.billId !== undefined) {
       this.router.navigate([
@@ -136,6 +129,7 @@ export class BillBreakdownComponent implements OnInit {
       ]);
     }
   }
+
   addPayment() {
     if (this.billId !== undefined) {
       this.router.navigate([
@@ -147,6 +141,7 @@ export class BillBreakdownComponent implements OnInit {
       ]);
     }
   }
+
   viewPaymentHistory(transactionId: number) {
     this.router.navigate([
       'bill-records/orthodontic/patients/',
@@ -157,6 +152,7 @@ export class BillBreakdownComponent implements OnInit {
       transactionId,
     ]);
   }
+
   viewAdditionalChargeHistory(transactionId: number) {
     this.router.navigate([
       'bill-records/orthodontic/patients/',
@@ -167,6 +163,7 @@ export class BillBreakdownComponent implements OnInit {
       transactionId,
     ]);
   }
+
   updatePayment(transactionId: number) {
     this.router.navigate([
       'bill-records/orthodontic/patients/',
@@ -177,6 +174,7 @@ export class BillBreakdownComponent implements OnInit {
       transactionId,
     ]);
   }
+
   updateAdditionalCharge(transactionId: number) {
     this.router.navigate([
       'bill-records/orthodontic/patients/',

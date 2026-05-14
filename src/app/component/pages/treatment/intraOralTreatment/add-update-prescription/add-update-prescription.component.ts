@@ -52,7 +52,7 @@ export class AddUpdatePrescriptionComponent implements OnInit {
     private readonly keycloak: KeycloakService,
     public alertService: AlertService,
     private route: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
   ) {}
 
   public id: any;
@@ -74,15 +74,9 @@ export class AddUpdatePrescriptionComponent implements OnInit {
   });
 
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
 
   get f(): { [key: string]: AbstractControl } {
@@ -91,16 +85,9 @@ export class AddUpdatePrescriptionComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
     if (this.form.invalid) {
       return;
     }
-
-    console.log('firstName = ' + this.userProfile?.firstName);
-    console.log('id = ' + this.userProfile?.id);
 
     const prescriptionSaveRequest: PrescriptionSaveRequest = {
       dosage: this.form.value['dosage'],
@@ -118,7 +105,6 @@ export class AddUpdatePrescriptionComponent implements OnInit {
       .createPrescription(prescriptionSaveRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const messageSplit = response.message.split(':');
             const strLink =
@@ -134,16 +120,11 @@ export class AddUpdatePrescriptionComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating walkin appointment..')
       );
   }
 }

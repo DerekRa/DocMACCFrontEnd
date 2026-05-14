@@ -10,7 +10,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
-import { User } from 'src/app/model/class/authenticate/user.model';
 import { RegularPatientRequest } from 'src/app/model/interface/appointmentModel/regular-patient-request';
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-response';
@@ -31,17 +30,14 @@ export class AddUpdateAppointmentComponent implements OnInit {
     public alertService: AlertService,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
   ) {}
   async ngOnInit(): Promise<void> {
     this.id = this.route.snapshot.params['id'];
     this.isLoggedIn = await this.keycloak.isLoggedIn();
-    // console.log(this.isLoggedIn);
     if (this.isLoggedIn) {
       this.userProfile = await this.keycloak.loadUserProfile();
     }
-    console.log('::::::::');
-    console.log(this.userProfile);
     this.onGetProfileModel();
     this.form = this.formBuilder.group({
       eventTitle: [
@@ -63,7 +59,6 @@ export class AddUpdateAppointmentComponent implements OnInit {
       rangeDateFrom: ['', Validators.required],
       rangeTimeFrom: ['', Validators.required],
     });
-    console.log('id ==-=-=-=- ' + this.id);
   }
 
   public id: any;
@@ -86,17 +81,13 @@ export class AddUpdateAppointmentComponent implements OnInit {
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
+
   public onGetProfileModel(): void {
-    this.profileModelService.getProfileModel(this.id).subscribe(
-      (response) => {
-        this.profileModel = response;
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => console.log('Done getting single profile..')
-    );
+    this.profileModelService.getProfileModel(this.id).subscribe((response) => {
+      this.profileModel = response;
+    });
   }
+
   private convert(time: string) {
     let [hour, modifier] = time.split(':');
     let min = parseInt(modifier).toString().padStart(2, '0');
@@ -118,21 +109,19 @@ export class AddUpdateAppointmentComponent implements OnInit {
 
     return time24hr;
   }
+
   onSubmit() {
     this.submitted = true;
-    console.log('form value =-=-= ' + JSON.stringify(this.form.value));
-    // console.log('form value periodontalScreeningTMDRequestList =-=-= ' + JSON.stringify(this.form.value.periodontalScreeningTMDRequestList));
-    // console.log('form value occlusion =-=-= ' + JSON.stringify(this.form.value.occlusion));
-    // console.log('form value appliances =-=-= ' + JSON.stringify(this.form.value.appliances));
     if (this.form.invalid) {
       return;
     }
+
     const dateFormat = this.datepipe.transform(
       this.form.value['rangeDateFrom'],
-      'yyyy-MM-dd'
+      'yyyy-MM-dd',
     );
+
     const timeFormat = this.convert(this.form.value['rangeTimeFrom']);
-    console.log('timeFormat == ' + timeFormat);
     const regularPatientRequest: RegularPatientRequest = {
       profileId: this.id,
       createdByName: this.userProfile?.firstName || '',
@@ -147,7 +136,6 @@ export class AddUpdateAppointmentComponent implements OnInit {
       .createRegularAppointment(regularPatientRequest)
       .subscribe(
         (response: CustomHttpResponse) => {
-          console.log(response);
           if (response.httpStatus == 'CREATED') {
             const messageSplit = response.message.split(':');
             const strLink =
@@ -159,16 +147,11 @@ export class AddUpdateAppointmentComponent implements OnInit {
           }
         },
         (error: any) => {
-          console.log(error.status);
-          console.log(error);
-          console.log(JSON.stringify(error));
           const errorResponse: CustomHttpResponse = error['error'];
-          console.log(errorResponse);
           if (errorResponse.httpStatus == 'BAD_REQUEST') {
             this.alertService.error(errorResponse.message, this.options);
           }
         },
-        () => console.log('Done creating walkin appointment..')
       );
   }
 }
