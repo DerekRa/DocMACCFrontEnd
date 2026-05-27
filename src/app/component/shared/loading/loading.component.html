@@ -1,0 +1,15 @@
+<div *ngIf="loading$ | async" class="spinner-container">
+  <ng-container *ngIf="customLoadingIndicator; else defaultSpinner">
+    <ng-container *ngTemplateOutlet="customLoadingIndicator"></ng-container>
+  </ng-container>
+  <ng-template #defaultSpinner>
+    <mat-spinner mode="indeterminate"></mat-spinner>
+    <!-- <mat-progress-spinner
+      mode="determinate"
+      [value]="95"
+      diameter="40"
+      strokeWidth="5"
+    >
+    </mat-progress-spinner> -->
+  </ng-template>
+</div>

@@ -117,38 +117,39 @@
       <div class="col-4 col-md-auto text-sm">Date of Procedure</div>
       <!-- Calendar Input -->
       <div class="col-4 col-md-auto -mt-2">
-        <div class="input-group input-group-sm mb-2">
-          <input
-            type="text"
-            class="form-control inputGroupDOP"
-            aria-label="Date Of Procedure"
-            aria-describedby="dateprocd"
-            placeholder="YYYY-MM-DD"
-            formControlName="dateOfProcedure"
-            value=""
-            [matDatepicker]="picker"
-            (dateChange)="onChangeDateOfProcedure($event)"
-            min="1990-01-01"
-            max="{{ currentDate | date: 'yyyy-MM-dd' }}"
-            readonly
-          />
-          <button
-            class="btn btn-outline-secondary"
-            id="dateprocd"
-            (click)="picker.open()"
-            type="button"
-          >
-            <!-- <span class="material-symbols-outlined">
+        <form [formGroup]="form">
+          <div class="input-group input-group-sm mb-2">
+            <input
+              type="text"
+              class="form-control inputGroupDOP"
+              aria-label="Date Of Procedure"
+              aria-describedby="dateprocd"
+              placeholder="YYYY-MM-DD"
+              formControlName="dateOfProcedure"
+              [matDatepicker]="picker"
+              (dateChange)="onChangeDateOfProcedure($event)"
+              min="1990-01-01"
+              max="{{ currentDate | date: 'yyyy-MM-dd' }}"
+              readonly
+            />
+            <button
+              class="btn btn-outline-secondary"
+              id="dateprocd"
+              (click)="picker.open()"
+              type="button"
+            >
+              <!-- <span class="material-symbols-outlined">
                             event
                             </span> -->
-            <mat-icon
-              aria-hidden="false"
-              aria-label="Event icon"
-              fontIcon="event"
-            ></mat-icon>
-          </button>
-        </div>
-        <mat-datepicker #picker></mat-datepicker>
+              <mat-icon
+                aria-hidden="false"
+                aria-label="Event icon"
+                fontIcon="event"
+              ></mat-icon>
+            </button>
+          </div>
+          <mat-datepicker #picker></mat-datepicker>
+        </form>
       </div>
       <div class="col-1 col-md-auto" style="color: rgb(224, 216, 216)">|</div>
       <!-- Update Button -->

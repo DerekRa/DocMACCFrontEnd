@@ -28,10 +28,6 @@ export class PreProcedureRequirementService {
     orderBy: string,
     findItem: string,
   ): Observable<ImageDetails[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/details/${item_name}/${location}/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`,
-    );
     return this.http
       .get<
         ImageDetails[]

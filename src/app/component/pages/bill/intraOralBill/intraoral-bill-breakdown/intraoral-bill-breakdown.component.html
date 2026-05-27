@@ -41,7 +41,7 @@
         >
       </div>
       <div class="col-auto mt-2 -mb-1">
-        &nbsp; {{ dateOfProcedure | date : "MMMM dd, YYYY" }}
+        &nbsp; {{ dateOfProcedure | date: "MMMM dd, YYYY" }}
       </div>
       <div class="col text-center">
         <span>&nbsp;</span>
@@ -107,7 +107,11 @@
                       <td class="tblLabel">Procedure Done</td>
                       <td class="tblValue">{{ breakdown?.procedureDone }}</td>
                     </tr>
-                    <tr>
+                    <tr
+                      *ngIf="
+                        breakdown?.procedureDone != 'OP - Oral Prophylaxis'
+                      "
+                    >
                       <td class="tblLabel">Tooth Number</td>
                       <td class="tblValue">{{ breakdown?.toothNumbers }}</td>
                     </tr>

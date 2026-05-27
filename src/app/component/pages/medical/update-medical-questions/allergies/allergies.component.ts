@@ -27,16 +27,20 @@ export class AllergiesComponent implements OnInit {
   ];
   public medicalModel: MedicalModel | undefined;
   public form: FormGroup = new FormGroup({ allergies: this.fb.array([]) });
+
   ngOnInit(): void {
     this.onGetMedicalModel(2);
   }
+
   constructor(
     private medicalHistoryService: MedicalHistoryService, // private formBuilder: FormBuilder,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {}
+
   public onGetMedicalModel(id: number): void {
-    this.medicalHistoryService.getMedicalModel(id).subscribe(
-      (response: MedicalModel) => {
+    this.medicalHistoryService
+      .getMedicalModel(id)
+      .subscribe((response: MedicalModel) => {
         this.medicalModel = response;
         //const allergies = this.medicalModel?.questions?.allergies.split(',');
 
@@ -47,14 +51,7 @@ export class AllergiesComponent implements OnInit {
         for (let i = 0; i < this.listOfAllergies.length; i++) {
           allergiesForms.push(new FormControl(this.listOfAllergies[i]));
         }
-      },
-      (error: any) => {
-        console.log(error);
-      },
-      () => {
-        console.log('Done getting medical health..');
-      }
-    );
+      });
   }
 
   get listOfAllAllergies() {
@@ -75,16 +72,10 @@ export class AllergiesComponent implements OnInit {
     }
   }
   onCheckboxChangeAllergies(event: any) {
-    console.log(event.target.value);
     //const allergies = this.form.controls['allergies'] as FormArray;
-    console.log('reach until here');
-    console.log('event.target.value -=-=- ' + event.target.value);
-    console.log(
-      'data before -=-=- ' + JSON.stringify(this.form.value.allergies)
-    );
+
     for (let i = 0; i < this.form.value.allergies.length; i++) {
       if (event.target.value == this.form.value.allergies[i].value) {
-        console.log('check value == ' + this.form.value.allergies[i].checked);
         if (this.form.value.allergies[i].checked) {
           this.form.value.allergies[i].checked = false;
         } else {
@@ -94,8 +85,5 @@ export class AllergiesComponent implements OnInit {
     }
 
     //allergies.patchValue(event.target.value);
-    console.log(
-      'data after  -=-=- ' + JSON.stringify(this.form.value.allergies)
-    );
   }
 }

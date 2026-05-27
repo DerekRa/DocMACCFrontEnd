@@ -114,7 +114,6 @@ export class AmountChargedHistoryComponent implements OnInit {
         },
         (error: any) => {
           this.amountChargedHistory = [];
-          console.log(error);
         },
       );
 
@@ -126,7 +125,6 @@ export class AmountChargedHistoryComponent implements OnInit {
         },
         (error: any) => {
           this.amountChargedHistory = [];
-          console.log(error);
         },
       );
   }

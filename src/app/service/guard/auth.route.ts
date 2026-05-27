@@ -18,14 +18,14 @@ export class AuthKeyClockGuard extends KeycloakAuthGuard {
   public userProfile: KeycloakProfile | null = null;
   constructor(
     protected override readonly router: Router,
-    protected readonly keycloak: KeycloakService
+    protected readonly keycloak: KeycloakService,
   ) {
     super(router, keycloak);
   }
 
   public async isAccessAllowed(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ) {
     // Force the user to log in if currently unauthenticated.
     console.log('authenticated :' + this.authenticated);
@@ -35,7 +35,7 @@ export class AuthKeyClockGuard extends KeycloakAuthGuard {
       });
     } else {
       this.userProfile = await this.keycloak.loadUserProfile();
-      console.log(this.userProfile);
+      // console.log(this.userProfile);
       this.user.authStatus = 'AUTH';
       this.user.name = this.userProfile.firstName || '';
       this.user.email = this.userProfile.email || '';
@@ -44,11 +44,11 @@ export class AuthKeyClockGuard extends KeycloakAuthGuard {
 
     // Get the roles required from the route.
     const requiredRoles = route.data['roles'];
-    console.log(requiredRoles);
+    // console.log(requiredRoles);
 
     // Allow the user to to proceed if no additional roles are required to access the route.
     if (!(requiredRoles instanceof Array) || requiredRoles.length === 0) {
-      console.log('here..');
+      // console.log('here..');
       return true;
     }
 

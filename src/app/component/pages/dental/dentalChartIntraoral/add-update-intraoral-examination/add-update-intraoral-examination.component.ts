@@ -30,6 +30,7 @@ import { CustomHttpResponse } from 'src/app/model/interface/shared/custom-http-r
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
 import { co } from '@fullcalendar/core/internal-common';
+import { GlobalLoadingService } from 'src/app/service/loading/global-loading.service';
 
 @Component({
   selector: 'app-add-update-intraoral-examination',
@@ -98,6 +99,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     public matDatepickerModule: MatDatepickerModule,
     private fb: FormBuilder, // public datepipe: DatePipe
     public datepipe: DatePipe,
+    private loadingService: GlobalLoadingService,
   ) {
     this.dentalChartDesignResponseForm = this.fb.group({
       kindsOfTeeth: ['', this.validatorData('required')],
@@ -108,15 +110,33 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       teethArea: ['', this.validatorData('required')],
     });
     this.conditionProcedureGroupingsForm = this.fb.group({
-      conditions: this.fb.array(this.conditionList),
-      restorations: this.fb.array(this.restorationList),
-      restorationsInlay: this.fb.array(this.restorationInlayList),
-      restorationsOnlay: this.fb.array(this.restorationOnlayList),
-      prosthetics: this.fb.array(this.prostheticsList),
-      denture: this.fb.array(this.dentureList),
-      periodontal: this.fb.array(this.periodontalList),
-      periodontalFluoride: this.fb.array(this.periodontalFluorideList),
-      surgery: this.fb.array(this.surgeryList),
+      conditions: this.fb.array(
+        this.conditionList.map((item) => this.fb.group(item)),
+      ),
+      restorations: this.fb.array(
+        this.restorationList.map((item) => this.fb.group(item)),
+      ),
+      restorationsInlay: this.fb.array(
+        this.restorationInlayList.map((item) => this.fb.group(item)),
+      ),
+      restorationsOnlay: this.fb.array(
+        this.restorationOnlayList.map((item) => this.fb.group(item)),
+      ),
+      prosthetics: this.fb.array(
+        this.prostheticsList.map((item) => this.fb.group(item)),
+      ),
+      denture: this.fb.array(
+        this.dentureList.map((item) => this.fb.group(item)),
+      ),
+      periodontal: this.fb.array(
+        this.periodontalList.map((item) => this.fb.group(item)),
+      ),
+      periodontalFluoride: this.fb.array(
+        this.periodontalFluorideList.map((item) => this.fb.group(item)),
+      ),
+      surgery: this.fb.array(
+        this.surgeryList.map((item) => this.fb.group(item)),
+      ),
       conditionProcedureSurfaceRemarksResponse:
         this.conditionProcedureSurfaceRemarksForm,
     });
@@ -148,43 +168,45 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       dentalChartDesignResponse: this.dentalChartDesignResponseForm,
       conditionProcedureGroupings: this.conditionProcedureGroupingsForm,
       surfaceCheckResponses: [
-        this.fb.array([
-          {
-            id: 'buccalCervicalId',
-            name: numbersCheckOne.includes(number) ? 'Buccal' : 'Cervical',
-            value: numbersCheckOne.includes(number) ? 'Buccal' : 'Cervical',
-            checked: false,
-          },
-          {
-            id: 'lingualIncisalFacialId',
-            name: numbersCheckOne.includes(number)
-              ? 'Lingual'
-              : 'Incisal Facial',
-            value: numbersCheckOne.includes(number)
-              ? 'Lingual'
-              : 'Incisal Facial',
-            checked: false,
-          },
-          {
-            id: 'mesialDistalId',
-            name: numbersCheckTwo.includes(number) ? 'Mesial' : 'Distal',
-            value: numbersCheckTwo.includes(number) ? 'Mesial' : 'Distal',
-            checked: false,
-          },
-          {
-            id: 'distalMesialId',
-            name: numbersCheckTwo.includes(number) ? 'Distal' : 'Mesial',
-            value: numbersCheckTwo.includes(number) ? 'Distal' : 'Mesial',
-            checked: false,
-          },
-          {
-            id: 'occlusalPitId',
-            name: numbersCheckOne.includes(number) ? 'Occlusal' : 'Pit',
-            value: numbersCheckOne.includes(number) ? 'Occlusal' : 'Pit',
-            checked: false,
-          },
-        ]),
-        [toothSurfaceValidator('surfaceCheckResponses')],
+        this.fb.array(
+          [
+            {
+              id: 'buccalCervicalId',
+              name: numbersCheckOne.includes(number) ? 'Buccal' : 'Cervical',
+              value: numbersCheckOne.includes(number) ? 'Buccal' : 'Cervical',
+              checked: false,
+            },
+            {
+              id: 'lingualIncisalFacialId',
+              name: numbersCheckOne.includes(number)
+                ? 'Lingual'
+                : 'Incisal Facial',
+              value: numbersCheckOne.includes(number)
+                ? 'Lingual'
+                : 'Incisal Facial',
+              checked: false,
+            },
+            {
+              id: 'mesialDistalId',
+              name: numbersCheckTwo.includes(number) ? 'Mesial' : 'Distal',
+              value: numbersCheckTwo.includes(number) ? 'Mesial' : 'Distal',
+              checked: false,
+            },
+            {
+              id: 'distalMesialId',
+              name: numbersCheckTwo.includes(number) ? 'Distal' : 'Mesial',
+              value: numbersCheckTwo.includes(number) ? 'Distal' : 'Mesial',
+              checked: false,
+            },
+            {
+              id: 'occlusalPitId',
+              name: numbersCheckOne.includes(number) ? 'Occlusal' : 'Pit',
+              value: numbersCheckOne.includes(number) ? 'Occlusal' : 'Pit',
+              checked: false,
+            },
+          ].map((item) => this.fb.group(item)),
+          [toothSurfaceValidator('surfaceCheckResponses')],
+        ),
       ],
     });
 
@@ -204,7 +226,8 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   public currentDate = new Date();
   public recordAction: any;
   public teethNumbering: any;
-  public displayToothNumers: any;
+  public checkDisplayToothNumers: any;
+  public displayToothNumers: any[] = [];
   public removablePartialDentureNote: any;
   public completeDentureNote: any;
   public almostCompleteDentureNote: any;
@@ -219,15 +242,18 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   public toothNumbersId: any[] = [];
   public toothNumbersValue: any[] = [];
   public intraoralExaminationResponse: IntraoralExamination | undefined;
+  public intraoralExaminationPeriodontalResponse:
+    | IntraoralExamination
+    | undefined;
   public profileModel: ProfileModel | undefined;
   public conditionList: any[] = [
     {
       formControlName: 'presentTeeth',
       inputId: 'presentTeethId',
       group: 'Condition',
-      label: '&#10003; - Present Teeth',
-      name: 'Present Teeth',
-      value: 'Present Teeth',
+      label: '&#10003; - Present Tooth',
+      name: 'Present Tooth',
+      value: 'Present Tooth',
       checked: false,
     },
     {
@@ -638,6 +664,14 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     63, 62, 61, 53, 52, 51, 13, 12, 11, 21, 22, 23, 43, 42, 41, 33, 32, 31, 83,
     82, 81, 73, 72, 71,
   ];
+  public toothNumbersDTMaxUp: any[] = [65, 64, 55, 54];
+  public toothNumbersDTManUp: any[] = [85, 84, 75, 74];
+  public toothNumbersPTMaxUp: any[] = [18, 17, 16, 15, 14, 28, 27, 26, 25, 24];
+  public toothNumbersPTManUp: any[] = [48, 47, 46, 45, 44, 38, 37, 36, 35, 34];
+  public toothNumbersDTMaxDown: any[] = [63, 62, 61, 53, 52, 51];
+  public toothNumbersDTManDown: any[] = [83, 82, 81, 73, 72, 71];
+  public toothNumbersPTMaxDown: any[] = [13, 12, 11, 21, 22, 23];
+  public toothNumbersPTManDown: any[] = [43, 42, 41, 33, 32, 31];
   public pagingToothNumbersGroupOne: any[] = [
     75, 74, 73, 72, 71, 81, 82, 83, 84, 85, 55, 54, 53, 52, 51, 61, 62, 63, 64,
     65,
@@ -926,6 +960,90 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
             this.intraoralExaminationResponse?.surfaceCheckResponses,
           ),
         });
+      });
+  }
+
+  private onGetDataForToothPeriodontal(
+    id: number,
+    teethNumbering: number,
+    dateOfProcedure: string,
+  ) {
+    this.intraoralExaminationService
+      .getIntraOralExaminationByNumber(id, teethNumbering, dateOfProcedure)
+      .subscribe((response: IntraoralExamination) => {
+        this.intraoralExaminationPeriodontalResponse = response;
+        if (
+          this.intraoralExaminationPeriodontalResponse
+            ?.conditionProcedureGroupings?.conditions.length != 0
+        ) {
+          for (
+            let i = 0;
+            i <
+            this.intraoralExaminationPeriodontalResponse
+              ?.conditionProcedureGroupings?.conditions.length;
+            i++
+          ) {
+            if (
+              this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.conditions[i].group ==
+                'Condition' &&
+              this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.conditions[i].checked == true &&
+              (this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.conditions[i].value ==
+                'Missing due to Caries' ||
+                this.intraoralExaminationPeriodontalResponse
+                  ?.conditionProcedureGroupings?.conditions[i].name ==
+                  'Missing due to Other Causes' ||
+                this.intraoralExaminationPeriodontalResponse
+                  ?.conditionProcedureGroupings?.conditions[i].name ==
+                  'Unerupted' ||
+                this.intraoralExaminationPeriodontalResponse
+                  ?.conditionProcedureGroupings?.conditions[i].name ==
+                  'Extracted')
+            ) {
+              const index = this.displayToothNumers.indexOf(
+                Number(teethNumbering),
+              );
+              if (index !== -1) {
+                this.displayToothNumers.splice(index, 1);
+              }
+            }
+          }
+        }
+
+        if (
+          this.intraoralExaminationPeriodontalResponse
+            ?.conditionProcedureGroupings?.surgery.length != 0
+        ) {
+          for (
+            let i = 0;
+            i <
+            this.intraoralExaminationPeriodontalResponse
+              ?.conditionProcedureGroupings?.surgery.length;
+            i++
+          ) {
+            if (
+              this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.surgery[i].group == 'Surgery' &&
+              this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.surgery[i].checked == true &&
+              (this.intraoralExaminationPeriodontalResponse
+                ?.conditionProcedureGroupings?.surgery[i].value ==
+                'Extraction' ||
+                this.intraoralExaminationPeriodontalResponse
+                  ?.conditionProcedureGroupings?.surgery[i].name ==
+                  'Extraction due to Other Causes')
+            ) {
+              const index = this.displayToothNumers.indexOf(
+                Number(teethNumbering),
+              );
+              if (index !== -1) {
+                this.displayToothNumers.splice(index, 1);
+              }
+            }
+          }
+        }
       });
   }
 
@@ -1282,17 +1400,79 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     ) {
       //check if present teeth and decayed is checked
       if (this.isPresentTeethAndDecayedAndOthersChecked()) {
-        const isInGroupOne = this.listToothNumbersGroupOne.includes(
+        this.displayToothNumers = [];
+        // this.displayToothNumers.push(this.teethNumbering);
+
+        const isInDTMaxUp = this.toothNumbersDTMaxUp.includes(
           Number(this.teethNumbering),
         );
-        const isInGroupTwo = this.listToothNumbersGroupTwo.includes(
+        const isInDTManUp = this.toothNumbersDTManUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTMaxUp = this.toothNumbersPTMaxUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTManUp = this.toothNumbersPTManUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInDTMaxDown = this.toothNumbersDTMaxDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInDTManDown = this.toothNumbersDTManDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTMaxDown = this.toothNumbersPTMaxDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTManDown = this.toothNumbersPTManDown.includes(
           Number(this.teethNumbering),
         );
 
-        if (isInGroupOne) {
-          this.displayToothNumers = this.listToothNumbersGroupOne;
-        } else if (isInGroupTwo) {
-          this.displayToothNumers = this.listToothNumbersGroupTwo;
+        switch (true) {
+          case isInDTMaxUp:
+            this.checkDisplayToothNumers = this.toothNumbersDTMaxUp;
+            break;
+          case isInDTManUp:
+            this.checkDisplayToothNumers = this.toothNumbersDTManUp;
+            break;
+          case isInPTMaxUp:
+            this.checkDisplayToothNumers = this.toothNumbersPTMaxUp;
+            break;
+          case isInPTManUp:
+            this.checkDisplayToothNumers = this.toothNumbersPTManUp;
+            break;
+          case isInDTMaxDown:
+            this.checkDisplayToothNumers = this.toothNumbersDTMaxDown;
+            break;
+          case isInDTManDown:
+            this.checkDisplayToothNumers = this.toothNumbersDTManDown;
+            break;
+          case isInPTMaxDown:
+            this.checkDisplayToothNumers = this.toothNumbersPTMaxDown;
+            break;
+          case isInPTManDown:
+            this.checkDisplayToothNumers = this.toothNumbersPTManDown;
+            break;
+          // default:
+          //   this.checkDisplayToothNumers = [];
+        }
+        //now will check from DB if the tooth number is in the list of tooth numbers for oral prophylaxis and display the modal if it is
+        for (let i = 0; i < this.checkDisplayToothNumers.length; i++) {
+          if (this.checkDisplayToothNumers[i] != Number(this.teethNumbering)) {
+            this.displayToothNumers.push(this.checkDisplayToothNumers[i]);
+
+            let currentDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+
+            this.onGetDataForToothPeriodontal(
+              this.id,
+              this.checkDisplayToothNumers[i],
+              currentDate + '',
+            );
+          } else if (
+            this.checkDisplayToothNumers[i] === Number(this.teethNumbering)
+          ) {
+            this.displayToothNumers.push(this.checkDisplayToothNumers[i]);
+          }
         }
 
         const modal = document.getElementById('opModalToggle');
@@ -1412,17 +1592,79 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
     if (event?.target?.value == 'Oral Prophylaxis' && event?.target?.checked) {
       //check if present teeth and decayed is checked
       if (this.isPresentTeethAndDecayedAndOthersChecked()) {
-        const isInGroupOne = this.listToothNumbersGroupOne.includes(
+        this.displayToothNumers = [];
+        // this.displayToothNumers.push(this.teethNumbering);
+
+        const isInDTMaxUp = this.toothNumbersDTMaxUp.includes(
           Number(this.teethNumbering),
         );
-        const isInGroupTwo = this.listToothNumbersGroupTwo.includes(
+        const isInDTManUp = this.toothNumbersDTManUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTMaxUp = this.toothNumbersPTMaxUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTManUp = this.toothNumbersPTManUp.includes(
+          Number(this.teethNumbering),
+        );
+        const isInDTMaxDown = this.toothNumbersDTMaxDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInDTManDown = this.toothNumbersDTManDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTMaxDown = this.toothNumbersPTMaxDown.includes(
+          Number(this.teethNumbering),
+        );
+        const isInPTManDown = this.toothNumbersPTManDown.includes(
           Number(this.teethNumbering),
         );
 
-        if (isInGroupOne) {
-          this.displayToothNumers = this.listToothNumbersGroupOne;
-        } else if (isInGroupTwo) {
-          this.displayToothNumers = this.listToothNumbersGroupTwo;
+        switch (true) {
+          case isInDTMaxUp:
+            this.checkDisplayToothNumers = this.toothNumbersDTMaxUp;
+            break;
+          case isInDTManUp:
+            this.checkDisplayToothNumers = this.toothNumbersDTManUp;
+            break;
+          case isInPTMaxUp:
+            this.checkDisplayToothNumers = this.toothNumbersPTMaxUp;
+            break;
+          case isInPTManUp:
+            this.checkDisplayToothNumers = this.toothNumbersPTManUp;
+            break;
+          case isInDTMaxDown:
+            this.checkDisplayToothNumers = this.toothNumbersDTMaxDown;
+            break;
+          case isInDTManDown:
+            this.checkDisplayToothNumers = this.toothNumbersDTManDown;
+            break;
+          case isInPTMaxDown:
+            this.checkDisplayToothNumers = this.toothNumbersPTMaxDown;
+            break;
+          case isInPTManDown:
+            this.checkDisplayToothNumers = this.toothNumbersPTManDown;
+            break;
+          // default:
+          //   this.checkDisplayToothNumers = [];
+        }
+        //now will check from DB if the tooth number is in the list of tooth numbers for oral prophylaxis and display the modal if it is
+        for (let i = 0; i < this.checkDisplayToothNumers.length; i++) {
+          if (this.checkDisplayToothNumers[i] != Number(this.teethNumbering)) {
+            this.displayToothNumers.push(this.checkDisplayToothNumers[i]);
+
+            let currentDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+
+            this.onGetDataForToothPeriodontal(
+              this.id,
+              this.checkDisplayToothNumers[i],
+              currentDate + '',
+            );
+          } else if (
+            this.checkDisplayToothNumers[i] === Number(this.teethNumbering)
+          ) {
+            this.displayToothNumers.push(this.checkDisplayToothNumers[i]);
+          }
         }
 
         const modal = document.getElementById('opModalToggle');
@@ -1477,7 +1719,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
 
     const present = findCondition({
       formControlName: 'presentTeeth',
-      value: 'Present Teeth',
+      value: 'Present Tooth',
     });
     const decayed = findCondition({
       formControlName: 'decayed',
@@ -1534,7 +1776,7 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
       }
       if (
         val.formControlName === 'presentTeeth' ||
-        val.value === 'Present Teeth'
+        val.value === 'Present Tooth'
       ) {
         presentChecked = !!val.checked;
       }
@@ -1693,93 +1935,102 @@ export class AddUpdateIntraoralExaminationComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.submitted = true;
-    if (this.toothNumbersId.length == 0) {
-      return;
+    try {
+      this.loadingService.loadingOn();
+      this.submitted = true;
+      if (this.toothNumbersId.length == 0) {
+        return;
+      }
+
+      for (let i = 0; i < this.toothNumbersId.length; i++) {
+        const conditions =
+          this.form.value['conditionProcedureGroupings']['conditions'];
+        const denture =
+          this.form.value['conditionProcedureGroupings']['denture'];
+        const periodontal =
+          this.form.value['conditionProcedureGroupings']['periodontal'];
+        const periodontalFluoride =
+          this.form.value['conditionProcedureGroupings']['periodontalFluoride'];
+        const prosthetics =
+          this.form.value['conditionProcedureGroupings']['prosthetics'];
+        const restorations =
+          this.form.value['conditionProcedureGroupings']['restorations'];
+        const restorationsInlay =
+          this.form.value['conditionProcedureGroupings']['restorationsInlay'];
+        const restorationsOnlay =
+          this.form.value['conditionProcedureGroupings']['restorationsOnlay'];
+        const surgery =
+          this.form.value['conditionProcedureGroupings']['surgery'];
+
+        const combineGroupings = conditions
+          .concat(denture)
+          .concat(periodontal)
+          .concat(periodontalFluoride)
+          .concat(prosthetics)
+          .concat(restorations)
+          .concat(restorationsInlay)
+          .concat(restorationsOnlay)
+          .concat(surgery);
+        const conditionProcedureRequests: ConditionProcedureRequest[] =
+          combineGroupings;
+
+        const conditionProcedureRequest: ConditionProcedureModelRequest = {
+          profileId: this.form.value['profileId'],
+          dentalChartDesignId: this.toothNumbersId[i],
+          dateOfProcedure: this.form.value['dateOfProcedure'],
+          createdByName: this.userProfile?.firstName || '',
+          createdById: this.userProfile?.id || '',
+          actionType: i == 0 ? 'SingleSave' : 'MultipleSave',
+          historyTracking: this.isTrackHistory,
+          conditionProcedureRequests: conditionProcedureRequests,
+          conditionProcedureRemarksRequests:
+            this.form.value['conditionProcedureGroupings'][
+              'conditionProcedureSurfaceRemarksResponse'
+            ],
+          surfaceCheckRequests: this.form.value['surfaceCheckResponses'],
+          recordTracking: this.recordAction,
+        };
+
+        this.intraoralExaminationService
+          .createIntraOralExaminationModel(conditionProcedureRequest)
+          .subscribe(
+            (response: CustomHttpResponse) => {
+              if (response.httpStatus == 'CREATED') {
+                const messageSplit = response.message.split(':');
+                const strLink =
+                  '<a href="/dental-records/dental-chart/intraoral-examination/add-record/' +
+                  this.id +
+                  '">Click here to view..</a>';
+                this.options.autoClose = false;
+                this.alertService.success(
+                  messageSplit[0] + strLink,
+                  this.options,
+                );
+                //Go to current date
+                // let currentDateTime = this.datepipe.transform(new Date(), 'MM/dd/yyyy h:mm:ss');
+                let currentDate = this.datepipe.transform(
+                  new Date(),
+                  'yyyy-MM-dd',
+                );
+                this.resetAllCheckboxes();
+                this.onGetData(this.id, this.teethNumbering, currentDate + '');
+              }
+            },
+            (error: any) => {
+              const errorResponse: CustomHttpResponse = error['error'];
+              if (errorResponse.httpStatus == 'BAD_REQUEST') {
+                this.alertService.error(errorResponse.message, this.options);
+              }
+            },
+          );
+      }
+      this.toothNumbersId = [];
+      this.toothNumbersValue = [];
+    } catch (error) {
+      // handle error message
+    } finally {
+      this.loadingService.loadingOff();
     }
-
-    for (let i = 0; i < this.toothNumbersId.length; i++) {
-      const conditions =
-        this.form.value['conditionProcedureGroupings']['conditions'];
-      const denture = this.form.value['conditionProcedureGroupings']['denture'];
-      const periodontal =
-        this.form.value['conditionProcedureGroupings']['periodontal'];
-      const periodontalFluoride =
-        this.form.value['conditionProcedureGroupings']['periodontalFluoride'];
-      const prosthetics =
-        this.form.value['conditionProcedureGroupings']['prosthetics'];
-      const restorations =
-        this.form.value['conditionProcedureGroupings']['restorations'];
-      const restorationsInlay =
-        this.form.value['conditionProcedureGroupings']['restorationsInlay'];
-      const restorationsOnlay =
-        this.form.value['conditionProcedureGroupings']['restorationsOnlay'];
-      const surgery = this.form.value['conditionProcedureGroupings']['surgery'];
-
-      const combineGroupings = conditions
-        .concat(denture)
-        .concat(periodontal)
-        .concat(periodontalFluoride)
-        .concat(prosthetics)
-        .concat(restorations)
-        .concat(restorationsInlay)
-        .concat(restorationsOnlay)
-        .concat(surgery);
-      const conditionProcedureRequests: ConditionProcedureRequest[] =
-        combineGroupings;
-
-      const conditionProcedureRequest: ConditionProcedureModelRequest = {
-        profileId: this.form.value['profileId'],
-        dentalChartDesignId: this.toothNumbersId[i],
-        dateOfProcedure: this.form.value['dateOfProcedure'],
-        createdByName: this.userProfile?.firstName || '',
-        createdById: this.userProfile?.id || '',
-        actionType: i == 0 ? 'SingleSave' : 'MultipleSave',
-        historyTracking: this.isTrackHistory,
-        conditionProcedureRequests: conditionProcedureRequests,
-        conditionProcedureRemarksRequests:
-          this.form.value['conditionProcedureGroupings'][
-            'conditionProcedureSurfaceRemarksResponse'
-          ],
-        surfaceCheckRequests: this.form.value['surfaceCheckResponses'],
-        recordTracking: this.recordAction,
-      };
-
-      this.intraoralExaminationService
-        .createIntraOralExaminationModel(conditionProcedureRequest)
-        .subscribe(
-          (response: CustomHttpResponse) => {
-            if (response.httpStatus == 'CREATED') {
-              const messageSplit = response.message.split(':');
-              const strLink =
-                '<a href="/dental-records/dental-chart/intraoral-examination/add-record/' +
-                this.id +
-                '">Click here to view..</a>';
-              this.options.autoClose = false;
-              this.alertService.success(
-                messageSplit[0] + strLink,
-                this.options,
-              );
-              //Go to current date
-              // let currentDateTime = this.datepipe.transform(new Date(), 'MM/dd/yyyy h:mm:ss');
-              let currentDate = this.datepipe.transform(
-                new Date(),
-                'yyyy-MM-dd',
-              );
-              this.resetAllCheckboxes();
-              this.onGetData(this.id, this.teethNumbering, currentDate + '');
-            }
-          },
-          (error: any) => {
-            const errorResponse: CustomHttpResponse = error['error'];
-            if (errorResponse.httpStatus == 'BAD_REQUEST') {
-              this.alertService.error(errorResponse.message, this.options);
-            }
-          },
-        );
-    }
-    this.toothNumbersId = [];
-    this.toothNumbersValue = [];
     return;
   }
 
