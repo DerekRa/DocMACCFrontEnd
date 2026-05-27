@@ -3,6 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -81,6 +82,7 @@ import { OrthodonticTreatmentListComponent } from './component/pages/treatment/o
 import { AlertComponent } from './component/shared/alert/alert.component';
 import { FooterComponent } from './component/shared/footer/footer.component';
 import { HeaderComponent } from './component/shared/header/header.component';
+import { LoadingComponent } from './component/shared/loading/loading.component';
 
 function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
@@ -161,6 +163,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     BillHistoryComponent,
     BillChangesHistoryComponent,
     CameraDeviceComponent,
+    LoadingComponent,
   ],
   imports: [
     BrowserModule,
@@ -184,6 +187,7 @@ function initializeKeycloak(keycloak: KeycloakService) {
     MatInputModule,
     MatButtonModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     {

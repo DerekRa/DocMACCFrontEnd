@@ -26,11 +26,6 @@ export class PreRequisiteRequirementService {
   public getXrayTakenPagination(
     paginationData: XrayTakenPaginationDataRequest,
   ): Observable<XrayTakenImageDetails[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/images/details` +
-        this.convertToHttpParams(paginationData),
-    );
     return this.http
       .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/details`, {
         params: this.convertToHttpParams(paginationData),
@@ -41,11 +36,6 @@ export class PreRequisiteRequirementService {
   public getXrayTakenDisplay(
     displayDataRequest: XrayTakenDisplayDataRequest,
   ): Observable<XrayTakenImageDetails[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/images/display` +
-        this.convertToHttpParams(displayDataRequest),
-    );
     return this.http
       .get<XrayTakenImageDetails[]>(`${this.baseUrl}/images/display`, {
         params: this.convertToHttpParams(displayDataRequest),
@@ -56,9 +46,6 @@ export class PreRequisiteRequirementService {
   public getXrayTakenTempImages(
     tempImages: XrayTakenTempImageRequest,
   ): Observable<XrayTakenTempImageResponse[]> {
-    console.log(
-      'url = ' + `${this.baseUrl}/temp` + this.convertToHttpParams(tempImages),
-    );
     return this.http
       .get<XrayTakenTempImageResponse[]>(`${this.baseUrl}/images/temp`, {
         params: this.convertToHttpParams(tempImages),
@@ -69,9 +56,6 @@ export class PreRequisiteRequirementService {
   public getPreRequisite(
     getPreRequisite: PreRequisiteDto,
   ): Observable<PreRequisiteModel> {
-    console.log(
-      'url = ' + `${this.baseUrl}` + this.convertToHttpParams(getPreRequisite),
-    );
     return this.http
       .get<PreRequisiteModel>(`${this.baseUrl}`, {
         params: this.convertToHttpParams(getPreRequisite),

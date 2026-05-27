@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +18,8 @@ import { IntraoralExaminationService } from 'src/app/service/dentalRecord/intrao
   encapsulation: ViewEncapsulation.None,
 })
 export class IntraoralExaminationComponent implements OnInit {
+  public form!: FormGroup;
+
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
     this.recordAction = this.route.snapshot.params['record-action'];
@@ -58,6 +60,9 @@ export class IntraoralExaminationComponent implements OnInit {
       'rgb(190, 193, 99)',
     );
     this.recordAction = this.route.snapshot.params['record-action'];
+    this.form = this.fb.group({
+      dateOfProcedure: [''],
+    });
   }
 
   public id: any;

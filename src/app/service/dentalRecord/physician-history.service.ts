@@ -22,10 +22,6 @@ export class PhysicianHistoryService {
     orderBy: string,
     findItem: string,
   ): Observable<Physician[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/pagingAndSorting/${profileId}/${pageNo}/${pageSize}/${sortBy}/${orderBy}/${findItem}`,
-    );
     return this.http
       .get<
         Physician[]

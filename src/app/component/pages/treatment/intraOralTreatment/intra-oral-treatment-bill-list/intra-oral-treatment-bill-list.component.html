@@ -159,11 +159,12 @@
                     : {
                         itemsPerPage: paginationSize,
                         currentPage: pageNoDisplay,
-                        totalItems: paginationTotalItems
+                        totalItems: paginationTotalItems,
                       }
               "
             >
               <tr>
+                <!-- Actions Column -->
                 <td class="fitWidth">
                   <button
                     (click)="
@@ -212,16 +213,21 @@
                     Prescription
                   </button>
                 </td>
+                <!-- Date Of Procedure Column -->
                 <td>{{ treatmentPlan?.dateOfProcedure | date }}</td>
+                <!-- Category Column -->
                 <td>{{ treatmentPlan?.category }}</td>
+                <!-- Procedure Done Column -->
                 <td
                   [hidden]="!(pageLocation == 'Treatment')"
                   [innerHTML]="treatmentPlan?.procedureDoneTreatment"
                 ></td>
+                <!-- Procedure Done Billing Column -->
                 <td
                   [hidden]="!(pageLocation == 'Bill')"
                   [innerHTML]="treatmentPlan?.procedureDoneBilling"
                 ></td>
+                <!-- Total Balance Column -->
                 <td>
                   <span
                     class="astrk"

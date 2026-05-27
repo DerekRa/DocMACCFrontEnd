@@ -86,6 +86,14 @@ export class PatientProfileComponent implements OnInit {
     this.router.navigate(['update-patient-profile', id]);
   }
 
+  public goToMedicalHistory(id: any) {
+    if (!this.medicalModel) {
+      this.router.navigate(['medical-history/add-patient', id]);
+    } else {
+      this.router.navigate(['medical-history/patient', id]);
+    }
+  }
+
   public onGetProfileModel(id: number): void {
     this.profileModelService.getProfileModel(id).subscribe((response) => {
       this.profileModel = response;

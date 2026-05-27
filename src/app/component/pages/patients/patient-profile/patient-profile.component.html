@@ -26,14 +26,46 @@
           class="btn btn-outline-primary btn-sm ms-3"
           (click)="printPDFProfile(profileModel?.id)"
         >
-          Print
+          <span class="valign-center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Printer icon"
+              fontIcon="print"
+              class="icon-cls"
+            ></mat-icon>
+            &nbsp;Print
+          </span>
         </button>
         <button
           (click)="updatePatientProfile(profileModel?.id)"
           type="button"
           class="btn btn-outline-primary btn-sm ms-3"
         >
-          Update
+          <span class="valign-center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Medication icon"
+              fontIcon="update"
+              class="icon-cls"
+            ></mat-icon>
+            &nbsp;Update
+          </span>
+        </button>
+        <button
+          routerLink="/medical-history/patient/{{ profileModel?.id }}"
+          (click)="goToMedicalHistory(profileModel?.id)"
+          type="button"
+          class="btn btn-outline-primary btn-sm ms-3"
+        >
+          <span class="valign-center">
+            <mat-icon
+              aria-hidden="false"
+              aria-label="Medication icon"
+              fontIcon="medication"
+              class="icon-cls"
+            ></mat-icon>
+            Proceed to Medical History
+          </span>
         </button>
       </div>
       <div class="col-2">

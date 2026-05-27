@@ -99,11 +99,6 @@ export class IntraoralExaminationService {
   public getToothProcedureHistoryPagination(
     paginationData: ToothHistoryPaginationRequest,
   ): Observable<ToothProcedureHistoryPaginationResponse[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/history/teethProcedure` +
-        this.convertToHttpParams(paginationData),
-    );
     return this.http
       .get<ToothProcedureHistoryPaginationResponse[]>(
         `${this.baseUrl}/history/teethProcedure`,
@@ -116,11 +111,6 @@ export class IntraoralExaminationService {
   public getToothConditionHistoryPagination(
     paginationData: ToothHistoryPaginationRequest,
   ): Observable<ToothConditionHistoryPaginationResponse[]> {
-    console.log(
-      'url = ' +
-        `${this.baseUrl}/history/teethCondition` +
-        this.convertToHttpParams(paginationData),
-    );
     return this.http
       .get<ToothConditionHistoryPaginationResponse[]>(
         `${this.baseUrl}/history/teethCondition`,

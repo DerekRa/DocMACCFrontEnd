@@ -110,7 +110,6 @@ export class IntraOralTreatmentListDetailsComponent implements OnInit {
     } else if (event.target.innerText.replace(/\s/g, '') == 'Note') {
       this.sortBy = 'note';
     } else if (event.target.innerText.replace(/\s/g, '') == 'ToothSurface') {
-      console.log('toothSurface');
       this.sortBy = 'toothSurface';
     }
     this.onGetTableData();
