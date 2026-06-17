@@ -90,7 +90,7 @@ export class AddUpdatePaymentComponent implements OnInit {
               [
                 Validators.required,
                 Validators.minLength(2),
-                Validators.maxLength(255),
+                Validators.maxLength(50),
               ],
             ],
             reason: [
@@ -98,7 +98,7 @@ export class AddUpdatePaymentComponent implements OnInit {
               [
                 Validators.required,
                 Validators.minLength(2),
-                Validators.maxLength(255),
+                Validators.maxLength(50),
               ],
             ],
           });
@@ -111,7 +111,7 @@ export class AddUpdatePaymentComponent implements OnInit {
           [
             Validators.required,
             Validators.minLength(2),
-            Validators.maxLength(255),
+            Validators.maxLength(50),
           ],
         ],
         reason: [''],

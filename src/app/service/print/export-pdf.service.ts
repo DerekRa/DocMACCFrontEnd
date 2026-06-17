@@ -69,4 +69,15 @@ export class ExportPdfService {
       },
     );
   }
+  public getExportPDFOrthodonticBillBreakdown(
+    profileId: number,
+    billId: number,
+  ): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/exportPDFOrthodonticBill/${profileId}/${billId}`,
+      {
+        responseType: 'blob',
+      },
+    );
+  }
 }

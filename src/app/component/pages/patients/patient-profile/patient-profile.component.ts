@@ -62,7 +62,7 @@ export class PatientProfileComponent implements OnInit {
   public deletePatientProfile(id: any) {
     const deleteProfile: DeleteProfileOrMedical = {
       id: id,
-      updatedBy: 'Killua',
+      updatedBy: this.userProfile?.username || 'Killua Zoldyck',
     };
     this.profileModelService.deleteProfileModel(deleteProfile).subscribe(
       (response: CustomHttpResponse) => {

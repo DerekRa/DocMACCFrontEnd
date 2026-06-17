@@ -89,14 +89,14 @@ function initializeKeycloak(keycloak: KeycloakService) {
     keycloak.init({
       config: {
         // url: 'http://192.168.0.127:7080/', //doc macc desktop ip address
-        url: 'http://docmaccdentalclinic.local:7080/', //doc macc desktop ip address
+        url: 'http://localhost:7080/',
         realm: 'maccDentalclinicRealm',
         clientId: 'maccDentalclinicClient',
       },
       initOptions: {
         pkceMethod: 'S256',
         // redirectUri: 'http://192.168.0.127:4200/home',
-        redirectUri: 'http://docmaccdentalclinic.local:4200/home',
+        redirectUri: 'http://192.168.1.57:4200/home',
         checkLoginIframe: false,
       },
       loadUserProfileAtStartUp: false,

@@ -137,7 +137,7 @@ export class IntraoralBillBreakdownComponent implements OnInit {
           ? this.profileModel?.name?.lastName +
             this.profileModel?.name?.firstName +
             this.profileModel?.name?.middleName +
-            '_Bills' +
+            '_IntraOral_Bills' +
             '.pdf'
           : 'blankpage.pdf';
         document.body.appendChild(a);

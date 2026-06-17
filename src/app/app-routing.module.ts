@@ -451,8 +451,8 @@ const routes: Routes = [
     path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill',
     title: 'Orthodontic Bill Breakdown',
     component: BillBreakdownComponent,
-    // canActivate: [AuthKeyClockGuard],
-    // data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   //Bill - Orthodontic - update bill
   {
@@ -515,8 +515,8 @@ const routes: Routes = [
     path: 'bill-records/orthodontic/patients/:id/:billId/:dateOfBill/additional-charge-changes-history/:transactionId',
     title: 'Orthodontic Bill Additional Charge History',
     component: AdditionalChargeHistoryComponent,
-    // canActivate: [AuthKeyClockGuard],
-    // data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
+    canActivate: [AuthKeyClockGuard],
+    data: { roles: ['USER', 'SECRETARY', 'ADMIN'] },
   },
   //ALL
   { path: '**', title: '404 Not Found', component: PageNotFoundComponent },

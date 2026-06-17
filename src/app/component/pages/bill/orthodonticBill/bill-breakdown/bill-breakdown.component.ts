@@ -1,3 +1,4 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakdownOrBillChangesPaginationRequest } from 'src/app/model/interface/billModel/orthodonticBill/breakdown-or-bill-changes-pagination-request';
@@ -35,12 +36,13 @@ export class BillBreakdownComponent implements OnInit {
   public profileModel: ProfileModel | undefined;
   public billBreakdown: BreakdownResponse | any = [];
   public pageNoDisplay: number = 1;
-  public paginationSize: number = 10;
+  public paginationSize: number = 20;
   public paginationTotalItems: number | any;
   public itemNameSearch: string = '**';
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+  public percentDone: number = 0;
 
   public onGetProfileModel(): void {
     this.profileModelService.getProfileModel(this.id).subscribe((response) => {
@@ -70,6 +72,7 @@ export class BillBreakdownComponent implements OnInit {
 
     this.orthodonticBillService.getBillBreakdown(dataPagination).subscribe(
       (response: BreakdownResponse[]) => {
+        console.log('response', response);
         this.billBreakdown = response;
       },
       (error: any) => {
@@ -186,6 +189,33 @@ export class BillBreakdownComponent implements OnInit {
     ]);
   }
 
-  printPDFBillBreakdown() {}
+  public printPDFBillBreakdown() {
+    this.exportPdfService
+      .getExportPDFOrthodonticBillBreakdown(this.id, this.billId)
+      .subscribe((response: any) => {
+        if (response.type === HttpEventType.DownloadProgress) {
+          //Percent done of the file download
+          this.percentDone = Math.round(
+            (100 * response.loaded) / response.total,
+          );
+        }
+        var file = new Blob([response], { type: 'application/pdf' });
+        var fileURL = URL.createObjectURL(file);
+        // if you want to open PDF in new tab
+        // window.open(response);
+        var a = document.createElement('a');
+        a.href = fileURL;
+        a.target = '_blank';
+        a.download = this.profileModel?.name?.lastName
+          ? this.profileModel?.name?.lastName +
+            this.profileModel?.name?.firstName +
+            this.profileModel?.name?.middleName +
+            '_Orthodontic_Bills' +
+            '.pdf'
+          : 'blankpage.pdf';
+        document.body.appendChild(a);
+        a.click();
+      });
+  }
   printPDFBillIndividual() {}
 }
