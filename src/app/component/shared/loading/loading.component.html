@@ -3,13 +3,15 @@
     <ng-container *ngTemplateOutlet="customLoadingIndicator"></ng-container>
   </ng-container>
   <ng-template #defaultSpinner>
-    <mat-spinner mode="indeterminate"></mat-spinner>
-    <!-- <mat-progress-spinner
-      mode="determinate"
-      [value]="95"
-      diameter="40"
-      strokeWidth="5"
-    >
-    </mat-progress-spinner> -->
+    <div class="spinner-content">
+      <mat-spinner
+        class="custom-spinner"
+        mode="indeterminate"
+        color="accent"
+      ></mat-spinner>
+      <div *ngIf="progress$ | async as progress" class="loading-progress">
+        {{ progress }}%
+      </div>
+    </div>
   </ng-template>
 </div>

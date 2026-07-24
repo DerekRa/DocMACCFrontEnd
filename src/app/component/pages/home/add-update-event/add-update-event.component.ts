@@ -61,6 +61,7 @@ export class AddUpdateEventComponent implements OnInit {
     } else {
       this.onGetSingleAppointmentData();
     }
+    console.log('this.newDataToInsert', this.newDataToInsert);
   }
 
   public id: any;
@@ -97,6 +98,7 @@ export class AddUpdateEventComponent implements OnInit {
         // title: string;
         // serviceToAvail: string;
         // start: string;
+        console.log('response', response);
         this.eventData = response;
         const format = 'HH:mm';
         this.form = this.formBuilder.group({

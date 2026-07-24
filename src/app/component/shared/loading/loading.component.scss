@@ -10,3 +10,25 @@
   background: rgba(0, 0, 0, 0.32);
   z-index: 2000;
 }
+
+.spinner-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.loading-progress {
+  color: #b79c26;
+  font-weight: 600;
+  font-size: 2.25rem;
+  letter-spacing: 0.02em;
+}
+
+::ng-deep .custom-spinner circle {
+  stroke: #d6c061 !important;
+}
+
+::ng-deep .custom-spinner .mdc-circular-progress__indeterminate-circle-graphic {
+  stroke: #b79c26 !important;
+}

@@ -7,7 +7,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { MedicalModel } from 'src/app/model/interface/medicalHistoryModel/medical-model';
@@ -28,6 +28,8 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
   public profileModel: ProfileModel | undefined;
   public medicalModel: MedicalModel | undefined;
   public id: any;
+  public isLoading: boolean = false;
+  public isSaveSuccess: boolean = false;
   public urlLocation: string = 'Add';
   public allergyList: any[] = [
     {
@@ -198,6 +200,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     private profileModelService: ProfileModelService,
     private medicalHistoryService: MedicalHistoryService,
     private route: ActivatedRoute,
+    private router: Router,
     public alertService: AlertService,
     private fb: FormBuilder,
     private readonly keycloak: KeycloakService,
@@ -449,6 +452,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
     if (this.form.invalid) {
       return;
     }
+    this.isLoading = true;
 
     const question: Question = {
       id: this.form.value['id'],
@@ -491,6 +495,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         .createMedicalQuestionsModel(addMedicalModel)
         .subscribe(
           (response: CustomHttpResponse) => {
+            this.isLoading = false;
             if (response.httpStatus == 'CREATED') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -502,9 +507,11 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
                 messageSplit[0] + strLink,
                 this.options,
               );
+              this.isSaveSuccess = true;
             }
           },
           (error: any) => {
+            this.isLoading = false;
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
@@ -524,6 +531,7 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
         .updateMedicalQuestionsModel(updateMedicalModel)
         .subscribe(
           (response: CustomHttpResponse) => {
+            this.isLoading = false;
             if (response.httpStatus == 'OK') {
               const messageSplit = response.message.split(':');
               const strLink =
@@ -535,9 +543,11 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
                 messageSplit[0] + strLink,
                 this.options,
               );
+              this.isSaveSuccess = true;
             }
           },
           (error: any) => {
+            this.isLoading = false;
             const errorResponse: CustomHttpResponse = error['error'];
             if (errorResponse.httpStatus == 'BAD_REQUEST') {
               this.alertService.error(errorResponse.message, this.options);
@@ -545,6 +555,10 @@ export class AddUpdateMedicalQuestionsComponent implements OnInit {
           },
         );
     }
+  }
+
+  viewRecord(): void {
+    this.router.navigate(['/medical-history/patient', this.id]);
   }
 
   /** Returns true if 'None' allergy is checked */

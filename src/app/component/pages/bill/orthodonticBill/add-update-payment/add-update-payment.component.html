@@ -79,7 +79,7 @@
                 class="form-control form-control-sm"
                 min="1"
                 [ngClass]="{
-                  'is-invalid': submitted && f['payment'].errors
+                  'is-invalid': submitted && f['payment'].errors,
                 }"
               />
               <div
@@ -106,7 +106,7 @@
                 cols="32"
                 rows="3"
                 [ngClass]="{
-                  'is-invalid': submitted && f['note'].errors
+                  'is-invalid': submitted && f['note'].errors,
                 }"
               ></textarea>
               <div
@@ -118,7 +118,7 @@
                   Note must be at least 2 characters
                 </div>
                 <div *ngIf="f['note'].errors['maxlength']">
-                  Note must be maximum of 255 characters
+                  Note must be maximum of 50 characters
                 </div>
               </div>
             </div>
@@ -137,7 +137,7 @@
                 cols="32"
                 rows="3"
                 [ngClass]="{
-                  'is-invalid': submitted && f['reason'].errors
+                  'is-invalid': submitted && f['reason'].errors,
                 }"
               ></textarea>
               <div
@@ -151,7 +151,7 @@
                   Reason must be at least 2 characters
                 </div>
                 <div *ngIf="f['reason'].errors['maxlength']">
-                  Reason must be maximum of 255 characters
+                  Reason must be maximum of 50 characters
                 </div>
               </div>
             </div>

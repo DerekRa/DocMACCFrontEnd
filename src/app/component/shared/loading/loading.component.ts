@@ -20,6 +20,7 @@ import { GlobalLoadingService } from 'src/app/service/loading/global-loading.ser
 })
 export class LoadingComponent implements OnInit {
   loading$: Observable<boolean>;
+  progress$: Observable<number>;
 
   @Input()
   detectRouteTransitions = false;
@@ -32,6 +33,7 @@ export class LoadingComponent implements OnInit {
     private router: Router,
   ) {
     this.loading$ = this.loadingService.loading$;
+    this.progress$ = this.loadingService.progress$;
   }
 
   ngOnInit() {

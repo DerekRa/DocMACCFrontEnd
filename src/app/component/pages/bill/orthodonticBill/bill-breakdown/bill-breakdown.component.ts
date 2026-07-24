@@ -1,3 +1,4 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakdownOrBillChangesPaginationRequest } from 'src/app/model/interface/billModel/orthodonticBill/breakdown-or-bill-changes-pagination-request';
@@ -5,6 +6,7 @@ import { BreakdownResponse } from 'src/app/model/interface/billModel/orthodontic
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { OrthodonticBillService } from 'src/app/service/billRecord/orthodontic-bill.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
+import { GlobalLoadingService } from 'src/app/service/loading/global-loading.service';
 import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 
 @Component({
@@ -27,6 +29,7 @@ export class BillBreakdownComponent implements OnInit {
     private exportPdfService: ExportPdfService,
     private route: ActivatedRoute,
     private router: Router,
+    private loadingService: GlobalLoadingService,
   ) {}
 
   public id: any;
@@ -35,12 +38,13 @@ export class BillBreakdownComponent implements OnInit {
   public profileModel: ProfileModel | undefined;
   public billBreakdown: BreakdownResponse | any = [];
   public pageNoDisplay: number = 1;
-  public paginationSize: number = 10;
+  public paginationSize: number = 20;
   public paginationTotalItems: number | any;
   public itemNameSearch: string = '**';
   public sortBy: string = 'searchAllColumns';
   public orderBy: string = 'DESC';
   public orderByAscDesc: boolean = false;
+  public percentDone: number = 0;
 
   public onGetProfileModel(): void {
     this.profileModelService.getProfileModel(this.id).subscribe((response) => {
@@ -70,6 +74,7 @@ export class BillBreakdownComponent implements OnInit {
 
     this.orthodonticBillService.getBillBreakdown(dataPagination).subscribe(
       (response: BreakdownResponse[]) => {
+        console.log('response', response);
         this.billBreakdown = response;
       },
       (error: any) => {
@@ -186,6 +191,53 @@ export class BillBreakdownComponent implements OnInit {
     ]);
   }
 
-  printPDFBillBreakdown() {}
+  public printPDFBillBreakdown() {
+    this.loadingService.loadingOn();
+    this.percentDone = 0;
+
+    this.exportPdfService
+      .getExportPDFOrthodonticBillBreakdown(this.id, this.billId)
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response.type === HttpEventType.DownloadProgress &&
+            typeof response.total === 'number' &&
+            response.total > 0
+          ) {
+            this.percentDone = Math.round(
+              (100 * response.loaded) / response.total,
+            );
+            this.loadingService.setProgress(this.percentDone);
+          }
+
+          if (response.type === HttpEventType.Response && response.body) {
+            this.percentDone = 100;
+            this.loadingService.setProgress(100);
+            this.loadingService.loadingOff();
+
+            const file = new Blob([response.body], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.download = this.profileModel?.name?.lastName
+              ? this.profileModel?.name?.lastName +
+                this.profileModel?.name?.firstName +
+                this.profileModel?.name?.middleName +
+                '_Orthodontic_Bills' +
+                '.pdf'
+              : 'blankpage.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(fileURL);
+          }
+        },
+        error: () => {
+          this.percentDone = 0;
+          this.loadingService.loadingOff();
+        },
+      });
+  }
   printPDFBillIndividual() {}
 }

@@ -47,7 +47,7 @@
                 name="goodHealth"
                 formControlName="goodHealth"
                 [ngClass]="{
-                  'is-invalid': submitted && f['goodHealth'].errors
+                  'is-invalid': submitted && f['goodHealth'].errors,
                 }"
                 ngModel
               />
@@ -63,7 +63,7 @@
                 formControlName="goodHealth"
                 ngModel
                 [ngClass]="{
-                  'is-invalid': submitted && f['goodHealth'].errors
+                  'is-invalid': submitted && f['goodHealth'].errors,
                 }"
               />
               <label class="form-check-label" for="gdhlthno">No</label>
@@ -96,7 +96,7 @@
                 value="Yes"
                 (change)="onChangeConditionYesNo($event, 'conditionTreated')"
                 [ngClass]="{
-                  'is-invalid': submitted && f['medicalTreatment'].errors
+                  'is-invalid': submitted && f['medicalTreatment'].errors,
                 }"
                 ngModel
               />
@@ -112,7 +112,7 @@
                 value="No"
                 (change)="onChangeConditionYesNo($event, 'conditionTreated')"
                 [ngClass]="{
-                  'is-invalid': submitted && f['medicalTreatment'].errors
+                  'is-invalid': submitted && f['medicalTreatment'].errors,
                 }"
                 ngModel
               />
@@ -144,7 +144,7 @@
             formControlName="conditionTreated"
             placeholder="Type the condition being treated here.."
             [ngClass]="{
-              'is-invalid': submitted && f['conditionTreated'].errors
+              'is-invalid': submitted && f['conditionTreated'].errors,
             }"
           />
           <div
@@ -180,7 +180,7 @@
                 id="srsillsopyes"
                 value="Yes"
                 [ngClass]="{
-                  'is-invalid': submitted && f['surgicalOperation'].errors
+                  'is-invalid': submitted && f['surgicalOperation'].errors,
                 }"
                 (change)="onChangeConditionYesNo($event, 'whatOperation')"
                 ngModel
@@ -197,7 +197,7 @@
                 value="No"
                 (change)="onChangeConditionYesNo($event, 'whatOperation')"
                 [ngClass]="{
-                  'is-invalid': submitted && f['surgicalOperation'].errors
+                  'is-invalid': submitted && f['surgicalOperation'].errors,
                 }"
                 ngModel
               />
@@ -229,7 +229,7 @@
             placeholder="Type illness or operation here.."
             class="form-control form-control-sm"
             [ngClass]="{
-              'is-invalid': submitted && f['whatOperation'].errors
+              'is-invalid': submitted && f['whatOperation'].errors,
             }"
           />
           <div
@@ -264,7 +264,7 @@
                 class="form-check-input"
                 value="Yes"
                 [ngClass]="{
-                  'is-invalid': submitted && f['hospitalized'].errors
+                  'is-invalid': submitted && f['hospitalized'].errors,
                 }"
                 (change)="onChangeConditionYesNo($event, 'whenWhyHospitalized')"
                 ngModel
@@ -280,7 +280,7 @@
                 value="No"
                 class="form-check-input"
                 [ngClass]="{
-                  'is-invalid': submitted && f['hospitalized'].errors
+                  'is-invalid': submitted && f['hospitalized'].errors,
                 }"
                 (change)="onChangeConditionYesNo($event, 'whenWhyHospitalized')"
                 ngModel
@@ -313,7 +313,7 @@
             placeholder="Type when and why here.."
             class="form-control form-control-sm"
             [ngClass]="{
-              'is-invalid': submitted && f['whenWhyHospitalized'].errors
+              'is-invalid': submitted && f['whenWhyHospitalized'].errors,
             }"
             ngModel
           />
@@ -350,7 +350,7 @@
                 value="Yes"
                 class="form-check-input"
                 [ngClass]="{
-                  'is-invalid': submitted && f['prescriptionMedication'].errors
+                  'is-invalid': submitted && f['prescriptionMedication'].errors,
                 }"
                 (change)="
                   onChangeConditionYesNo(
@@ -371,7 +371,7 @@
                 value="No"
                 class="form-check-input"
                 [ngClass]="{
-                  'is-invalid': submitted && f['prescriptionMedication'].errors
+                  'is-invalid': submitted && f['prescriptionMedication'].errors,
                 }"
                 (change)="
                   onChangeConditionYesNo(
@@ -410,7 +410,7 @@
             class="form-control form-control-sm"
             [ngClass]="{
               'is-invalid':
-                submitted && f['specificPrescriptionMedication'].errors
+                submitted && f['specificPrescriptionMedication'].errors,
             }"
             ngModel
           />
@@ -453,7 +453,7 @@
                 value="Yes"
                 class="form-check-input"
                 [ngClass]="{
-                  'is-invalid': submitted && f['tobacco'].errors
+                  'is-invalid': submitted && f['tobacco'].errors,
                 }"
                 ngModel
               />
@@ -468,7 +468,7 @@
                 value="No"
                 class="form-check-input"
                 [ngClass]="{
-                  'is-invalid': submitted && f['tobacco'].errors
+                  'is-invalid': submitted && f['tobacco'].errors,
                 }"
                 ngModel
               />
@@ -504,7 +504,7 @@
                 class="form-check-input"
                 [ngClass]="{
                   'is-invalid':
-                    submitted && f['alcoholCocaineOtherDrugs'].errors
+                    submitted && f['alcoholCocaineOtherDrugs'].errors,
                 }"
                 ngModel
               />
@@ -520,7 +520,7 @@
                 class="form-check-input"
                 [ngClass]="{
                   'is-invalid':
-                    submitted && f['alcoholCocaineOtherDrugs'].errors
+                    submitted && f['alcoholCocaineOtherDrugs'].errors,
                 }"
                 ngModel
               />
@@ -554,7 +554,7 @@
               *ngFor="let allergy of getFormAllergies.controls; let i = index"
               formArrayName="allergies"
               [ngClass]="{
-                'is-invalid': submitted && f['allergies'].errors
+                'is-invalid': submitted && f['allergies'].errors,
               }"
             >
               <div formGroupName="{{ i }}" class="checkboxClass">
@@ -567,7 +567,7 @@
                   (change)="onCheckboxChangeAllergies($event)"
                   [disabled]="i > 0 && isNoneAllergyChecked()"
                   [ngClass]="{
-                    'is-invalid': submitted && f['allergies'].errors
+                    'is-invalid': submitted && f['allergies'].errors,
                   }"
                 />
                 <label
@@ -588,7 +588,7 @@
                 placeholder="Type others here.."
                 class="form-control form-control-sm -mt-1 -ml-"
                 [ngClass]="{
-                  'is-invalid': submitted && f['allergies'].errors
+                  'is-invalid': submitted && f['allergies'].errors,
                 }"
                 ngModel
               />
@@ -812,8 +812,19 @@
             type="submit"
             id="saveallnowid"
             class="btn btn-outline-primary btn-sm -mt-1"
+            [disabled]="isLoading"
+            *ngIf="!isSaveSuccess"
           >
-            Save All
+            {{ isLoading ? "Saving..." : "Save All" }}
+          </button>
+          <button
+            type="button"
+            id="viewrecordid"
+            class="btn btn-outline-primary btn-sm -mt-1"
+            (click)="viewRecord()"
+            *ngIf="isSaveSuccess"
+          >
+            View Record
           </button>
         </div>
       </div>

@@ -17,6 +17,8 @@ export class ExportPdfService {
   public getExportPDFProfile(number: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/exportPDFPatientProfile/${number}`, {
       responseType: 'blob',
+      reportProgress: true,
+      observe: 'events',
     });
   }
   public getExportPDFCertificate(
@@ -29,6 +31,8 @@ export class ExportPdfService {
       `${this.baseUrl}/exportPDFCertificate/${profileId}/${dateOfProcedure}/${createdByName}/${createdById}`,
       {
         responseType: 'blob',
+        reportProgress: true,
+        observe: 'events',
       },
     );
   }
@@ -41,6 +45,8 @@ export class ExportPdfService {
       `${this.baseUrl}/exportPDFPrescription/${profileId}/${dateOfProcedure}/${careOfMouth}`,
       {
         responseType: 'blob',
+        reportProgress: true,
+        observe: 'events',
       },
     );
   }
@@ -55,6 +61,8 @@ export class ExportPdfService {
       `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}/${category}/${procedureDone}/${toothNumbers}`,
       {
         responseType: 'blob',
+        reportProgress: true,
+        observe: 'events',
       },
     );
   }
@@ -66,6 +74,21 @@ export class ExportPdfService {
       `${this.baseUrl}/exportPDFIntraOralBill/${profileId}/${dateOfProcedure}`,
       {
         responseType: 'blob',
+        reportProgress: true,
+        observe: 'events',
+      },
+    );
+  }
+  public getExportPDFOrthodonticBillBreakdown(
+    profileId: number,
+    billId: number,
+  ): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/exportPDFOrthodonticBill/${profileId}/${billId}`,
+      {
+        responseType: 'blob',
+        reportProgress: true,
+        observe: 'events',
       },
     );
   }

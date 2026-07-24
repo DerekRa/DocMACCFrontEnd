@@ -43,7 +43,7 @@
         >
       </div>
       <div class="col-auto mt-2 -mb-1">
-        &nbsp; {{ dateOfBill | date : "MMMM dd, YYYY" }}
+        &nbsp; {{ dateOfBill | date: "MMMM dd, YYYY" }}
       </div>
       <!-- Empty Title -->
       <div class="col text-center">
@@ -94,8 +94,8 @@
           (change)="onChangeShowPage($event)"
           style="width: auto"
         >
-          <option value="10" selected>10</option>
-          <option value="20">20</option>
+          <option value="10">10</option>
+          <option value="20" selected>20</option>
           <option value="30">30</option>
           <option value="40">40</option>
           <option value="50">50</option>
@@ -125,7 +125,7 @@
                   : {
                       itemsPerPage: paginationSize,
                       currentPage: pageNoDisplay,
-                      totalItems: paginationTotalItems
+                      totalItems: paginationTotalItems,
                     };
               let i = index
             "
@@ -175,7 +175,7 @@
                     <!-- Date -->
                     <label class="tblLabel">Date</label>
                     <span class="tblValue p-2">{{
-                      breakdown?.createdDate | date : " MMMM dd, YYYY"
+                      breakdown?.createdDate | date: " MMMM dd, YYYY"
                     }}</span>
                     <br />
                     <!-- Total Bill -->
