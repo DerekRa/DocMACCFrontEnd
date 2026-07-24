@@ -19,6 +19,7 @@ import { ProfileModelService } from 'src/app/service/clientProfile/profile-model
 import { DentalCertificateService } from 'src/app/service/treatmentPlan/dental-certificate.service';
 import { KeycloakProfile } from 'keycloak-js';
 import { KeycloakService } from 'keycloak-angular';
+import { GlobalLoadingService } from 'src/app/service/loading/global-loading.service';
 
 @Component({
   selector: 'app-dental-certification',
@@ -45,6 +46,7 @@ export class DentalCertificationComponent implements OnInit {
     private fb: FormBuilder,
     public alertService: AlertService,
     private readonly keycloak: KeycloakService,
+    private loadingService: GlobalLoadingService,
   ) {}
 
   public id: any;
@@ -113,6 +115,9 @@ export class DentalCertificationComponent implements OnInit {
   }
 
   public printPDFCertificate() {
+    this.loadingService.loadingOn();
+    this.percentDone = 0;
+
     this.exportPdfService
       .getExportPDFCertificate(
         this.id,
@@ -120,29 +125,48 @@ export class DentalCertificationComponent implements OnInit {
         this.userProfile?.firstName || '',
         this.userProfile?.id || '',
       )
-      .subscribe((response: any) => {
-        if (response.type === HttpEventType.DownloadProgress) {
-          this.percentDone = Math.round(
-            (100 * response.loaded) / response.total,
-          );
-        }
-        var file = new Blob([response], { type: 'application/pdf' });
-        var fileURL = URL.createObjectURL(file);
-        // if you want to open PDF in new tab
-        // window.open(response);
-        var a = document.createElement('a');
-        a.href = fileURL;
-        a.target = '_blank';
-        a.download = this.profileModel?.name?.lastName
-          ? this.profileModel?.name?.lastName +
-            this.profileModel?.name?.firstName +
-            this.profileModel?.name?.middleName +
-            'Certification' +
-            this.dateOfProcedure +
-            '.pdf'
-          : 'blankpage.pdf';
-        document.body.appendChild(a);
-        a.click();
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response.type === HttpEventType.DownloadProgress &&
+            typeof response.total === 'number' &&
+            response.total > 0
+          ) {
+            this.percentDone = Math.round(
+              (100 * response.loaded) / response.total,
+            );
+            console.log('Download progress:', this.percentDone + '%');
+            this.loadingService.setProgress(this.percentDone);
+          }
+
+          if (response.type === HttpEventType.Response && response.body) {
+            this.percentDone = 100;
+            this.loadingService.setProgress(100);
+            this.loadingService.loadingOff();
+
+            const file = new Blob([response.body], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.download = this.profileModel?.name?.lastName
+              ? this.profileModel?.name?.lastName +
+                this.profileModel?.name?.firstName +
+                this.profileModel?.name?.middleName +
+                'Certification' +
+                this.dateOfProcedure +
+                '.pdf'
+              : 'blankpage.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(fileURL);
+          }
+        },
+        error: () => {
+          this.percentDone = 0;
+          this.loadingService.loadingOff();
+        },
       });
   }
 

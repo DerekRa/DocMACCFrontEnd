@@ -88,15 +88,17 @@ function initializeKeycloak(keycloak: KeycloakService) {
   return () =>
     keycloak.init({
       config: {
-        // url: 'http://192.168.0.127:7080/', //doc macc desktop ip address
-        url: 'http://localhost:7080/',
+        // url: 'http://192.168.0.127:7080/', //doc macc desktop ip address first deployment
+        url: 'http://192.168.0.127:30623/', //doc macc desktop ip address
+        // url: 'http://localhost:7080/', //localhost
+        // url: 'http://localhost:30623/', //kubernetes local test
         realm: 'maccDentalclinicRealm',
         clientId: 'maccDentalclinicClient',
       },
       initOptions: {
         pkceMethod: 'S256',
-        // redirectUri: 'http://192.168.0.127:4200/home',
-        redirectUri: 'http://192.168.1.57:4200/home',
+        redirectUri: 'http://192.168.0.127:4200/home',
+        // redirectUri: 'http://192.168.1.57:4200/home',
         checkLoginIframe: false,
       },
       loadUserProfileAtStartUp: false,

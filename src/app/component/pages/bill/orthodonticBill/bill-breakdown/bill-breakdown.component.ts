@@ -6,6 +6,7 @@ import { BreakdownResponse } from 'src/app/model/interface/billModel/orthodontic
 import { ProfileModel } from 'src/app/model/interface/profileModel/profile-model';
 import { OrthodonticBillService } from 'src/app/service/billRecord/orthodontic-bill.service';
 import { ProfileModelService } from 'src/app/service/clientProfile/profile-model.service';
+import { GlobalLoadingService } from 'src/app/service/loading/global-loading.service';
 import { ExportPdfService } from 'src/app/service/print/export-pdf.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class BillBreakdownComponent implements OnInit {
     private exportPdfService: ExportPdfService,
     private route: ActivatedRoute,
     private router: Router,
+    private loadingService: GlobalLoadingService,
   ) {}
 
   public id: any;
@@ -190,31 +192,51 @@ export class BillBreakdownComponent implements OnInit {
   }
 
   public printPDFBillBreakdown() {
+    this.loadingService.loadingOn();
+    this.percentDone = 0;
+
     this.exportPdfService
       .getExportPDFOrthodonticBillBreakdown(this.id, this.billId)
-      .subscribe((response: any) => {
-        if (response.type === HttpEventType.DownloadProgress) {
-          //Percent done of the file download
-          this.percentDone = Math.round(
-            (100 * response.loaded) / response.total,
-          );
-        }
-        var file = new Blob([response], { type: 'application/pdf' });
-        var fileURL = URL.createObjectURL(file);
-        // if you want to open PDF in new tab
-        // window.open(response);
-        var a = document.createElement('a');
-        a.href = fileURL;
-        a.target = '_blank';
-        a.download = this.profileModel?.name?.lastName
-          ? this.profileModel?.name?.lastName +
-            this.profileModel?.name?.firstName +
-            this.profileModel?.name?.middleName +
-            '_Orthodontic_Bills' +
-            '.pdf'
-          : 'blankpage.pdf';
-        document.body.appendChild(a);
-        a.click();
+      .subscribe({
+        next: (response: any) => {
+          if (
+            response.type === HttpEventType.DownloadProgress &&
+            typeof response.total === 'number' &&
+            response.total > 0
+          ) {
+            this.percentDone = Math.round(
+              (100 * response.loaded) / response.total,
+            );
+            this.loadingService.setProgress(this.percentDone);
+          }
+
+          if (response.type === HttpEventType.Response && response.body) {
+            this.percentDone = 100;
+            this.loadingService.setProgress(100);
+            this.loadingService.loadingOff();
+
+            const file = new Blob([response.body], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            const a = document.createElement('a');
+            a.href = fileURL;
+            a.target = '_blank';
+            a.download = this.profileModel?.name?.lastName
+              ? this.profileModel?.name?.lastName +
+                this.profileModel?.name?.firstName +
+                this.profileModel?.name?.middleName +
+                '_Orthodontic_Bills' +
+                '.pdf'
+              : 'blankpage.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(fileURL);
+          }
+        },
+        error: () => {
+          this.percentDone = 0;
+          this.loadingService.loadingOff();
+        },
       });
   }
   printPDFBillIndividual() {}

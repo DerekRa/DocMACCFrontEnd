@@ -118,7 +118,11 @@ export class PatientProfileComponent implements OnInit {
 
   public printPDFProfile(id: any) {
     this.exportPdfService.getExportPDFProfile(id).subscribe((response: any) => {
-      if (response.type === HttpEventType.DownloadProgress) {
+      if (
+        response.type === HttpEventType.DownloadProgress &&
+        response.total &&
+        response.total > 0
+      ) {
         this.percentDone = Math.round((100 * response.loaded) / response.total);
       }
       var file = new Blob([response], { type: 'application/pdf' });
